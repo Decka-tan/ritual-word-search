@@ -41,7 +41,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
     };
 
     const handleNativeShare = async () => {
-        if (navigator.share) {
+        if (typeof navigator !== 'undefined' && navigator.share) {
             try {
                 await navigator.share({
                     title: puzzleTitle,
@@ -53,6 +53,8 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
             }
         }
     };
+
+    const supportsNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
     return (
         <div className="relative">
@@ -106,7 +108,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                             </button>
 
                             {/* Native Share (mobile) */}
-                            {navigator.share && (
+                            {supportsNativeShare && (
                                 <button
                                     onClick={handleNativeShare}
                                     className="w-full px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-3"
