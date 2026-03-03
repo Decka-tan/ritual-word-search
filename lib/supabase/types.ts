@@ -81,7 +81,7 @@ export function rowToPuzzle(row: PuzzleRow) {
         allowBackward: row.allow_backward,
         seed: row.seed,
         grid: row.grid,
-        placements: row.placements,
+        placements: row.placements as any, // Type cast: DB placements match WordPlacement structure
         editKey: row.edit_key,
         createdAt: row.created_at,
     };
