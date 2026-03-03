@@ -283,7 +283,7 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 border border-zinc-700 flex items-center justify-center font-mono font-bold text-sm sm:text-lg md:text-xl transition-all duration-150 cursor-pointer';
+        const base = 'w-full h-full border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-150 cursor-pointer aspect-square';
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
@@ -301,12 +301,13 @@ export function PuzzleGrid({
 
     return (
         <div className={className}>
-            <div className="flex justify-center">
+            <div className="w-full">
                 <div
-                    className="inline-grid gap-0 border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900"
+                    className="grid gap-px border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900 mx-auto"
                     style={{
-                        gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
-                        maxWidth: '100%'
+                        gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
+                        maxWidth: '600px',
+                        aspectRatio: '1'
                     }}
                 >
                     {grid.map((row, rowIndex) =>
@@ -319,10 +320,7 @@ export function PuzzleGrid({
                                 style={{
                                     backgroundColor: getCellBackground(rowIndex, colIndex),
                                     cursor: 'pointer',
-                                    border: '1px solid #3f3f46',
-                                    padding: '8px',
-                                    minWidth: '32px',
-                                    minHeight: '32px'
+                                    border: '1px solid #3f3f46'
                                 }}
                                 className={getCellStyle(rowIndex, colIndex)}
                                 aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
