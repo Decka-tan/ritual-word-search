@@ -15,7 +15,30 @@ export default function PlayPage() {
   const [error, setError] = useState<string | null>(null);
   const [showSolution, setShowSolution] = useState(false);
   const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
+  const [timer, setTimer] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const puzzleRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Timer effect
+  useEffect(() => {
+    if (isRunning && !isComplete) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isRunning, isComplete]);
 
   useEffect(() => {
     const fetchPuzzle = async () => {
@@ -38,27 +61,46 @@ export default function PlayPage() {
     }
   }, [params.id]);
 
-  const handleExportPNG = async () => {
-    if (!puzzleRef.current) return;
-
-    const element = puzzleRef.current;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Simple canvas export (fallback)
-    const dataUrl = element.innerHTML;
-    alert('Export feature - html2canvas integration needed');
+  const handleExportPNG = () => {
+    alert('Export feature - html2canvas integration coming soon!');
   };
 
   const handleWordFound = (word: string) => {
-    setFoundWords((prev) => new Set(prev).add(word));
+    setFoundWords((prev) => {
+      const newSet = new Set(prev).add(word);
+
+      // Start timer on first word found
+      if (prev.size === 0 && newSet.size === 1) {
+        setIsRunning(true);
+      }
+
+      // Check if complete
+      const allWords = puzzle?.placements.map((p) => p.word) || [];
+      if (newSet.size === allWords.length) {
+        setIsRunning(false);
+        setIsComplete(true);
+      }
+
+      return newSet;
+    });
   };
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const totalWords = puzzle?.placements.length || 0;
+  const progress = (foundWords.size / totalWords) * 100;
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Loading puzzle...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading puzzle...</p>
+        </div>
       </div>
     );
   }
@@ -66,8 +108,8 @@ export default function PlayPage() {
   if (error || !puzzle) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg mb-4">{error || 'Puzzle not found'}</p>
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-600">{error || 'Puzzle not found'}</p>
           <Button onClick={() => router.push('/')}>Back Home</Button>
         </div>
       </div>
@@ -78,33 +120,71 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen">
-      <div ref={puzzleRef} className="max-w-6xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="mb-8 border-b-2 border-black pb-6">
+      <div ref={puzzleRef} className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header with gradient */}
+        <div className="mb-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 shadow-xl text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
           {puzzle.description && (
-            <p className="text-gray-700 mb-4">{puzzle.description}</p>
+            <p className="text-purple-100 mb-4">{puzzle.description}</p>
           )}
-          <div className="flex flex-wrap gap-4">
+
+          {/* Stats */}
+          <div className="flex flex-wrap items-center gap-6">
+            {/* Timer */}
+            <div className="bg-white/20 backdrop-blur rounded-xl px-4 py-2">
+              <span className="text-sm font-medium">Time: </span>
+              <span className="text-2xl font-bold font-mono">{formatTime(timer)}</span>
+            </div>
+
+            {/* Progress */}
+            <div className="bg-white/20 backdrop-blur rounded-xl px-4 py-2 flex-1 min-w-[200px]">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Progress</span>
+                <span className="font-bold">{foundWords.size}/{totalWords}</span>
+              </div>
+              <div className="bg-white/30 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-white h-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Completion Badge */}
+            {isComplete && (
+              <div className="bg-green-500 rounded-xl px-4 py-2 animate-pulse">
+                <span className="font-bold">🎉 Complete!</span>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 mt-4">
             <Button
               variant="ghost"
               onClick={() => setShowSolution(!showSolution)}
+              disabled={!isComplete}
+              className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
             >
               {showSolution ? 'Hide Solution' : 'Show Solution'}
             </Button>
             <Button variant="ghost" onClick={handleExportPNG}>
               Export PNG
             </Button>
-            <Button variant="secondary" onClick={() => router.push('/maker')}>
+            <Button
+              variant="secondary"
+              onClick={() => router.push('/maker')}
+              className="bg-white/20 hover:bg-white/30 text-white border-none"
+            >
               Create Your Own
             </Button>
           </div>
         </div>
 
         {/* Puzzle */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6">
           {/* Grid */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-lg">
             <PuzzleGrid
               grid={puzzle.grid}
               placements={placements}
@@ -114,7 +194,7 @@ export default function PlayPage() {
           </div>
 
           {/* Word List */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-lg">
             <WordList
               placements={placements}
               foundWords={foundWords}

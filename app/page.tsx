@@ -4,24 +4,27 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="border-b-2 border-black">
+      {/* Hero Section with Gradient */}
+      <section className="bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 text-white">
         <div className="max-w-4xl mx-auto px-4 py-24 sm:py-32">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-            RITUAL WORD SEARCH
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 drop-shadow-lg">
+            Ritual Word Search
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 mb-12 max-w-2xl">
+          <p className="text-lg sm:text-xl text-purple-100 mb-12 max-w-2xl">
             Create and play custom word search puzzles.<br/>
             No account required. Deterministic generation. Full ownership.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/maker">
-              <Button size="lg" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-purple-600 hover:bg-gray-100">
                 Create Puzzle
               </Button>
             </Link>
             <Link href="/my-puzzles">
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white/20"
+              >
                 My Puzzles
               </Button>
             </Link>
@@ -30,27 +33,36 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="border-b-2 border-black">
+      <section className="bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-12">
-            FEATURES
+          <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-center text-gray-800">
+            WHY RITUAL?
           </h2>
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div className="border-2 border-black p-6">
-              <h3 className="font-bold text-lg mb-2">NO LOGIN</h3>
-              <p className="text-sm text-gray-700">
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-100 hover:border-purple-300 transition-all">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white mb-4">
+                🔓
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-gray-800">NO LOGIN</h3>
+              <p className="text-sm text-gray-600">
                 Create puzzles instantly with secret edit links. No account required.
               </p>
             </div>
-            <div className="border-2 border-black p-6">
-              <h3 className="font-bold text-lg mb-2">DETERMINISTIC</h3>
-              <p className="text-sm text-gray-700">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-100 hover:border-blue-300 transition-all">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white mb-4">
+                🎲
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-gray-800">DETERMINISTIC</h3>
+              <p className="text-sm text-gray-600">
                 Same words + options + seed = same puzzle. Always reproducible.
               </p>
             </div>
-            <div className="border-2 border-black p-6">
-              <h3 className="font-bold text-lg mb-2">YOUR DATA</h3>
-              <p className="text-sm text-gray-700">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-green-100 hover:border-green-300 transition-all">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-white mb-4">
+                💾
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-gray-800">YOUR DATA</h3>
+              <p className="text-sm text-gray-600">
                 Full ownership. Export as PNG. Edit anytime with secret link.
               </p>
             </div>
@@ -59,40 +71,61 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section>
+      <section className="bg-white">
         <div className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-center text-gray-800">
             HOW IT WORKS
           </h2>
-          <ol className="space-y-6">
-            <li className="flex gap-4">
-              <span className="text-3xl font-bold flex-shrink-0">01</span>
-              <div>
-                <h3 className="font-bold text-lg mb-1">CREATE</h3>
-                <p className="text-gray-700">
-                  Add your words, customize options, generate puzzle.
+          <ol className="space-y-8">
+            <li className="flex gap-6 items-start">
+              <span className="text-4xl font-bold flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                1
+              </span>
+              <div className="flex-1">
+                <h3 className="font-bold text-xl mb-2 text-gray-800">CREATE</h3>
+                <p className="text-gray-600">
+                  Add your words, customize options, generate puzzle in seconds.
                 </p>
               </div>
             </li>
-            <li className="flex gap-4">
-              <span className="text-3xl font-bold flex-shrink-0">02</span>
-              <div>
-                <h3 className="font-bold text-lg mb-1">SHARE</h3>
-                <p className="text-gray-700">
-                  Get public play link. Share with anyone, anywhere.
+            <li className="flex gap-6 items-start">
+              <span className="text-4xl font-bold flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                2
+              </span>
+              <div className="flex-1">
+                <h3 className="font-bold text-xl mb-2 text-gray-800">SHARE</h3>
+                <p className="text-gray-600">
+                  Get public play link. Share with friends, family, community.
                 </p>
               </div>
             </li>
-            <li className="flex gap-4">
-              <span className="text-3xl font-bold flex-shrink-0">03</span>
-              <div>
-                <h3 className="font-bold text-lg mb-1">EDIT</h3>
-                <p className="text-gray-700">
-                  Keep secret edit link. Modify or delete anytime.
+            <li className="flex gap-6 items-start">
+              <span className="text-4xl font-bold flex-shrink-0 w-16 h-16 bg-gradient-to-br from-cyan-500 to-green-500 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                3
+              </span>
+              <div className="flex-1">
+                <h3 className="font-bold text-xl mb-2 text-gray-800">EDIT</h3>
+                <p className="text-gray-600">
+                  Keep secret edit link. Modify or delete anytime. You control your puzzles.
                 </p>
               </div>
             </li>
           </ol>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to create?</h2>
+          <p className="text-purple-100 mb-8">
+            Build your first word search puzzle in under a minute.
+          </p>
+          <Link href="/maker">
+            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
+              Get Started Free
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

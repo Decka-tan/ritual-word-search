@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface WordListProps {
@@ -14,19 +13,19 @@ export function WordList({ placements, foundWords = new Set(), className }: Word
 
     return (
         <div className={className}>
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b-2 border-black pb-2">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-4 pb-2 border-b-2 border-gray-200 text-gray-700">
                 Words to Find ({foundWords.size}/{words.length})
             </h3>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <ul className="grid grid-cols-2 sm:grid-cols-1 gap-2">
                 {words.map((word) => {
                     const found = foundWords.has(word);
                     return (
                         <li
                             key={word}
-                            className={`font-mono text-sm py-1 px-2 border-2 ${
+                            className={`font-mono text-sm py-2 px-3 rounded-lg border-2 transition-all ${
                                 found
-                                    ? 'border-black bg-black text-white line-through'
-                                    : 'border-gray-300 bg-white'
+                                    ? 'border-green-500 bg-green-50 text-green-700 line-through'
+                                    : 'border-gray-200 bg-gray-50 text-gray-700'
                             }`}
                         >
                             {word}
@@ -34,6 +33,13 @@ export function WordList({ placements, foundWords = new Set(), className }: Word
                     );
                 })}
             </ul>
+
+            {/* Completion message */}
+            {foundWords.size === words.length && words.length > 0 && (
+                <div className="mt-6 text-center p-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl text-white">
+                    <p className="font-bold text-lg">🎉 All words found!</p>
+                </div>
+            )}
         </div>
     );
 }

@@ -26,22 +26,21 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                 disabled={disabled}
                 onClick={handleClick}
                 className={cn(
-                    'relative inline-flex h-8 w-14 items-center rounded-none transition-colors duration-150',
-                    'border-2 border-black',
-                    'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2',
-                    checked ? 'bg-black' : 'bg-white',
+                    'relative inline-flex h-7 w-13 items-center rounded-full transition-all duration-200',
+                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+                    checked ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-gray-300',
                     disabled && 'opacity-50 cursor-not-allowed',
                     className
                 )}
             >
                 <span
                     className={cn(
-                        'inline-block h-5 w-5 bg-white border-2 border-black transition-transform duration-150',
-                        checked ? 'translate-x-7' : 'translate-x-0.5'
+                        'inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200',
+                        checked ? 'translate-x-7' : 'translate-x-1'
                     )}
                 />
                 {label && (
-                    <span className="ml-3 text-sm font-semibold text-black">{label}</span>
+                    <span className="ml-3 text-sm font-semibold text-gray-700">{label}</span>
                 )}
             </button>
         );

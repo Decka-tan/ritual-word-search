@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #000000;
+  --foreground: #1e293b;
 }
 
 @theme inline {
@@ -10,23 +10,15 @@
   --color-foreground: var(--foreground);
 }
 
-/* Brutalist overrides - no dark mode for Ritual aesthetic */
 body {
-  background: #ffffff;
-  color: #000000;
-  font-family: 'Courier New', Courier, monospace;
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Force light mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #000000;
-  }
-}
-
-/* Remove default focus styles and use our own */
-*:focus-visible {
-  outline: 2px solid #000000;
-  outline-offset: 2px;
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
