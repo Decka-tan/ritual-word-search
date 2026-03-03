@@ -34,8 +34,12 @@ export function PuzzleGrid({
     const [selectState, setSelectState] = useState<SelectState>({ firstCell: null, secondCell: null });
 
     const handleCellClick = (row: number, col: number) => {
+        // DEBUG
+        console.log('🔥 CLICKED!', { row, col, selectState });
+
         // No first cell selected
         if (!selectState.firstCell) {
+            console.log('✅ Setting first cell');
             setSelectState({
                 firstCell: { row, col },
                 secondCell: null
@@ -45,6 +49,7 @@ export function PuzzleGrid({
 
         // Clicked same cell - deselect
         if (selectState.firstCell.row === row && selectState.firstCell.col === col) {
+            console.log('❌ Same cell, deselecting');
             setSelectState({ firstCell: null, secondCell: null });
             return;
         }
@@ -205,6 +210,10 @@ export function PuzzleGrid({
 
     return (
         <div className={className}>
+            {/* DEBUG INFO */}
+            <div className="mb-2 p-2 bg-yellow-100 text-xs font-mono">
+                DEBUG: Grid size {grid.length}x{grid[0]?.length || 0} | Total cells: {grid.length * (grid[0]?.length || 0)}
+            </div>
             <div
                 className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
@@ -213,8 +222,17 @@ export function PuzzleGrid({
                     row.map((cell, colIndex) => (
                         <button
                             key={`${rowIndex}-${colIndex}`}
-                            onClick={() => handleCellClick(rowIndex, colIndex)}
-                            style={{ backgroundColor: getCellBackground(rowIndex, colIndex) }}
+                            onClick={() => {
+                                console.log('BUTTON CLICKED!', rowIndex, colIndex);
+                                handleCellClick(rowIndex, colIndex);
+                            }}
+                            onMouseDown={() => console.log('MOUSE DOWN', rowIndex, colIndex)}
+                            style={{
+                                backgroundColor: getCellBackground(rowIndex, colIndex),
+                                cursor: 'pointer',
+                                border: '1px solid #ccc',
+                                padding: '8px'
+                            }}
                             className={getCellStyle(rowIndex, colIndex)}
                             aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
                         >
