@@ -101,10 +101,7 @@ export function PuzzleGrid({
         dragStartRef.current = { row, col };
         const cells = getCellsBetween({ row, col }, { row, col });
         dragCellsRef.current = cells;
-        setSelectState({
-            firstCell: { row, col },
-            secondCell: { row, col }
-        });
+        // Don't set selectState here - let click handler or drag handle it
     };
 
     const handleMouseEnter = (row: number, col: number) => {
@@ -117,10 +114,13 @@ export function PuzzleGrid({
 
         const cells = getCellsBetween(dragStartRef.current, { row, col });
         dragCellsRef.current = cells;
-        setSelectState({
-            firstCell: dragStartRef.current,
-            secondCell: { row, col }
-        });
+        // Only set selectState if we're actually dragging (moved)
+        if (hasMovedRef.current) {
+            setSelectState({
+                firstCell: dragStartRef.current,
+                secondCell: { row, col }
+            });
+        }
     };
 
     const handleMouseUp = () => {
