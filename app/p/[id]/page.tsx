@@ -152,10 +152,10 @@ export default function PlayPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-lg font-semibold text-zinc-300">Loading puzzle...</p>
+          <p className="text-lg font-semibold text-gray-700 dark:text-zinc-300">Loading puzzle...</p>
         </div>
       </div>
     );
@@ -163,9 +163,9 @@ export default function PlayPage() {
 
   if (error || !puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <div className="text-center p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl max-w-md">
-          <p className="text-lg mb-4 text-red-400">{error || 'Puzzle not found'}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+        <div className="text-center p-8 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-600 dark:text-red-400">{error || 'Puzzle not found'}</p>
           <Button onClick={() => router.push('/')}>Back Home</Button>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function PlayPage() {
   const placements: WordPlacement[] = puzzle.placements as any;
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
       <div ref={puzzleRef} className="max-w-[1600px] mx-auto px-4 py-6">
         {/* Header with gradient */}
         <div className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-5 shadow-xl text-white">
@@ -244,7 +244,7 @@ export default function PlayPage() {
         {/* Puzzle + Leaderboard - 3 Column Layout - SEAMLESS */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
           {/* Word List - 2 columns */}
-          <div className="order-2 lg:order-1 lg:col-span-2 border-r border-zinc-200 dark:border-zinc-800">
+          <div className="order-2 lg:order-1 lg:col-span-2 border-r border-gray-200 dark:border-zinc-800">
             <div className="p-4">
               <WordList
                 placements={placements}
@@ -254,7 +254,7 @@ export default function PlayPage() {
           </div>
 
           {/* Grid - Center Column - 8 columns */}
-          <div className="order-1 lg:order-2 lg:col-span-8 border-r border-zinc-200 dark:border-zinc-800">
+          <div className="order-1 lg:order-2 lg:col-span-8 border-r border-gray-200 dark:border-zinc-800">
             <div className="p-6">
               <PuzzleGrid
                 grid={puzzle.grid}

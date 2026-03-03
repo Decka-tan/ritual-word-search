@@ -74,7 +74,7 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
             case 3:
                 return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white';
             default:
-                return 'bg-zinc-800 text-zinc-300 border border-zinc-700';
+                return 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border border-gray-200 dark:border-zinc-700';
         }
     };
 
