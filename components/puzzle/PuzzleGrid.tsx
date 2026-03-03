@@ -304,7 +304,7 @@ export function PuzzleGrid({
         <div className={className}>
             <div className="w-full">
                 <div
-                    className="grid gap-px border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900 mx-auto"
+                    className="grid gap-px border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-1 shadow-xl bg-white dark:bg-zinc-900 mx-auto"
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
                         maxWidth: '600px',
@@ -333,7 +333,7 @@ export function PuzzleGrid({
                 </div>
             </div>
 
-            <p className="text-sm text-zinc-400 mt-4 text-center font-medium">
+            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-4 text-center font-medium">
                 🖱️ DRAG across letters OR 👆 Click first & last letter to select words
             </p>
         </div>
