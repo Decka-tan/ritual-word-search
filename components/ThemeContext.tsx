@@ -12,23 +12,20 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('dark');
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as Theme | null;
-        if (savedTheme) {
-            setTheme(savedTheme);
+    // Initialize theme from localStorage or default to 'dark'
+    const [theme, setTheme] = useState<Theme>(() => {
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme') as Theme | null;
+            return savedTheme || 'dark';
         }
-        setMounted(true);
-    }, []);
+        return 'dark';
+    });
 
     useEffect(() => {
-        if (!mounted) return;
-
         const root = document.documentElement;
         const body = document.body;
 
+        // Apply theme immediately
         if (theme === 'dark') {
             root.classList.add('dark');
             root.classList.remove('light');
@@ -44,14 +41,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             body.style.backgroundColor = '#ffffff';
             body.style.color = '#1e293b';
         }
+
+        // Save to localStorage
         localStorage.setItem('theme', theme);
-    }, [theme, mounted]);
+    }, [theme]);
 
     const toggleTheme = () => {
         setTheme(prev => prev === 'dark' ? 'light' : 'dark');
     };
 
-    // Always provide context, even during SSR
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}
