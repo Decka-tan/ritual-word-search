@@ -14,17 +14,18 @@ interface PuzzleGridProps {
 
 // Colors for different words
 const WORD_COLORS = [
-    '#ef4444', // red
-    '#f97316', // orange
-    '#eab308', // yellow
-    '#22c55e', // green
-    '#06b6d4', // cyan
-    '#3b82f6', // blue
-    '#8b5cf6', // violet
-    '#ec4899', // pink
+    '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899',
 ];
 
-interface SelectionLine {
+interface DragState {
+    isDragging: boolean;
+    startRow: number;
+    startCol: number;
+    currentRow: number;
+    currentCol: number;
+}
+
+interface CellLine {
     startRow: number;
     startCol: number;
     endRow: number;
@@ -41,74 +42,102 @@ export function PuzzleGrid({
 }: PuzzleGridProps) {
     const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
-    const [isDragging, setIsDragging] = useState(false);
-    const [selectionLine, setSelectionLine] = useState<SelectionLine | null>(null);
+    const [drag, setDrag] = useState<DragState>({
+        isDragging: false,
+        startRow: 0,
+        startCol: 0,
+        currentRow: 0,
+        currentCol: 0,
+    });
     const gridRef = useRef<HTMLDivElement>(null);
 
-    // Calculate which cells should be highlighted based on selection line
-    const getHighlightedCells = useCallback((line: SelectionLine): Set<string> => {
+    // Get all cells that should be highlighted based on drag state
+    const getHighlightedCells = useCallback((): Set<string> => {
+        if (!drag.isDragging) return new Set();
+
+        const { startRow, startCol, currentRow, currentCol } = drag;
         const cells = new Set<string>();
-        const { startRow, startCol, endRow, endCol } = line;
 
-        const rowDist = endRow - startRow;
-        const colDist = endCol - startCol;
-        const dist = Math.max(Math.abs(rowDist), Math.abs(colDist));
+        const rowDiff = currentRow - startRow;
+        const colDiff = currentCol - startCol;
 
-        if (dist === 0) {
+        // Determine the primary direction
+        const absRowDiff = Math.abs(rowDiff);
+        const absColDiff = Math.abs(colDiff);
+
+        // Find the line direction (snap to 8 directions)
+        let rowStep = 0;
+        let colStep = 0;
+
+        if (absRowDiff > absColDiff * 2) {
+            // Vertical dominant
+            rowStep = rowDiff > 0 ? 1 : -1;
+        } else if (absColDiff > absRowDiff * 2) {
+            // Horizontal dominant
+            colStep = colDiff > 0 ? 1 : -1;
+        } else if (absRowDiff < 5 && absColDiff < 5) {
+            // Close to start, just highlight start
             cells.add(`${startRow}-${startCol}`);
             return cells;
+        } else {
+            // Diagonal
+            rowStep = rowDiff > 0 ? 1 : -1;
+            colStep = colDiff > 0 ? 1 : -1;
         }
 
-        // Calculate direction (normalized)
-        const rowStep = rowDist / dist;
-        const colStep = colDist / dist;
+        // Calculate length
+        const length = Math.max(absRowDiff, absColDiff);
 
-        // Only add cells that are exactly on the line
-        for (let i = 0; i <= dist; i++) {
-            const row = Math.round(startRow + rowStep * i);
-            const col = Math.round(startCol + colStep * i);
-            cells.add(`${row}-${col}`);
+        // Add all cells along the line
+        for (let i = 0; i <= length; i++) {
+            const row = startRow + rowStep * i;
+            const col = startCol + colStep * i;
+
+            // Bounds check
+            if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
+                cells.add(`${row}-${col}`);
+            }
         }
 
         return cells;
-    }, []);
+    }, [drag, grid]);
 
-    // Check if selection forms a valid word
-    const getWordFromSelection = useCallback((line: SelectionLine): string | null => {
-        const { startRow, startCol, endRow, endCol } = line;
+    // Check if current drag forms a valid word
+    const getDraggedWord = useCallback((): string | null => {
+        if (!drag.isDragging) return null;
 
-        const rowDist = endRow - startRow;
-        const colDist = endCol - startCol;
-        const dist = Math.max(Math.abs(rowDist), Math.abs(colDist));
+        const { startRow, startCol, currentRow, currentCol } = drag;
+        const rowDiff = currentRow - startRow;
+        const colDiff = currentCol - startCol;
 
-        if (dist === 0) return null;
+        const absRowDiff = Math.abs(rowDiff);
+        const absColDiff = Math.abs(colDiff);
+        const length = Math.max(absRowDiff, absColDiff);
 
-        const rowStep = rowDist / dist;
-        const colStep = colDist / dist;
+        if (length === 0) return null;
 
-        // Verify it's a valid 8-direction (horizontal, vertical, or perfect diagonal)
-        const validSteps = [
-            [0, 1],   // right
-            [0, -1],  // left
-            [1, 0],   // down
-            [-1, 0],  // up
-            [1, 1],   // down-right
-            [-1, -1], // up-left
-            [1, -1],  // down-left
-            [-1, 1],  // up-right
-        ];
+        // Determine direction
+        let rowStep = 0;
+        let colStep = 0;
 
-        const isValid = validSteps.some(
-            ([r, c]) => Math.abs(r - rowStep) < 0.01 && Math.abs(c - colStep) < 0.01
-        );
+        if (absRowDiff > absColDiff * 2) {
+            rowStep = rowDiff > 0 ? 1 : -1;
+        } else if (absColDiff > absRowDiff * 2) {
+            colStep = colDiff > 0 ? 1 : -1;
+        } else {
+            // Diagonal (must be ~45 degrees)
+            if (Math.abs(absRowDiff - absColDiff) > Math.max(absRowDiff, absColDiff) * 0.5) {
+                return null; // Not close enough to diagonal
+            }
+            rowStep = rowDiff > 0 ? 1 : -1;
+            colStep = colDiff > 0 ? 1 : -1;
+        }
 
-        if (!isValid) return null;
-
-        // Build the word
+        // Build word
         const word: string[] = [];
-        for (let i = 0; i <= dist; i++) {
-            const row = Math.round(startRow + rowStep * i);
-            const col = Math.round(startCol + colStep * i);
+        for (let i = 0; i <= length; i++) {
+            const row = startRow + rowStep * i;
+            const col = startCol + colStep * i;
 
             if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
                 return null;
@@ -124,32 +153,32 @@ export function PuzzleGrid({
         if (allWords.includes(backward)) return backward;
 
         return null;
-    }, [grid, placements]);
+    }, [drag, grid, placements]);
 
-    const handleCellMouseDown = (row: number, col: number) => {
-        setIsDragging(true);
-        setSelectionLine({
+    const handleMouseDown = (row: number, col: number) => {
+        setDrag({
+            isDragging: true,
             startRow: row,
             startCol: col,
-            endRow: row,
-            endCol: col,
+            currentRow: row,
+            currentCol: col,
         });
     };
 
-    const handleCellMouseEnter = (row: number, col: number) => {
-        if (!isDragging || !selectionLine) return;
+    const handleMouseEnter = (row: number, col: number) => {
+        if (!drag.isDragging) return;
 
-        setSelectionLine({
-            ...selectionLine,
-            endRow: row,
-            endCol: col,
+        setDrag({
+            ...drag,
+            currentRow: row,
+            currentCol: col,
         });
     };
 
     const handleMouseUp = () => {
-        if (!isDragging || !selectionLine) return;
+        if (!drag.isDragging) return;
 
-        const word = getWordFromSelection(selectionLine);
+        const word = getDraggedWord();
 
         if (word && !foundWords.has(word)) {
             setFoundWords((prev) => {
@@ -170,21 +199,20 @@ export function PuzzleGrid({
             });
         }
 
-        setIsDragging(false);
-        setSelectionLine(null);
+        setDrag({ ...drag, isDragging: false });
     };
 
     // Global mouse events
     useEffect(() => {
         const handleGlobalMouseUp = () => {
-            if (isDragging) {
+            if (drag.isDragging) {
                 handleMouseUp();
             }
         };
 
         document.addEventListener('mouseup', handleGlobalMouseUp);
         return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
-    }, [isDragging, selectionLine]);
+    }, [drag]);
 
     // Get color for a cell
     const getCellColor = useCallback((row: number, col: number): string | null => {
@@ -247,11 +275,15 @@ export function PuzzleGrid({
         return deltas[direction] || [0, 1];
     };
 
+    const isCellHighlighted = (row: number, col: number): boolean => {
+        return getHighlightedCells().has(`${row}-${col}`);
+    };
+
     const getCellStyle = (row: number, col: number): string => {
         const color = getCellColor(row, col);
-        const isHighlighted = selectionLine && getHighlightedCells(selectionLine).has(`${row}-${col}`);
+        const isHighlighted = isCellHighlighted(row, col);
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-75 cursor-pointer select-none touch-none';
+        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-100 cursor-pointer select-none touch-none';
 
         if (color) {
             return `${base} text-white shadow-md`;
@@ -268,8 +300,8 @@ export function PuzzleGrid({
         const color = getCellColor(row, col);
         if (color) return color;
 
-        if (selectionLine && getHighlightedCells(selectionLine).has(`${row}-${col}`)) {
-            return 'rgba(59, 130, 246, 0.6)';
+        if (isCellHighlighted(row, col)) {
+            return 'rgba(59, 130, 246, 0.5)';
         }
 
         return 'white';
@@ -286,8 +318,8 @@ export function PuzzleGrid({
                     row.map((cell, colIndex) => (
                         <button
                             key={`${rowIndex}-${colIndex}`}
-                            onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                            onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                            onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                            onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                             style={{
                                 backgroundColor: getCellBackground(rowIndex, colIndex),
                             }}
