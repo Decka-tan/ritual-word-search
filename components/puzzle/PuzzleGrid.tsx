@@ -283,12 +283,12 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-full h-full border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-150 cursor-pointer aspect-square';
+        const base = 'w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-150 cursor-pointer aspect-square';
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
         if (isFirst) return `${base} bg-yellow-500 scale-110 shadow-md`;
-        return `${base} bg-zinc-800 hover:bg-zinc-700 hover:scale-105 text-zinc-100`;
+        return `${base} bg-white dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 hover:scale-105 text-gray-800 dark:text-zinc-100`;
     };
 
     const getCellBackground = (row: number, col: number): string => {
@@ -296,7 +296,7 @@ export function PuzzleGrid({
         if (color) return color;
         if (isInSelection(row, col)) return 'rgba(59, 130, 246, 0.5)';
         if (selectState.firstCell?.row === row && selectState.firstCell?.col === col) return 'rgba(250, 204, 21, 0.5)';
-        return '#27272a';
+        return '#ffffff';
     };
 
     return (

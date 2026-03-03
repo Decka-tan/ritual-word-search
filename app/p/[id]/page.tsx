@@ -241,11 +241,11 @@ export default function PlayPage() {
           </div>
         </div>
 
-        {/* Puzzle + Leaderboard - 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Puzzle + Leaderboard - 3 Column Layout - SEAMLESS */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
           {/* Word List - 2 columns */}
-          <div className="order-2 lg:order-1 lg:col-span-2">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl sticky top-6">
+          <div className="order-2 lg:order-1 lg:col-span-2 border-r border-zinc-200 dark:border-zinc-800">
+            <div className="p-4">
               <WordList
                 placements={placements}
                 foundWords={foundWords}
@@ -254,8 +254,8 @@ export default function PlayPage() {
           </div>
 
           {/* Grid - Center Column - 8 columns */}
-          <div className="order-1 lg:order-2 lg:col-span-8 flex justify-center">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+          <div className="order-1 lg:order-2 lg:col-span-8 border-r border-zinc-200 dark:border-zinc-800">
+            <div className="p-6">
               <PuzzleGrid
                 grid={puzzle.grid}
                 placements={placements}
@@ -268,7 +268,7 @@ export default function PlayPage() {
 
           {/* Leaderboard Sidebar - 2 columns */}
           <div className="order-3 lg:col-span-2">
-            <div className="sticky top-6">
+            <div className="p-4">
               <Leaderboard puzzleId={params.id as string} />
             </div>
           </div>

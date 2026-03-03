@@ -80,22 +80,22 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
 
     if (loading) {
         return (
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl">
-                <h3 className="text-base font-bold mb-3 text-zinc-100">🏆 Leaderboard</h3>
-                <p className="text-zinc-500 text-sm">Loading...</p>
+            <div className="p-4">
+                <h3 className="text-base font-bold mb-3 text-gray-800 dark:text-zinc-100">🏆 Leaderboard</h3>
+                <p className="text-gray-500 dark:text-zinc-500 text-sm">Loading...</p>
             </div>
         );
     }
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl">
-            <h3 className="text-base font-bold mb-3 text-zinc-100 flex items-center gap-2">
+        <div className="p-4">
+            <h3 className="text-base font-bold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
                 <span>🏆</span>
                 <span>Leaderboard</span>
             </h3>
 
             {entries.length === 0 ? (
-                <p className="text-zinc-500 text-xs text-center py-3">
+                <p className="text-gray-500 dark:text-zinc-500 text-xs text-center py-3">
                     No scores yet. Be the first!
                 </p>
             ) : (

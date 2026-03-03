@@ -13,7 +13,7 @@ export function WordList({ placements, foundWords = new Set(), className }: Word
 
     return (
         <div className={className}>
-            <h3 className="text-xs font-bold uppercase tracking-wider mb-3 pb-2 border-b-2 border-zinc-700 text-zinc-300">
+            <h3 className="text-xs font-bold uppercase tracking-wider mb-3 pb-2 border-b-2 border-zinc-200 dark:border-zinc-700 text-gray-800 dark:text-zinc-300">
                 Words ({foundWords.size}/{words.length})
             </h3>
             <ul className="space-y-2">
@@ -25,7 +25,7 @@ export function WordList({ placements, foundWords = new Set(), className }: Word
                             className={`font-mono text-xs py-2 px-3 rounded-lg border-2 transition-all ${
                                 found
                                     ? 'border-green-500 bg-green-500/20 text-green-400 line-through'
-                                    : 'border-zinc-700 bg-zinc-800 text-zinc-300'
+                                    : 'border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-300'
                             }`}
                         >
                             {word}
