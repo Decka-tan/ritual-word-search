@@ -283,7 +283,7 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-zinc-700 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer';
+        const base = 'w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 border border-zinc-700 flex items-center justify-center font-mono font-bold text-sm sm:text-lg md:text-xl transition-all duration-150 cursor-pointer';
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
@@ -301,30 +301,37 @@ export function PuzzleGrid({
 
     return (
         <div className={className}>
-            <div
-                className="inline-grid gap-0 border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900"
-                style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
-            >
-                {grid.map((row, rowIndex) =>
-                    row.map((cell, colIndex) => (
-                        <button
-                            key={`${rowIndex}-${colIndex}`}
-                            onClick={() => handleCellClick(rowIndex, colIndex)}
-                            onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                            onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                            style={{
-                                backgroundColor: getCellBackground(rowIndex, colIndex),
-                                cursor: 'pointer',
-                                border: '1px solid #ccc',
-                                padding: '8px'
-                            }}
-                            className={getCellStyle(rowIndex, colIndex)}
-                            aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
-                        >
-                            {cell}
-                        </button>
-                    ))
-                )}
+            <div className="flex justify-center">
+                <div
+                    className="inline-grid gap-0 border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900"
+                    style={{
+                        gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
+                        maxWidth: '100%'
+                    }}
+                >
+                    {grid.map((row, rowIndex) =>
+                        row.map((cell, colIndex) => (
+                            <button
+                                key={`${rowIndex}-${colIndex}`}
+                                onClick={() => handleCellClick(rowIndex, colIndex)}
+                                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                                style={{
+                                    backgroundColor: getCellBackground(rowIndex, colIndex),
+                                    cursor: 'pointer',
+                                    border: '1px solid #3f3f46',
+                                    padding: '8px',
+                                    minWidth: '32px',
+                                    minHeight: '32px'
+                                }}
+                                className={getCellStyle(rowIndex, colIndex)}
+                                aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
+                            >
+                                {cell}
+                            </button>
+                        ))
+                    )}
+                </div>
             </div>
 
             <p className="text-sm text-zinc-400 mt-4 text-center font-medium">
