@@ -1,0 +1,86 @@
+'use client';
+
+import { useState } from 'react';
+
+interface NameInputModalProps {
+    isOpen: boolean;
+    timeSeconds: number;
+    onSubmit: (name: string) => void;
+    onClose: () => void;
+}
+
+export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameInputModalProps) {
+    const [name, setName] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    if (!isOpen) return null;
+
+    const formatTime = (seconds: number): string => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!name.trim()) return;
+
+        setIsSubmitting(true);
+        onSubmit(name.trim());
+        setName('');
+        setIsSubmitting(false);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+                {/* Celebration */}
+                <div className="text-center mb-6">
+                    <div className="text-6xl mb-4">🎉</div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Puzzle Complete!</h2>
+                    <p className="text-gray-600">
+                        Your time: <span className="font-mono font-bold text-2xl text-purple-600">{formatTime(timeSeconds)}</span>
+                    </p>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="playerName" className="block text-sm font-bold text-gray-700 mb-2">
+                            Enter your name for the leaderboard:
+                        </label>
+                        <input
+                            id="playerName"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Your name..."
+                            maxLength={30}
+                            required
+                            autoFocus
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-sans text-sm"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Max 30 characters</p>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button
+                            type="submit"
+                            disabled={!name.trim() || isSubmitting}
+                            className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Score'}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-all"
+                        >
+                            Skip
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}

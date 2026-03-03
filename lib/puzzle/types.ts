@@ -103,3 +103,18 @@ export const DIRECTION_VECTORS: Record<Direction, [rowDelta: number, colDelta: n
     'diagonal-down-backward': [-1, -1],
     'diagonal-up-backward': [1, -1],
 };
+
+// Leaderboard types
+export interface LeaderboardEntry {
+    id: string;
+    puzzleId: string;
+    playerName: string;
+    timeSeconds: number;
+    createdAt: string;
+}
+
+export interface SubmitScoreInput {
+    puzzleId: string;
+    playerName: string;
+    timeSeconds: number;
+}

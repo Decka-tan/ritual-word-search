@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { PuzzleGrid } from '@/components/puzzle/PuzzleGrid';
 import { WordList } from '@/components/puzzle/WordList';
+import { NameInputModal } from '@/components/puzzle/NameInputModal';
+import { Leaderboard } from '@/components/puzzle/Leaderboard';
 import { Button } from '@/components/ui/Button';
 import { PublicPuzzle, WordPlacement } from '@/lib/puzzle/types';
 
@@ -18,6 +20,8 @@ export default function PlayPage() {
   const [timer, setTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const puzzleRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -79,10 +83,38 @@ export default function PlayPage() {
       if (newSet.size === allWords.length) {
         setIsRunning(false);
         setIsComplete(true);
+        // Show name input modal
+        setTimeout(() => setShowNameInput(true), 500);
       }
 
       return newSet;
     });
+  };
+
+  const handlePuzzleComplete = () => {
+    setIsComplete(true);
+  };
+
+  const handleSubmitScore = async (playerName: string) => {
+    try {
+      const response = await fetch('/api/leaderboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          puzzleId: params.id,
+          playerName,
+          timeSeconds: timer,
+        }),
+      });
+
+      if (response.ok) {
+        setScoreSubmitted(true);
+      }
+    } catch (err) {
+      console.error('Failed to submit score:', err);
+    }
+
+    setShowNameInput(false);
   };
 
   const formatTime = (seconds: number): string => {
@@ -164,11 +196,11 @@ export default function PlayPage() {
               variant="ghost"
               onClick={() => setShowSolution(!showSolution)}
               disabled={!isComplete}
-              className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
+              className={!isComplete ? 'opacity-50 cursor-not-allowed' : 'bg-white/20 hover:bg-white/30 text-white border-none'}
             >
               {showSolution ? 'Hide Solution' : 'Show Solution'}
             </Button>
-            <Button variant="ghost" onClick={handleExportPNG}>
+            <Button variant="ghost" onClick={handleExportPNG} className="bg-white/20 hover:bg-white/30 text-white border-none">
               Export PNG
             </Button>
             <Button
@@ -181,27 +213,44 @@ export default function PlayPage() {
           </div>
         </div>
 
-        {/* Puzzle */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Grid */}
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-lg">
-            <PuzzleGrid
-              grid={puzzle.grid}
-              placements={placements}
-              showSolution={showSolution}
-              onWordFound={handleWordFound}
-            />
+        {/* Puzzle + Leaderboard */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Grid + Word List */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Grid */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <PuzzleGrid
+                grid={puzzle.grid}
+                placements={placements}
+                showSolution={showSolution}
+                onWordFound={handleWordFound}
+                onPuzzleComplete={handlePuzzleComplete}
+              />
+            </div>
+
+            {/* Word List */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <WordList
+                placements={placements}
+                foundWords={foundWords}
+              />
+            </div>
           </div>
 
-          {/* Word List */}
-          <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-lg">
-            <WordList
-              placements={placements}
-              foundWords={foundWords}
-            />
+          {/* Leaderboard Sidebar */}
+          <div className="lg:col-span-1">
+            <Leaderboard puzzleId={params.id as string} />
           </div>
         </div>
       </div>
+
+      {/* Name Input Modal */}
+      <NameInputModal
+        isOpen={showNameInput}
+        timeSeconds={timer}
+        onSubmit={handleSubmitScore}
+        onClose={() => setShowNameInput(false)}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface PuzzleGridProps {
@@ -8,6 +8,7 @@ interface PuzzleGridProps {
     placements: WordPlacement[];
     showSolution?: boolean;
     onWordFound?: (word: string) => void;
+    onPuzzleComplete?: () => void;
     className?: string;
 }
 
@@ -35,35 +36,80 @@ export function PuzzleGrid({
     placements,
     showSolution = false,
     onWordFound,
+    onPuzzleComplete,
     className,
 }: PuzzleGridProps) {
     const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
     const [isDragging, setIsDragging] = useState(false);
     const [selectionLine, setSelectionLine] = useState<SelectionLine | null>(null);
-    const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
     const gridRef = useRef<HTMLDivElement>(null);
 
-    // Check if cells form a valid word
-    const getWordFromCells = useCallback((startRow: number, startCol: number, endRow: number, endCol: number): string | null => {
-        const rowDelta = Math.sign(endRow - startRow);
-        const colDelta = Math.sign(endCol - startCol);
+    // Calculate which cells should be highlighted based on selection line
+    const getHighlightedCells = useCallback((line: SelectionLine): Set<string> => {
+        const cells = new Set<string>();
+        const { startRow, startCol, endRow, endCol } = line;
 
-        // Must be horizontal, vertical, or diagonal
-        const rowDist = Math.abs(endRow - startRow);
-        const colDist = Math.abs(endCol - startCol);
+        const rowDist = endRow - startRow;
+        const colDist = endCol - startCol;
+        const dist = Math.max(Math.abs(rowDist), Math.abs(colDist));
 
-        // Check if direction is valid (horizontal, vertical, or exactly diagonal)
-        if (rowDist !== 0 && colDist !== 0 && rowDist !== colDist) {
-            return null;
+        if (dist === 0) {
+            cells.add(`${startRow}-${startCol}`);
+            return cells;
         }
 
-        const length = Math.max(rowDist, colDist) + 1;
-        const word: string[] = [];
+        // Calculate direction (normalized)
+        const rowStep = rowDist / dist;
+        const colStep = colDist / dist;
 
-        for (let i = 0; i < length; i++) {
-            const row = startRow + rowDelta * i;
-            const col = startCol + colDelta * i;
+        // Only add cells that are exactly on the line
+        for (let i = 0; i <= dist; i++) {
+            const row = Math.round(startRow + rowStep * i);
+            const col = Math.round(startCol + colStep * i);
+            cells.add(`${row}-${col}`);
+        }
+
+        return cells;
+    }, []);
+
+    // Check if selection forms a valid word
+    const getWordFromSelection = useCallback((line: SelectionLine): string | null => {
+        const { startRow, startCol, endRow, endCol } = line;
+
+        const rowDist = endRow - startRow;
+        const colDist = endCol - startCol;
+        const dist = Math.max(Math.abs(rowDist), Math.abs(colDist));
+
+        if (dist === 0) return null;
+
+        const rowStep = rowDist / dist;
+        const colStep = colDist / dist;
+
+        // Verify it's a valid 8-direction (horizontal, vertical, or perfect diagonal)
+        const validSteps = [
+            [0, 1],   // right
+            [0, -1],  // left
+            [1, 0],   // down
+            [-1, 0],  // up
+            [1, 1],   // down-right
+            [-1, -1], // up-left
+            [1, -1],  // down-left
+            [-1, 1],  // up-right
+        ];
+
+        const isValid = validSteps.some(
+            ([r, c]) => Math.abs(r - rowStep) < 0.01 && Math.abs(c - colStep) < 0.01
+        );
+
+        if (!isValid) return null;
+
+        // Build the word
+        const word: string[] = [];
+        for (let i = 0; i <= dist; i++) {
+            const row = Math.round(startRow + rowStep * i);
+            const col = Math.round(startCol + colStep * i);
+
             if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
                 return null;
             }
@@ -71,7 +117,7 @@ export function PuzzleGrid({
         }
 
         const forward = word.join('');
-        const backward = word.reverse().join('');
+        const backward = word.slice().reverse().join('');
 
         const allWords = placements.map((p) => p.word);
         if (allWords.includes(forward)) return forward;
@@ -80,65 +126,56 @@ export function PuzzleGrid({
         return null;
     }, [grid, placements]);
 
-    const getCellsInLine = useCallback((line: SelectionLine): Set<string> => {
-        const cells = new Set<string>();
-        const { startRow, startCol, endRow, endCol } = line;
-
-        const rowDelta = Math.sign(endRow - startRow);
-        const colDelta = Math.sign(endCol - startCol);
-        const length = Math.max(Math.abs(endRow - startRow), Math.abs(endCol - startCol)) + 1;
-
-        for (let i = 0; i < length; i++) {
-            const row = startRow + rowDelta * i;
-            const col = startCol + colDelta * i;
-            cells.add(`${row}-${col}`);
-        }
-
-        return cells;
-    }, []);
-
     const handleCellMouseDown = (row: number, col: number) => {
         setIsDragging(true);
-        setSelectionLine({ startRow: row, startCol: row, endRow: col, endCol: col });
-        setSelectedCells(new Set([`${row}-${col}`]));
+        setSelectionLine({
+            startRow: row,
+            startCol: col,
+            endRow: row,
+            endCol: col,
+        });
     };
 
     const handleCellMouseEnter = (row: number, col: number) => {
         if (!isDragging || !selectionLine) return;
 
-        const newLine = { ...selectionLine, endRow: row, endCol: col };
-        setSelectionLine(newLine);
-        setSelectedCells(getCellsInLine(newLine));
+        setSelectionLine({
+            ...selectionLine,
+            endRow: row,
+            endCol: col,
+        });
     };
 
     const handleMouseUp = () => {
         if (!isDragging || !selectionLine) return;
 
-        const word = getWordFromCells(
-            selectionLine.startRow,
-            selectionLine.startCol,
-            selectionLine.endRow,
-            selectionLine.endCol
-        );
+        const word = getWordFromSelection(selectionLine);
 
         if (word && !foundWords.has(word)) {
-            setFoundWords((prev) => new Set(prev).add(word));
+            setFoundWords((prev) => {
+                const newSet = new Set(prev).add(word);
 
-            // Assign a color to this word
-            const usedColors = Array.from(foundWordColors.values());
-            const availableColor = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-            setFoundWordColors((prev) => new Map(prev).set(word, availableColor));
+                // Assign color
+                const availableColor = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                setFoundWordColors((prev) => new Map(prev).set(word, availableColor));
 
-            onWordFound?.(word);
+                // Check if complete
+                const allWords = placements.map((p) => p.word);
+                if (newSet.size === allWords.length) {
+                    onPuzzleComplete?.();
+                }
+
+                onWordFound?.(word);
+                return newSet;
+            });
         }
 
         setIsDragging(false);
         setSelectionLine(null);
-        setSelectedCells(new Set());
     };
 
-    // Add global mouse up listener
-    useState(() => {
+    // Global mouse events
+    useEffect(() => {
         const handleGlobalMouseUp = () => {
             if (isDragging) {
                 handleMouseUp();
@@ -147,37 +184,10 @@ export function PuzzleGrid({
 
         document.addEventListener('mouseup', handleGlobalMouseUp);
         return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
-    });
+    }, [isDragging, selectionLine]);
 
     // Get color for a cell
-    const getCellColor = (row: number, col: number): string | null => {
-        if (showSolution) {
-            // Check if this cell is part of any word
-            for (const placement of placements) {
-                const { startRow, startCol, endRow, endCol, direction } = placement;
-                const [rowDelta, colDelta] = getDirectionDelta(direction);
-
-                let r = startRow;
-                let c = startCol;
-                let isPartOfWord = false;
-
-                do {
-                    if (r === row && c === col) {
-                        isPartOfWord = true;
-                        break;
-                    }
-                    if (r === endRow && c === endCol) break;
-                    r += rowDelta;
-                    c += colDelta;
-                } while (true);
-
-                if (isPartOfWord) {
-                    const colorIndex = placements.indexOf(placement) % WORD_COLORS.length;
-                    return WORD_COLORS[colorIndex];
-                }
-            }
-        }
-
+    const getCellColor = useCallback((row: number, col: number): string | null => {
         // Check found words
         for (const [word, color] of foundWordColors) {
             const placement = placements.find((p) => p.word === word);
@@ -199,8 +209,29 @@ export function PuzzleGrid({
             } while (true);
         }
 
+        // Show solution
+        if (showSolution) {
+            for (const placement of placements) {
+                const { startRow, startCol, endRow, endCol, direction } = placement;
+                const [rowDelta, colDelta] = getDirectionDelta(direction);
+
+                let r = startRow;
+                let c = startCol;
+
+                do {
+                    if (r === row && c === col) {
+                        const colorIndex = placements.indexOf(placement) % WORD_COLORS.length;
+                        return WORD_COLORS[colorIndex];
+                    }
+                    if (r === endRow && c === endCol) break;
+                    r += rowDelta;
+                    c += colDelta;
+                } while (true);
+            }
+        }
+
         return null;
-    };
+    }, [placements, foundWordColors, showSolution]);
 
     const getDirectionDelta = (direction: string): [number, number] => {
         const deltas: Record<string, [number, number]> = {
@@ -216,22 +247,18 @@ export function PuzzleGrid({
         return deltas[direction] || [0, 1];
     };
 
-    const isCellSelected = (row: number, col: number): boolean => {
-        return selectedCells.has(`${row}-${col}`);
-    };
-
     const getCellStyle = (row: number, col: number): string => {
         const color = getCellColor(row, col);
-        const isSelected = isCellSelected(row, col);
+        const isHighlighted = selectionLine && getHighlightedCells(selectionLine).has(`${row}-${col}`);
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-100 cursor-pointer select-none';
+        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-75 cursor-pointer select-none touch-none';
 
         if (color) {
-            return `${base} text-white`;
+            return `${base} text-white shadow-md`;
         }
 
-        if (isSelected) {
-            return `${base} bg-blue-200`;
+        if (isHighlighted) {
+            return `${base} bg-blue-400 scale-105 shadow-md`;
         }
 
         return `${base} bg-white hover:bg-gray-100`;
@@ -241,8 +268,8 @@ export function PuzzleGrid({
         const color = getCellColor(row, col);
         if (color) return color;
 
-        if (selectedCells.has(`${row}-${col}`)) {
-            return 'rgba(59, 130, 246, 0.3)'; // semi-transparent blue
+        if (selectionLine && getHighlightedCells(selectionLine).has(`${row}-${col}`)) {
+            return 'rgba(59, 130, 246, 0.6)';
         }
 
         return 'white';
@@ -252,7 +279,7 @@ export function PuzzleGrid({
         <div className={className}>
             <div
                 ref={gridRef}
-                className="inline-grid gap-0.5 border-2 border-gray-800 rounded-lg p-1 shadow-lg"
+                className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white select-none"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
             >
                 {grid.map((row, rowIndex) =>
@@ -273,8 +300,7 @@ export function PuzzleGrid({
                 )}
             </div>
 
-            {/* Instructions */}
-            <p className="text-sm text-gray-600 mt-4 text-center">
+            <p className="text-sm text-gray-600 mt-4 text-center font-medium">
                 Click and drag to select words
             </p>
         </div>
