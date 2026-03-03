@@ -25,10 +25,8 @@ export function getServiceRoleClient() {
         throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
     }
 
-    // Type assertion: after the null check above, we know this is a string
-    const key: string = serviceRoleKey;
-
-    return createClient(supabaseUrl, key, {
+    // Non-null assertion: we've verified serviceRoleKey exists above
+    return createClient(supabaseUrl!, serviceRoleKey!, {
         auth: {
             autoRefreshToken: false,
             persistSession: false,
