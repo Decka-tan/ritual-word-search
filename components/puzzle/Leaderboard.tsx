@@ -86,7 +86,7 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
                 <ul className="space-y-2">
                     {entries.map((entry) => (
                         <li
-                            key={entry.id}
+                            key={entry.rank}
                             className={`flex items-center gap-4 p-3 rounded-xl ${getRankStyle(entry.rank)}`}
                         >
                             <span className="text-xl w-10 text-center font-bold">
