@@ -105,7 +105,7 @@ export async function PUT(
                 allowDiagonal: existing.allowDiagonal,
                 allowBackward: existing.allowBackward,
             };
-            const seed = input.regenerate ? undefined : existing.seed;
+            const seed = input.regenerate ? undefined : (existing.seed ?? undefined);
 
             try {
                 const generated = generatePuzzle(words, options, seed);
