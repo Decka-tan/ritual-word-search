@@ -37,6 +37,7 @@ export function PuzzleGrid({
     const [isDragging, setIsDragging] = useState(false);
     const dragStartRef = useRef<{row: number; col: number} | null>(null);
     const dragCellsRef = useRef<string[]>([]);
+    const hasMovedRef = useRef(false);
 
     const handleCellClick = (row: number, col: number) => {
         // No first cell selected
@@ -96,6 +97,7 @@ export function PuzzleGrid({
     // DRAG HANDLERS
     const handleMouseDown = (row: number, col: number) => {
         setIsDragging(true);
+        hasMovedRef.current = false;
         dragStartRef.current = { row, col };
         const cells = getCellsBetween({ row, col }, { row, col });
         dragCellsRef.current = cells;
@@ -108,6 +110,11 @@ export function PuzzleGrid({
     const handleMouseEnter = (row: number, col: number) => {
         if (!isDragging || !dragStartRef.current) return;
 
+        // Mark as moved if we're entering a different cell
+        if (dragStartRef.current.row !== row || dragStartRef.current.col !== col) {
+            hasMovedRef.current = true;
+        }
+
         const cells = getCellsBetween(dragStartRef.current, { row, col });
         dragCellsRef.current = cells;
         setSelectState({
@@ -117,40 +124,53 @@ export function PuzzleGrid({
     };
 
     const handleMouseUp = () => {
-        if (!isDragging || !dragStartRef.current) return;
-
-        const cells = dragCellsRef.current;
-        const word = cells
-            .map(key => {
-                const [r, c] = key.split('-').map(Number);
-                return grid[r][c];
-            })
-            .join('');
-
-        const reversed = word.split('').reverse().join('');
-        const allWords = placements.map((p) => p.word);
-        const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
-
-        if (foundWord && !foundWords.has(foundWord)) {
-            setFoundWords((prev) => {
-                const newSet = new Set(prev).add(foundWord);
-                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
-
-                const allWordsList = placements.map((p) => p.word);
-                if (newSet.size === allWordsList.length) {
-                    onPuzzleComplete?.();
-                }
-
-                onWordFound?.(foundWord);
-                return newSet;
-            });
+        if (!isDragging || !dragStartRef.current) {
+            setIsDragging(false);
+            return;
         }
 
-        setIsDragging(false);
-        dragStartRef.current = null;
-        dragCellsRef.current = [];
-        setSelectState({ firstCell: null, secondCell: null });
+        // Only process as drag if mouse actually moved
+        if (hasMovedRef.current) {
+            const cells = dragCellsRef.current;
+            const word = cells
+                .map(key => {
+                    const [r, c] = key.split('-').map(Number);
+                    return grid[r][c];
+                })
+                .join('');
+
+            const reversed = word.split('').reverse().join('');
+            const allWords = placements.map((p) => p.word);
+            const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
+
+            if (foundWord && !foundWords.has(foundWord)) {
+                setFoundWords((prev) => {
+                    const newSet = new Set(prev).add(foundWord);
+                    const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                    setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
+
+                    const allWordsList = placements.map((p) => p.word);
+                    if (newSet.size === allWordsList.length) {
+                        onPuzzleComplete?.();
+                    }
+
+                    onWordFound?.(foundWord);
+                    return newSet;
+                });
+            }
+
+            setIsDragging(false);
+            dragStartRef.current = null;
+            dragCellsRef.current = [];
+            hasMovedRef.current = false;
+            setSelectState({ firstCell: null, secondCell: null });
+        } else {
+            // No movement - reset drag state, let click handler work
+            setIsDragging(false);
+            dragStartRef.current = null;
+            dragCellsRef.current = [];
+            hasMovedRef.current = false;
+        }
     };
 
     // Global mouse up listener
