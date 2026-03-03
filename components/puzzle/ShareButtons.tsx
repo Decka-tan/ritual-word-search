@@ -14,15 +14,16 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
     const [isOpen, setIsOpen] = useState(false);
 
     const puzzleUrl = typeof window !== 'undefined' ? window.location.href : '';
-    const shareText = isComplete
-        ? `🎉 I just completed "${puzzleTitle}" in ${formatTime(timeSeconds || 0)}! Can you beat my time?`
-        : `🔍 Try "${puzzleTitle}" - a word search puzzle!`;
 
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
+
+    const shareText = isComplete
+        ? `🎉 I just completed "${puzzleTitle}" in ${formatTime(timeSeconds || 0)}! Can you beat my time?`
+        : `🔍 Try "${puzzleTitle}" - a word search puzzle!`;
 
     const handleCopyLink = async () => {
         try {
