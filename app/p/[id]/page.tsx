@@ -254,8 +254,8 @@ export default function PlayPage() {
           </div>
 
           {/* Grid - Center Column - 8 columns */}
-          <div className="order-1 lg:order-2 lg:col-span-8">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl overflow-x-auto">
+          <div className="order-1 lg:order-2 lg:col-span-8 flex justify-center">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
               <PuzzleGrid
                 grid={puzzle.grid}
                 placements={placements}
