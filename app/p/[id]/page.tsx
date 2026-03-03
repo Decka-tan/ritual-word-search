@@ -96,6 +96,8 @@ export default function PlayPage() {
   };
 
   const handleSubmitScore = async (playerName: string) => {
+    console.log('🎯 Submitting score:', { puzzleId: params.id, playerName, timeSeconds: timer });
+
     try {
       const response = await fetch('/api/leaderboard', {
         method: 'POST',
@@ -107,11 +109,21 @@ export default function PlayPage() {
         }),
       });
 
+      console.log('📡 Response status:', response.status);
+
       if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Score submitted successfully:', data);
         setScoreSubmitted(true);
+        alert(`Score submitted! Time: ${formatTime(timer)}`);
+      } else {
+        const error = await response.json();
+        console.error('❌ Submit failed:', error);
+        alert(`Failed to submit score: ${error.error || 'Unknown error'}`);
       }
     } catch (err) {
-      console.error('Failed to submit score:', err);
+      console.error('❌ Network error:', err);
+      alert(`Error submitting score: ${err instanceof Error ? err.message : 'Network error'}`);
     }
 
     setShowNameInput(false);
