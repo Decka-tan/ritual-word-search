@@ -60,7 +60,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl text-zinc-300 font-semibold transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-300 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-zinc-300 font-semibold transition-all"
             >
                 <span className="text-lg">📤</span>
                 <span>Share</span>
@@ -75,12 +75,12 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                     />
 
                     {/* Share Panel */}
-                    <div className="absolute top-full right-0 mt-2 w-80 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl z-50 p-5">
+                    <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-2xl z-50 p-5">
                         <div className="flex items-center justify-between mb-5">
-                            <h3 className="text-lg font-bold text-zinc-100">Share Puzzle</h3>
+                            <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-100">Share Puzzle</h3>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-zinc-400 hover:text-zinc-200 text-2xl leading-none transition-colors"
+                                className="text-gray-400 dark:text-zinc-400 hover:text-gray-200 dark:hover:text-zinc-200 text-2xl leading-none transition-colors"
                             >
                                 ×
                             </button>
@@ -101,7 +101,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                             {/* Copy Link */}
                             <button
                                 onClick={handleCopyLink}
-                                className="w-full px-4 py-3 bg-zinc-700 hover:bg-zinc-600 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-3"
+                                className="w-full px-4 py-3 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-800 dark:text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-3"
                             >
                                 <span className="text-lg">🔗</span>
                                 <span>{copied ? '✓ Copied!' : 'Copy Link'}</span>
@@ -119,10 +119,10 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                             )}
 
                             {/* Preview */}
-                            <div className="mt-4 p-3 bg-zinc-800 rounded-xl border border-zinc-700">
-                                <p className="text-xs text-zinc-400 mb-2 font-semibold">Preview:</p>
-                                <p className="text-sm text-zinc-300 line-clamp-2">{shareText}</p>
-                                <p className="text-xs text-zinc-500 mt-2 truncate">{puzzleUrl}</p>
+                            <div className="mt-4 p-3 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700">
+                                <p className="text-xs text-gray-500 dark:text-zinc-400 mb-2 font-semibold">Preview:</p>
+                                <p className="text-sm text-gray-800 dark:text-zinc-300 line-clamp-2">{shareText}</p>
+                                <p className="text-xs text-gray-500 dark:text-zinc-500 mt-2 truncate">{puzzleUrl}</p>
                             </div>
                         </div>
                     </div>
