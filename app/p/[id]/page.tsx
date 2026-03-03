@@ -6,6 +6,7 @@ import { PuzzleGrid } from '@/components/puzzle/PuzzleGrid';
 import { WordList } from '@/components/puzzle/WordList';
 import { NameInputModal } from '@/components/puzzle/NameInputModal';
 import { Leaderboard } from '@/components/puzzle/Leaderboard';
+import { GameSettings } from '@/components/puzzle/GameSettings';
 import { Button } from '@/components/ui/Button';
 import { PublicPuzzle, WordPlacement } from '@/lib/puzzle/types';
 
@@ -95,6 +96,15 @@ export default function PlayPage() {
     setIsComplete(true);
   };
 
+  const handleReset = () => {
+    setFoundWords(new Set());
+    setTimer(0);
+    setIsRunning(false);
+    setIsComplete(false);
+    setShowSolution(false);
+    setScoreSubmitted(false);
+  };
+
   const handleSubmitScore = async (playerName: string) => {
     console.log('🎯 Submitting score:', { puzzleId: params.id, playerName, timeSeconds: timer });
 
@@ -140,10 +150,10 @@ export default function PlayPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-lg font-semibold text-gray-700">Loading puzzle...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-semibold text-zinc-300">Loading puzzle...</p>
         </div>
       </div>
     );
@@ -151,9 +161,9 @@ export default function PlayPage() {
 
   if (error || !puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md">
-          <p className="text-lg mb-4 text-red-600">{error || 'Puzzle not found'}</p>
+      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+        <div className="text-center p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-400">{error || 'Puzzle not found'}</p>
           <Button onClick={() => router.push('/')}>Back Home</Button>
         </div>
       </div>
@@ -163,8 +173,8 @@ export default function PlayPage() {
   const placements: WordPlacement[] = puzzle.placements as any;
 
   return (
-    <div className="min-h-screen">
-      <div ref={puzzleRef} className="max-w-6xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-zinc-950">
+      <div ref={puzzleRef} className="max-w-7xl mx-auto px-4 py-8">
         {/* Header with gradient */}
         <div className="mb-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 shadow-xl text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
@@ -203,15 +213,13 @@ export default function PlayPage() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3 mt-4">
-            <Button
-              variant="ghost"
-              onClick={() => setShowSolution(!showSolution)}
-              disabled={!isComplete}
-              className={!isComplete ? 'opacity-50 cursor-not-allowed' : 'bg-white/20 hover:bg-white/30 text-white border-none'}
-            >
-              {showSolution ? 'Hide Solution' : 'Show Solution'}
-            </Button>
+          <div className="flex flex-wrap gap-3 mt-4 items-center">
+            <GameSettings
+              onShowSolutionChange={setShowSolution}
+              showSolution={showSolution}
+              onReset={handleReset}
+              isComplete={isComplete}
+            />
             <Button variant="ghost" onClick={handleExportPNG} className="bg-white/20 hover:bg-white/30 text-white border-none">
               Export PNG
             </Button>
@@ -225,12 +233,21 @@ export default function PlayPage() {
           </div>
         </div>
 
-        {/* Puzzle + Leaderboard */}
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Grid + Word List */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Grid */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+        {/* Puzzle + Leaderboard - 3 Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Word List */}
+          <div className="order-2 lg:order-1">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl sticky top-6">
+              <WordList
+                placements={placements}
+                foundWords={foundWords}
+              />
+            </div>
+          </div>
+
+          {/* Grid - Center Column */}
+          <div className="order-1 lg:order-2">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
               <PuzzleGrid
                 grid={puzzle.grid}
                 placements={placements}
@@ -239,19 +256,13 @@ export default function PlayPage() {
                 onPuzzleComplete={handlePuzzleComplete}
               />
             </div>
-
-            {/* Word List */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <WordList
-                placements={placements}
-                foundWords={foundWords}
-              />
-            </div>
           </div>
 
           {/* Leaderboard Sidebar */}
-          <div className="lg:col-span-1">
-            <Leaderboard puzzleId={params.id as string} />
+          <div className="order-3">
+            <div className="sticky top-6">
+              <Leaderboard puzzleId={params.id as string} />
+            </div>
           </div>
         </div>
       </div>

@@ -32,21 +32,21 @@ export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameI
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl max-w-md w-full p-8">
                 {/* Celebration */}
                 <div className="text-center mb-6">
                     <div className="text-6xl mb-4">🎉</div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Puzzle Complete!</h2>
-                    <p className="text-gray-600">
-                        Your time: <span className="font-mono font-bold text-2xl text-purple-600">{formatTime(timeSeconds)}</span>
+                    <h2 className="text-2xl font-bold text-zinc-100 mb-2">Puzzle Complete!</h2>
+                    <p className="text-zinc-400">
+                        Your time: <span className="font-mono font-bold text-2xl text-purple-400">{formatTime(timeSeconds)}</span>
                     </p>
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="playerName" className="block text-sm font-bold text-gray-700 mb-2">
+                        <label htmlFor="playerName" className="block text-sm font-bold text-zinc-300 mb-2">
                             Enter your name for the leaderboard:
                         </label>
                         <input
@@ -58,9 +58,9 @@ export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameI
                             maxLength={30}
                             required
                             autoFocus
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-sans text-sm"
+                            className="w-full px-4 py-3 bg-zinc-800 border-2 border-zinc-700 text-zinc-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-sans text-sm placeholder:text-zinc-500"
                         />
-                        <p className="text-xs text-gray-500 mt-1">Max 30 characters</p>
+                        <p className="text-xs text-zinc-500 mt-1">Max 30 characters</p>
                     </div>
 
                     <div className="flex gap-3">
@@ -74,7 +74,7 @@ export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameI
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-all"
+                            className="px-6 py-3 bg-zinc-800 text-zinc-300 font-semibold rounded-xl hover:bg-zinc-700 transition-all border border-zinc-700"
                         >
                             Skip
                         </button>

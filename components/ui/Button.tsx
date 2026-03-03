@@ -10,7 +10,7 @@ const variantStyles = {
     primary: 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-md',
     secondary: 'bg-gradient-to-r from-green-500 to-teal-500 text-white hover:from-green-600 hover:to-teal-600 shadow-md',
     danger: 'bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 shadow-md',
-    ghost: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+    ghost: 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700',
 };
 
 const sizeStyles = {

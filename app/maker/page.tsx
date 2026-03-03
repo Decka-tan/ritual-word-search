@@ -52,20 +52,50 @@ export default function MakerPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-zinc-950">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">CREATE PUZZLE</h1>
-          <p className="text-gray-600">Build your custom word search puzzle.</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-zinc-100">CREATE PUZZLE</h1>
+          <p className="text-zinc-400">Make your own word search game on any topic you like, simply by providing between 10 and 30 words.</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 border-2 border-red-600 bg-red-50 text-red-900">
+          <div className="mb-6 p-4 border-2 border-red-500 bg-red-500/20 text-red-400 rounded-xl">
             {error}
           </div>
         )}
 
         <PuzzleForm onSubmit={handleSubmit} isLoading={isLoading} />
+
+        {/* Instructions */}
+        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+          <h2 className="text-xl font-bold mb-4 text-zinc-100 flex items-center gap-2">
+            <span>📋</span>
+            <span>Instructions</span>
+          </h2>
+          <ul className="space-y-3 text-zinc-400 text-sm">
+            <li className="flex gap-3">
+              <span className="text-purple-400 font-bold flex-shrink-0">•</span>
+              <span>To create a word search puzzle you must supply a word list of at least 10 words.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-purple-400 font-bold flex-shrink-0">•</span>
+              <span>The word list should be based on a single theme or topic. For example a television show or a movie you enjoy.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-purple-400 font-bold flex-shrink-0">•</span>
+              <span>Words can only contain the letters a-z and a maximum of two spaces or dashes. Spaces and dashes will be removed when words are added to the word search grid.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-purple-400 font-bold flex-shrink-0">•</span>
+              <span>Words can have a maximum length of 14 letters.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-purple-400 font-bold flex-shrink-0">•</span>
+              <span>All puzzles created will be playable on the site, will be deleted automatically after 60 days of inactivity.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

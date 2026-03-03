@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #1e293b;
+  --background: #000000;
+  --foreground: #ffffff;
+  --foreground-muted: #a1a1aa;
+  --card-bg: #111111;
+  --card-border: #222222;
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
 }
 
 @theme inline {
@@ -11,8 +16,8 @@
 }
 
 body {
-  background: #f8fafc;
-  color: #1e293b;
+  background: #000000;
+  color: #ffffff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 

@@ -67,8 +67,8 @@ export function PuzzleForm({
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-                <label htmlFor="title" className="block text-sm font-bold uppercase mb-2">
-                    Title <span className="text-red-600">*</span>
+                <label htmlFor="title" className="block text-sm font-bold uppercase mb-2 text-zinc-300">
+                    Title <span className="text-red-400">*</span>
                 </label>
                 <Input
                     id="title"
@@ -82,7 +82,7 @@ export function PuzzleForm({
 
             {/* Description */}
             <div>
-                <label htmlFor="description" className="block text-sm font-bold uppercase mb-2">
+                <label htmlFor="description" className="block text-sm font-bold uppercase mb-2 text-zinc-300">
                     Description
                 </label>
                 <Textarea
@@ -95,9 +95,9 @@ export function PuzzleForm({
 
             {/* Words */}
             <div>
-                <label htmlFor="words" className="block text-sm font-bold uppercase mb-2">
-                    Word List <span className="text-red-600">*</span>
-                    <span className="ml-2 text-gray-600">
+                <label htmlFor="words" className="block text-sm font-bold uppercase mb-2 text-zinc-300">
+                    Word List <span className="text-red-400">*</span>
+                    <span className="ml-2 text-zinc-500">
                         ({wordCount}/30 words)
                     </span>
                 </label>
@@ -109,7 +109,7 @@ export function PuzzleForm({
                     required
                 />
                 {!isValid && wordCount > 0 && (
-                    <p className="mt-2 text-sm text-red-600 font-semibold">
+                    <p className="mt-2 text-sm text-red-400 font-semibold">
                         {wordCount < 10
                             ? `Need 10 more words (${10 - wordCount} remaining)`
                             : `Too many words (${wordCount - 30} over limit)`}
@@ -118,12 +118,12 @@ export function PuzzleForm({
             </div>
 
             {/* Options */}
-            <div className="border-2 border-black p-6 space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider">Options</h3>
+            <div className="border-2 border-zinc-700 bg-zinc-900 p-6 space-y-4 rounded-xl">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-100">Options</h3>
 
                 {/* Grid Size */}
                 <div>
-                    <label htmlFor="size" className="block text-sm font-bold uppercase mb-2">
+                    <label htmlFor="size" className="block text-sm font-bold uppercase mb-2 text-zinc-300">
                         Grid Size: {size}x{size}
                     </label>
                     <input
@@ -133,9 +133,9 @@ export function PuzzleForm({
                         max="30"
                         value={size}
                         onChange={(e) => setSize(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full accent-purple-500"
                     />
-                    <div className="flex justify-between text-xs font-mono mt-1">
+                    <div className="flex justify-between text-xs font-mono mt-1 text-zinc-500">
                         <span>10</span>
                         <span>30</span>
                     </div>

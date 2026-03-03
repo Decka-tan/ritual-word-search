@@ -263,12 +263,12 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer';
+        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-zinc-700 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer';
 
         if (color) return `${base} text-white shadow-md scale-105`;
-        if (isSelected) return `${base} bg-blue-400 scale-105 shadow-md`;
-        if (isFirst) return `${base} bg-yellow-400 scale-110 shadow-md`;
-        return `${base} bg-white hover:bg-gray-100 hover:scale-105`;
+        if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
+        if (isFirst) return `${base} bg-yellow-500 scale-110 shadow-md`;
+        return `${base} bg-zinc-800 hover:bg-zinc-700 hover:scale-105 text-zinc-100`;
     };
 
     const getCellBackground = (row: number, col: number): string => {
@@ -276,13 +276,13 @@ export function PuzzleGrid({
         if (color) return color;
         if (isInSelection(row, col)) return 'rgba(59, 130, 246, 0.5)';
         if (selectState.firstCell?.row === row && selectState.firstCell?.col === col) return 'rgba(250, 204, 21, 0.5)';
-        return 'white';
+        return '#27272a';
     };
 
     return (
         <div className={className}>
             <div
-                className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white"
+                className="inline-grid gap-0 border-2 border-zinc-700 rounded-lg p-1 shadow-xl bg-zinc-900"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
             >
                 {grid.map((row, rowIndex) =>
@@ -307,7 +307,7 @@ export function PuzzleGrid({
                 )}
             </div>
 
-            <p className="text-sm text-gray-600 mt-4 text-center font-medium">
+            <p className="text-sm text-zinc-400 mt-4 text-center font-medium">
                 🖱️ DRAG across letters OR 👆 Click first & last letter to select words
             </p>
         </div>
