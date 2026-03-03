@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface PuzzleGridProps {
@@ -32,6 +32,11 @@ export function PuzzleGrid({
     const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
     const [selectState, setSelectState] = useState<SelectState>({ firstCell: null, secondCell: null });
+
+    // Drag state
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartRef = useRef<{row: number; col: number} | null>(null);
+    const dragCellsRef = useRef<string[]>([]);
 
     const handleCellClick = (row: number, col: number) => {
         // DEBUG
@@ -105,6 +110,82 @@ export function PuzzleGrid({
         console.log('🔄 Resetting selection');
         setSelectState({ firstCell: null, secondCell: null });
     };
+
+    // DRAG HANDLERS
+    const handleMouseDown = (row: number, col: number) => {
+        console.log('🖱️ MOUSE DOWN', row, col);
+        setIsDragging(true);
+        dragStartRef.current = { row, col };
+        const cells = getCellsBetween({ row, col }, { row, col });
+        dragCellsRef.current = cells;
+        setSelectState({
+            firstCell: { row, col },
+            secondCell: { row, col }
+        });
+    };
+
+    const handleMouseEnter = (row: number, col: number) => {
+        if (!isDragging || !dragStartRef.current) return;
+
+        const cells = getCellsBetween(dragStartRef.current, { row, col });
+        dragCellsRef.current = cells;
+        setSelectState({
+            firstCell: dragStartRef.current,
+            secondCell: { row, col }
+        });
+    };
+
+    const handleMouseUp = () => {
+        if (!isDragging || !dragStartRef.current) return;
+
+        console.log('🖱️ MOUSE UP - validating drag');
+        const cells = dragCellsRef.current;
+        const word = cells
+            .map(key => {
+                const [r, c] = key.split('-').map(Number);
+                return grid[r][c];
+            })
+            .join('');
+
+        const reversed = word.split('').reverse().join('');
+        const allWords = placements.map((p) => p.word);
+        const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
+
+        console.log('🖱️ DRAG word:', foundWord);
+
+        if (foundWord && !foundWords.has(foundWord)) {
+            setFoundWords((prev) => {
+                const newSet = new Set(prev).add(foundWord);
+                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
+
+                const allWordsList = placements.map((p) => p.word);
+                if (newSet.size === allWordsList.length) {
+                    onPuzzleComplete?.();
+                }
+
+                onWordFound?.(foundWord);
+                return newSet;
+            });
+        }
+
+        setIsDragging(false);
+        dragStartRef.current = null;
+        dragCellsRef.current = [];
+        setSelectState({ firstCell: null, secondCell: null });
+    };
+
+    // Global mouse up listener
+    useEffect(() => {
+        const handleGlobalMouseUp = () => {
+            if (isDragging) {
+                handleMouseUp();
+            }
+        };
+
+        document.addEventListener('mouseup', handleGlobalMouseUp);
+        return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
+    }, [isDragging]);
 
     // Get cells between two points
     const getCellsBetween = (start: {row: number; col: number}, end: {row: number; col: number}): string[] => {
@@ -222,10 +303,6 @@ export function PuzzleGrid({
 
     return (
         <div className={className}>
-            {/* DEBUG INFO */}
-            <div className="mb-2 p-2 bg-yellow-100 text-xs font-mono">
-                DEBUG: Grid size {grid.length}x{grid[0]?.length || 0} | Total cells: {grid.length * (grid[0]?.length || 0)}
-            </div>
             <div
                 className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
@@ -234,11 +311,9 @@ export function PuzzleGrid({
                     row.map((cell, colIndex) => (
                         <button
                             key={`${rowIndex}-${colIndex}`}
-                            onClick={() => {
-                                console.log('BUTTON CLICKED!', rowIndex, colIndex);
-                                handleCellClick(rowIndex, colIndex);
-                            }}
-                            onMouseDown={() => console.log('MOUSE DOWN', rowIndex, colIndex)}
+                            onClick={() => handleCellClick(rowIndex, colIndex)}
+                            onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                            onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                             style={{
                                 backgroundColor: getCellBackground(rowIndex, colIndex),
                                 cursor: 'pointer',
@@ -255,7 +330,7 @@ export function PuzzleGrid({
             </div>
 
             <p className="text-sm text-gray-600 mt-4 text-center font-medium">
-                Click first letter, then click last letter to select word
+                🖱️ DRAG across letters OR 👆 Click first & last letter to select words
             </p>
         </div>
     );
