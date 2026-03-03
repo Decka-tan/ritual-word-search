@@ -253,9 +253,9 @@ export default function PlayPage() {
             </div>
           </div>
 
-          {/* Grid - Center Column - 7 columns */}
-          <div className="order-1 lg:order-2 lg:col-span-7">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+          {/* Grid - Center Column - 8 columns */}
+          <div className="order-1 lg:order-2 lg:col-span-8">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl overflow-x-auto">
               <PuzzleGrid
                 grid={puzzle.grid}
                 placements={placements}
@@ -266,8 +266,8 @@ export default function PlayPage() {
             </div>
           </div>
 
-          {/* Leaderboard Sidebar - 3 columns */}
-          <div className="order-3 lg:col-span-3">
+          {/* Leaderboard Sidebar - 2 columns */}
+          <div className="order-3 lg:col-span-2">
             <div className="sticky top-6">
               <Leaderboard puzzleId={params.id as string} />
             </div>
