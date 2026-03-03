@@ -68,8 +68,26 @@ export default function PlayPage() {
     }
   }, [params.id]);
 
-  const handleExportPNG = () => {
-    alert('Export feature - html2canvas integration coming soon!');
+  const handleExportPNG = async () => {
+    if (!puzzleRef.current) return;
+
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(puzzleRef.current, {
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#ffffff',
+        scale: 2, // Higher quality
+        logging: false,
+      });
+
+      // Create download link
+      const link = document.createElement('a');
+      link.download = `${puzzle.title.replace(/[^a-z0-9]/gi, '_')}_word_search.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to export image. Please try again.');
+    }
   };
 
   const handleWordFound = (word: string) => {
