@@ -35,11 +35,11 @@ export function PuzzleGrid({
 
     const handleCellClick = (row: number, col: number) => {
         // DEBUG
-        console.log('🔥 CLICKED!', { row, col, selectState });
+        console.log('🔥 CLICKED!', { row, col, selectState, firstCell: selectState.firstCell });
 
         // No first cell selected
         if (!selectState.firstCell) {
-            console.log('✅ Setting first cell');
+            console.log('✅ Setting FIRST cell at', row, col);
             setSelectState({
                 firstCell: { row, col },
                 secondCell: null
@@ -49,17 +49,19 @@ export function PuzzleGrid({
 
         // Clicked same cell - deselect
         if (selectState.firstCell.row === row && selectState.firstCell.col === col) {
-            console.log('❌ Same cell, deselecting');
+            console.log('❌ Same cell clicked, deselecting');
             setSelectState({ firstCell: null, secondCell: null });
             return;
         }
 
         // Select second cell - try to form a word
+        console.log('⚡ Processing SECOND click at', row, col);
         const first = selectState.firstCell;
         const second = { row, col };
 
         // Get cells between first and second cell
         const cells = getCellsBetween(first, second);
+        console.log('📍 Cells between:', cells);
 
         // Build word
         const word = cells
@@ -69,12 +71,19 @@ export function PuzzleGrid({
             })
             .join('');
 
+        console.log('📝 Word built:', word);
+
         const reversed = word.split('').reverse().join('');
+        console.log('🔄 Reversed:', reversed);
 
         const allWords = placements.map((p) => p.word);
+        console.log('📚 All words:', allWords);
+
         const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
+        console.log('✨ Found word:', foundWord);
 
         if (foundWord && !foundWords.has(foundWord)) {
+            console.log('🎉 WORD FOUND! Adding to foundWords');
             setFoundWords((prev) => {
                 const newSet = new Set(prev).add(foundWord);
                 const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
@@ -88,9 +97,12 @@ export function PuzzleGrid({
                 onWordFound?.(foundWord);
                 return newSet;
             });
+        } else {
+            console.log('❌ Word not found or already found');
         }
 
         // Reset selection
+        console.log('🔄 Resetting selection');
         setSelectState({ firstCell: null, secondCell: null });
     };
 
