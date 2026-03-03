@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function Header() {
     return (
-        <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <header className="bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 shadow-sm sticky top-0 z-50 transition-colors">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
@@ -14,7 +17,8 @@ export function Header() {
                     </Link>
 
                     {/* Navigation */}
-                    <nav className="flex gap-3">
+                    <nav className="flex gap-3 items-center">
+                        <ThemeToggle />
                         <Link href="/maker">
                             <Button variant="primary" size="sm">
                                 Create

@@ -19,6 +19,19 @@ body {
   background: #000000;
   color: #ffffff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode */
+body:not(.dark) {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+/* Dark mode */
+body.dark {
+  background: #000000;
+  color: #ffffff;
 }
 
 /* Smooth transitions */
