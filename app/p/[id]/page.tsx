@@ -81,7 +81,8 @@ export default function PlayPage() {
 
       // Create download link
       const link = document.createElement('a');
-      link.download = `${puzzle.title.replace(/[^a-z0-9]/gi, '_')}_word_search.png`;
+      const safeTitle = puzzle?.title?.replace(/[^a-z0-9]/gi, '_') || 'puzzle';
+      link.download = `${safeTitle}_word_search.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (error) {
