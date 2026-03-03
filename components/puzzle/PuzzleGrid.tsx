@@ -187,7 +187,7 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer select-none';
+        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer';
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-400 scale-105 shadow-md`;
@@ -206,7 +206,7 @@ export function PuzzleGrid({
     return (
         <div className={className}>
             <div
-                className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white select-none"
+                className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
             >
                 {grid.map((row, rowIndex) =>
