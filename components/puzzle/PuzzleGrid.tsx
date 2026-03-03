@@ -296,7 +296,8 @@ export function PuzzleGrid({
         if (color) return color;
         if (isInSelection(row, col)) return 'rgba(59, 130, 246, 0.5)';
         if (selectState.firstCell?.row === row && selectState.firstCell?.col === col) return 'rgba(250, 204, 21, 0.5)';
-        return '#ffffff';
+        // Return empty string to let CSS handle background
+        return '';
     };
 
     return (
