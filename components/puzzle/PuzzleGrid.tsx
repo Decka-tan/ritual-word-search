@@ -320,8 +320,6 @@ export function PuzzleGrid({
                                 onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                                 style={{
                                     backgroundColor: getCellBackground(rowIndex, colIndex),
-                                    cursor: 'pointer',
-                                    border: '1px solid #3f3f46'
                                 }}
                                 className={getCellStyle(rowIndex, colIndex)}
                                 aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
