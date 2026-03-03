@@ -80,22 +80,22 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
 
     if (loading) {
         return (
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-                <h3 className="text-lg font-bold mb-4 text-zinc-100">🏆 Leaderboard</h3>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl">
+                <h3 className="text-base font-bold mb-3 text-zinc-100">🏆 Leaderboard</h3>
                 <p className="text-zinc-500 text-sm">Loading...</p>
             </div>
         );
     }
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-            <h3 className="text-lg font-bold mb-4 text-zinc-100 flex items-center gap-2">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl">
+            <h3 className="text-base font-bold mb-3 text-zinc-100 flex items-center gap-2">
                 <span>🏆</span>
                 <span>Leaderboard</span>
             </h3>
 
             {entries.length === 0 ? (
-                <p className="text-zinc-500 text-sm text-center py-4">
+                <p className="text-zinc-500 text-xs text-center py-3">
                     No scores yet. Be the first!
                 </p>
             ) : (
@@ -103,22 +103,22 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
                     {entries.map((entry) => (
                         <li
                             key={entry.rank}
-                            className={`flex items-center gap-3 p-3 rounded-xl ${getRankStyle(entry.rank)}`}
+                            className={`flex items-center gap-2 p-2 rounded-lg ${getRankStyle(entry.rank)}`}
                         >
-                            <span className="text-lg w-8 text-center font-bold flex-shrink-0">
+                            <span className="text-base w-7 text-center font-bold flex-shrink-0">
                                 {getRankIcon(entry.rank)}
                             </span>
                             <div className="flex-1 min-w-0">
-                                <div className="font-semibold truncate text-sm">
+                                <div className="font-semibold truncate text-xs">
                                     {entry.playerName}
                                 </div>
                                 {entry.createdAt && (
-                                    <div className="text-xs opacity-75">
+                                    <div className="text-[10px] opacity-75">
                                         {formatTimestamp(entry.createdAt)}
                                     </div>
                                 )}
                             </div>
-                            <span className="font-mono font-bold text-sm flex-shrink-0">
+                            <span className="font-mono font-bold text-xs flex-shrink-0">
                                 {formatTime(entry.timeSeconds)}
                             </span>
                         </li>

@@ -176,9 +176,9 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950">
-      <div ref={puzzleRef} className="max-w-7xl mx-auto px-4 py-8">
+      <div ref={puzzleRef} className="max-w-[1600px] mx-auto px-4 py-6">
         {/* Header with gradient */}
-        <div className="mb-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 shadow-xl text-white">
+        <div className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-5 shadow-xl text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
           {puzzle.description && (
             <p className="text-purple-100 mb-4">{puzzle.description}</p>
@@ -242,10 +242,10 @@ export default function PlayPage() {
         </div>
 
         {/* Puzzle + Leaderboard - 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Word List */}
-          <div className="order-2 lg:order-1">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl sticky top-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Word List - 2 columns */}
+          <div className="order-2 lg:order-1 lg:col-span-2">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-xl sticky top-6">
               <WordList
                 placements={placements}
                 foundWords={foundWords}
@@ -253,8 +253,8 @@ export default function PlayPage() {
             </div>
           </div>
 
-          {/* Grid - Center Column */}
-          <div className="order-1 lg:order-2">
+          {/* Grid - Center Column - 7 columns */}
+          <div className="order-1 lg:order-2 lg:col-span-7">
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
               <PuzzleGrid
                 grid={puzzle.grid}
@@ -266,8 +266,8 @@ export default function PlayPage() {
             </div>
           </div>
 
-          {/* Leaderboard Sidebar */}
-          <div className="order-3">
+          {/* Leaderboard Sidebar - 3 columns */}
+          <div className="order-3 lg:col-span-3">
             <div className="sticky top-6">
               <Leaderboard puzzleId={params.id as string} />
             </div>
