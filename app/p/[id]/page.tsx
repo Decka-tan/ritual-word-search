@@ -7,6 +7,8 @@ import { WordList } from '@/components/puzzle/WordList';
 import { NameInputModal } from '@/components/puzzle/NameInputModal';
 import { Leaderboard } from '@/components/puzzle/Leaderboard';
 import { GameSettings } from '@/components/puzzle/GameSettings';
+import { ShareButtons } from '@/components/puzzle/ShareButtons';
+import { Footer } from '@/components/puzzle/Footer';
 import { Button } from '@/components/ui/Button';
 import { PublicPuzzle, WordPlacement } from '@/lib/puzzle/types';
 
@@ -220,6 +222,12 @@ export default function PlayPage() {
               onReset={handleReset}
               isComplete={isComplete}
             />
+            <ShareButtons
+              puzzleId={params.id as string}
+              puzzleTitle={puzzle.title}
+              timeSeconds={timer}
+              isComplete={isComplete}
+            />
             <Button variant="ghost" onClick={handleExportPNG} className="bg-white/20 hover:bg-white/30 text-white border-none">
               Export PNG
             </Button>
@@ -274,6 +282,9 @@ export default function PlayPage() {
         onSubmit={handleSubmitScore}
         onClose={() => setShowNameInput(false)}
       />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

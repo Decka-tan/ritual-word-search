@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PuzzleForm } from '@/components/puzzle/PuzzleForm';
+import { Footer } from '@/components/puzzle/Footer';
 import { CreatePuzzleInput, Puzzle } from '@/lib/puzzle/types';
 
 export default function MakerPage() {
@@ -97,6 +98,9 @@ export default function MakerPage() {
           </ul>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
