@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface PuzzleGridProps {
@@ -12,25 +12,9 @@ interface PuzzleGridProps {
     className?: string;
 }
 
-// Colors for different words
 const WORD_COLORS = [
     '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899',
 ];
-
-interface DragState {
-    isDragging: boolean;
-    startRow: number;
-    startCol: number;
-    currentRow: number;
-    currentCol: number;
-}
-
-interface CellLine {
-    startRow: number;
-    startCol: number;
-    endRow: number;
-    endCol: number;
-}
 
 export function PuzzleGrid({
     grid,
@@ -42,106 +26,57 @@ export function PuzzleGrid({
 }: PuzzleGridProps) {
     const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
-    const [drag, setDrag] = useState<DragState>({
-        isDragging: false,
-        startRow: 0,
-        startCol: 0,
-        currentRow: 0,
-        currentCol: 0,
-    });
-    const gridRef = useRef<HTMLDivElement>(null);
 
-    // Get all cells that should be highlighted based on drag state
-    const getHighlightedCells = useCallback((): Set<string> => {
-        if (!drag.isDragging) return new Set();
+    const [dragStart, setDragStart] = useState<{row: number; col: number} | null>(null);
+    const [dragEnd, setDragEnd] = useState<{row: number; col: number} | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-        const { startRow, startCol, currentRow, currentCol } = drag;
-        const cells = new Set<string>();
+    // Get cells between two points (simple line interpolation)
+    const getCellsBetween = useCallback((start: {row: number; col: number}, end: {row: number; col: number}): string[] => {
+        const cells: string[] = [];
+        const rowDiff = end.row - start.row;
+        const colDiff = end.col - start.col;
+        const steps = Math.max(Math.abs(rowDiff), Math.abs(colDiff));
 
-        const rowDiff = currentRow - startRow;
-        const colDiff = currentCol - startCol;
-
-        // Determine the primary direction
-        const absRowDiff = Math.abs(rowDiff);
-        const absColDiff = Math.abs(colDiff);
-
-        // Find the line direction (snap to 8 directions)
-        let rowStep = 0;
-        let colStep = 0;
-
-        if (absRowDiff > absColDiff * 2) {
-            // Vertical dominant
-            rowStep = rowDiff > 0 ? 1 : -1;
-        } else if (absColDiff > absRowDiff * 2) {
-            // Horizontal dominant
-            colStep = colDiff > 0 ? 1 : -1;
-        } else if (absRowDiff < 5 && absColDiff < 5) {
-            // Close to start, just highlight start
-            cells.add(`${startRow}-${startCol}`);
-            return cells;
-        } else {
-            // Diagonal
-            rowStep = rowDiff > 0 ? 1 : -1;
-            colStep = colDiff > 0 ? 1 : -1;
+        if (steps === 0) {
+            return [`${start.row}-${start.col}`];
         }
 
-        // Calculate length
-        const length = Math.max(absRowDiff, absColDiff);
+        // Calculate step for each axis
+        const rowStep = rowDiff / steps;
+        const colStep = colDiff / steps;
 
         // Add all cells along the line
-        for (let i = 0; i <= length; i++) {
-            const row = startRow + rowStep * i;
-            const col = startCol + colStep * i;
-
-            // Bounds check
-            if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
-                cells.add(`${row}-${col}`);
-            }
+        for (let i = 0; i <= steps; i++) {
+            const row = Math.round(start.row + rowStep * i);
+            const col = Math.round(start.col + colStep * i);
+            cells.push(`${row}-${col}`);
         }
 
         return cells;
-    }, [drag, grid]);
+    }, []);
 
-    // Check if current drag forms a valid word
-    const getDraggedWord = useCallback((): string | null => {
-        if (!drag.isDragging) return null;
+    // Check if line forms a valid word
+    const getWordFromLine = useCallback((start: {row: number; col: number}, end: {row: number; col: number}): string | null => {
+        const rowDiff = end.row - start.row;
+        const colDiff = end.col - start.col;
+        const steps = Math.max(Math.abs(rowDiff), Math.abs(colDiff));
 
-        const { startRow, startCol, currentRow, currentCol } = drag;
-        const rowDiff = currentRow - startRow;
-        const colDiff = currentCol - startCol;
+        if (steps === 0) return null;
 
-        const absRowDiff = Math.abs(rowDiff);
-        const absColDiff = Math.abs(colDiff);
-        const length = Math.max(absRowDiff, absColDiff);
+        const rowStep = rowDiff / steps;
+        const colStep = colDiff / steps;
 
-        if (length === 0) return null;
-
-        // Determine direction
-        let rowStep = 0;
-        let colStep = 0;
-
-        if (absRowDiff > absColDiff * 2) {
-            rowStep = rowDiff > 0 ? 1 : -1;
-        } else if (absColDiff > absRowDiff * 2) {
-            colStep = colDiff > 0 ? 1 : -1;
-        } else {
-            // Diagonal (must be ~45 degrees)
-            if (Math.abs(absRowDiff - absColDiff) > Math.max(absRowDiff, absColDiff) * 0.5) {
-                return null; // Not close enough to diagonal
-            }
-            rowStep = rowDiff > 0 ? 1 : -1;
-            colStep = colDiff > 0 ? 1 : -1;
-        }
-
-        // Build word
         const word: string[] = [];
-        for (let i = 0; i <= length; i++) {
-            const row = startRow + rowStep * i;
-            const col = startCol + colStep * i;
+
+        for (let i = 0; i <= steps; i++) {
+            const row = Math.round(start.row + rowStep * i);
+            const col = Math.round(start.col + colStep * i);
 
             if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
                 return null;
             }
+
             word.push(grid[row][col]);
         }
 
@@ -153,42 +88,30 @@ export function PuzzleGrid({
         if (allWords.includes(backward)) return backward;
 
         return null;
-    }, [drag, grid, placements]);
+    }, [grid, placements]);
 
     const handleMouseDown = (row: number, col: number) => {
-        setDrag({
-            isDragging: true,
-            startRow: row,
-            startCol: col,
-            currentRow: row,
-            currentCol: col,
-        });
+        setIsDragging(true);
+        setDragStart({ row, col });
+        setDragEnd({ row, col });
     };
 
-    const handleMouseEnter = (row: number, col: number) => {
-        if (!drag.isDragging) return;
-
-        setDrag({
-            ...drag,
-            currentRow: row,
-            currentCol: col,
-        });
+    const handleMouseMove = (row: number, col: number) => {
+        if (!isDragging || !dragStart) return;
+        setDragEnd({ row, col });
     };
 
     const handleMouseUp = () => {
-        if (!drag.isDragging) return;
+        if (!isDragging || !dragStart || !dragEnd) return;
 
-        const word = getDraggedWord();
+        const word = getWordFromLine(dragStart, dragEnd);
 
         if (word && !foundWords.has(word)) {
             setFoundWords((prev) => {
                 const newSet = new Set(prev).add(word);
+                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                setFoundWordColors((prev) => new Map(prev).set(word, color));
 
-                // Assign color
-                const availableColor = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                setFoundWordColors((prev) => new Map(prev).set(word, availableColor));
-
-                // Check if complete
                 const allWords = placements.map((p) => p.word);
                 if (newSet.size === allWords.length) {
                     onPuzzleComplete?.();
@@ -199,20 +122,28 @@ export function PuzzleGrid({
             });
         }
 
-        setDrag({ ...drag, isDragging: false });
+        setIsDragging(false);
+        setDragStart(null);
+        setDragEnd(null);
     };
 
     // Global mouse events
     useEffect(() => {
         const handleGlobalMouseUp = () => {
-            if (drag.isDragging) {
+            if (isDragging) {
                 handleMouseUp();
             }
         };
 
         document.addEventListener('mouseup', handleGlobalMouseUp);
         return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
-    }, [drag]);
+    }, [isDragging, dragStart, dragEnd]);
+
+    // Get highlighted cells during drag
+    const getHighlightedCells = useCallback((): Set<string> => {
+        if (!isDragging || !dragStart || !dragEnd) return new Set();
+        return new Set(getCellsBetween(dragStart, dragEnd));
+    }, [isDragging, dragStart, dragEnd, getCellsBetween]);
 
     // Get color for a cell
     const getCellColor = useCallback((row: number, col: number): string | null => {
@@ -228,9 +159,7 @@ export function PuzzleGrid({
             let c = startCol;
 
             do {
-                if (r === row && c === col) {
-                    return color;
-                }
+                if (r === row && c === col) return color;
                 if (r === endRow && c === endCol) break;
                 r += rowDelta;
                 c += colDelta;
@@ -283,34 +212,23 @@ export function PuzzleGrid({
         const color = getCellColor(row, col);
         const isHighlighted = isCellHighlighted(row, col);
 
-        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-100 cursor-pointer select-none touch-none';
+        const base = 'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center font-mono font-bold text-lg sm:text-xl transition-all duration-75 cursor-pointer select-none';
 
-        if (color) {
-            return `${base} text-white shadow-md`;
-        }
-
-        if (isHighlighted) {
-            return `${base} bg-blue-400 scale-105 shadow-md`;
-        }
-
+        if (color) return `${base} text-white shadow-md`;
+        if (isHighlighted) return `${base} bg-blue-400 scale-105 shadow-md`;
         return `${base} bg-white hover:bg-gray-100`;
     };
 
     const getCellBackground = (row: number, col: number): string => {
         const color = getCellColor(row, col);
         if (color) return color;
-
-        if (isCellHighlighted(row, col)) {
-            return 'rgba(59, 130, 246, 0.5)';
-        }
-
+        if (isCellHighlighted(row, col)) return 'rgba(59, 130, 246, 0.5)';
         return 'white';
     };
 
     return (
         <div className={className}>
             <div
-                ref={gridRef}
                 className="inline-grid gap-0 border-2 border-gray-800 rounded-lg p-1 shadow-lg bg-white select-none"
                 style={{ gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))` }}
             >
@@ -319,10 +237,8 @@ export function PuzzleGrid({
                         <button
                             key={`${rowIndex}-${colIndex}`}
                             onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                            onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                            style={{
-                                backgroundColor: getCellBackground(rowIndex, colIndex),
-                            }}
+                            onMouseEnter={() => handleMouseMove(rowIndex, colIndex)}
+                            style={{ backgroundColor: getCellBackground(rowIndex, colIndex) }}
                             className={getCellStyle(rowIndex, colIndex)}
                             aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
                         >
