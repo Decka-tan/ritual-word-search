@@ -1,20 +1,15 @@
 @import "tailwindcss";
 
-/* Configure Tailwind dark mode */
-@config {
-  darkMode: "class";
-}
-
 /* Light mode (default) */
 :root {
-  --background: #fafaf9; /* stone-50 */
-  --foreground: #1c1917; /* stone-900 */
+  --background: #fafaf9;
+  --foreground: #1c1917;
 }
 
 /* Dark mode */
 .dark {
-  --background: #09090b; /* zinc-950 */
-  --foreground: #fafafa; /* zinc-50 */
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 body {
