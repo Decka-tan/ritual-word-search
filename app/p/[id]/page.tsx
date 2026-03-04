@@ -87,6 +87,7 @@ export default function PlayPage() {
       const wordListWidth = 220;
       const gridSize = puzzle.size;
       const wordSpacing = 22;
+      const extraBottomPadding = 40; // Extra space at bottom
 
       // Calculate dimensions
       const gridWidth = gridSize * cellSize;
@@ -94,7 +95,9 @@ export default function PlayPage() {
 
       // Word list height (dynamic based on word count)
       const words = puzzle.placements.map((p: any) => p.word).sort();
-      const wordListHeight = 40 + words.length * wordSpacing;
+      const wordListHeaderHeight = 25; // Space for "WORDS TO FIND:" title
+      const wordListItemsHeight = words.length * wordSpacing;
+      const wordListHeight = wordListHeaderHeight + wordListItemsHeight + extraBottomPadding;
 
       // Total dimensions (use max of grid height and word list height)
       const contentHeight = Math.max(gridHeight, wordListHeight);
@@ -171,6 +174,9 @@ export default function PlayPage() {
       const wordListX = gridStartX + gridWidth + padding * 2;
       const wordListY = gridStartY;
 
+      // Reset text baseline for word list (was 'middle' for grid)
+      ctx.textBaseline = 'alphabetic';
+
       ctx.fillStyle = '#1f2937';
       ctx.font = 'bold 14px Arial, sans-serif';
       ctx.textAlign = 'left';
@@ -180,7 +186,7 @@ export default function PlayPage() {
       ctx.font = '13px Arial, sans-serif';
 
       words.forEach((word, index) => {
-        const y = wordListY + 25 + index * wordSpacing;
+        const y = wordListY + wordListHeaderHeight + index * wordSpacing;
         ctx.fillText(`${index + 1}. ${word}`, wordListX, y);
       });
 
@@ -189,11 +195,12 @@ export default function PlayPage() {
       ctx.fillStyle = '#6b7280';
       ctx.font = '12px Arial, sans-serif';
       ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
       ctx.fillText(
         `Play this puzzle online at: ${baseUrl}/p/${params.id}`,
         totalWidth / 2,
-        footerY + 25
+        footerY + 20
       );
 
       // Download
