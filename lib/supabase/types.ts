@@ -3,6 +3,8 @@
  * These types match the database schema.
  */
 
+import { Puzzle } from '../puzzle/types';
+
 export interface Database {
     public: {
         Tables: {
