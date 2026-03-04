@@ -30,7 +30,7 @@ export function PuzzleForm({
     const [words, setWords] = useState(
         defaultValues?.words ? defaultValues.words.join('\n') : ''
     );
-    const [size, setSize] = useState(defaultValues?.options?.size ?? 15);
+    const [size, setSize] = useState(Math.min(defaultValues?.options?.size ?? 15, 15));
     const [allowDiagonal, setAllowDiagonal] = useState(
         defaultValues?.options?.allowDiagonal ?? true
     );

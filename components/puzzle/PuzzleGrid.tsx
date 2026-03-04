@@ -309,15 +309,22 @@ export function PuzzleGrid({
         return '';
     };
 
+    // Calculate max width based on grid size for optimal display
+    const getMaxWidth = (): string => {
+        const size = grid.length;
+        if (size <= 10) return '100%';
+        if (size <= 12) return '90%';
+        return '85%';
+    };
+
     return (
         <div className={className}>
-            <div className="w-full">
+            <div className="w-full flex items-center justify-center">
                 <div
-                    className="grid gap-px border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-1 shadow-xl bg-white dark:bg-zinc-900 mx-auto"
+                    className="grid gap-px border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl bg-white dark:bg-zinc-900 w-full"
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-                        maxWidth: '600px',
-                        aspectRatio: '1'
+                        maxWidth: getMaxWidth(),
                     }}
                 >
                     {grid.map((row, rowIndex) =>
