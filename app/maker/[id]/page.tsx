@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { PuzzleForm } from '@/components/puzzle/PuzzleForm';
 import { Puzzle, CreatePuzzleInput } from '@/lib/puzzle/types';
+import { Button } from '@/components/ui/Button';
 
 export default function EditPage() {
   const params = useParams();
@@ -92,41 +93,44 @@ export default function EditPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-semibold text-gray-700 dark:text-zinc-300">Loading puzzle...</p>
+        </div>
       </div>
     );
   }
 
   if (error || !puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="mb-4">{error || 'Puzzle not found'}</p>
-          <button onClick={() => router.back()}>Go Back</button>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+        <div className="text-center p-8 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-600 dark:text-red-400">{error || 'Puzzle not found'}</p>
+          <Button onClick={() => router.back()}>Go Back</Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold mb-2">EDIT PUZZLE</h1>
-            <p className="text-gray-600">{puzzle.title}</p>
+            <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-zinc-100">EDIT PUZZLE</h1>
+            <p className="text-gray-600 dark:text-zinc-400">{puzzle.title}</p>
           </div>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 border-2 border-red-600 text-red-600 hover:bg-red-50"
+            className="px-4 py-2 border-2 border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-semibold transition-all"
           >
             Delete
           </button>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 border-2 border-red-600 bg-red-50 text-red-900">
+          <div className="mb-6 p-4 border-2 border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-400 rounded-xl">
             {error}
           </div>
         )}

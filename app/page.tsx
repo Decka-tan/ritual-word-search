@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
       {/* Hero Section with Gradient */}
       <section className="bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 text-white">
         <div className="max-w-4xl mx-auto px-4 py-24 sm:py-32">
@@ -17,14 +17,15 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/maker">
-              <Button size="lg" className="w-full sm:w-auto bg-white text-purple-600 hover:bg-gray-100">
+              <Button size="lg" className="w-full sm:w-auto">
                 Create Puzzle
               </Button>
             </Link>
             <Link href="/my-puzzles">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white/20"
+                variant="secondary"
+                className="w-full sm:w-auto !bg-transparent !border-white text-white hover:!bg-white/20"
               >
                 My Puzzles
               </Button>
@@ -123,7 +124,7 @@ export default function HomePage() {
             Build your first word search puzzle in under a minute.
           </p>
           <Link href="/maker">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
+            <Button size="lg">
               Get Started Free
             </Button>
           </Link>
