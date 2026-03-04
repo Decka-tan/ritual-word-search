@@ -28,6 +28,7 @@ export default function PlayPage() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [highlightWords, setHighlightWords] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [hasSolvedBefore, setHasSolvedBefore] = useState(false);
   const puzzleRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -59,6 +60,10 @@ export default function PlayPage() {
         }
         const data = await response.json();
         setPuzzle(data.puzzle);
+
+        // Check if this puzzle was solved before on this device
+        const solvedPuzzles = JSON.parse(localStorage.getItem('solved_puzzles') || '[]');
+        setHasSolvedBefore(solvedPuzzles.includes(params.id));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load puzzle');
       } finally {
@@ -237,6 +242,17 @@ export default function PlayPage() {
       if (newSet.size === allWords.length) {
         setIsRunning(false);
         setIsComplete(true);
+
+        // Save to localStorage as solved puzzle
+        if (params.id) {
+          const solvedPuzzles = JSON.parse(localStorage.getItem('solved_puzzles') || '[]');
+          if (!solvedPuzzles.includes(params.id)) {
+            solvedPuzzles.push(params.id);
+            localStorage.setItem('solved_puzzles', JSON.stringify(solvedPuzzles));
+            setHasSolvedBefore(true);
+          }
+        }
+
         // Show name input modal
         setTimeout(() => setShowNameInput(true), 500);
       }
@@ -356,8 +372,19 @@ export default function PlayPage() {
           </div>
           <div className="flex gap-2 w-full sm:w-auto overflow-x-auto">
             <button
-              onClick={() => setShowSolution(!showSolution)}
-              className="px-3 py-2 text-xs sm:text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300 whitespace-nowrap"
+              onClick={() => {
+                if (hasSolvedBefore) {
+                  setShowSolution(!showSolution);
+                } else {
+                  alert('⚠️ You need to complete this puzzle first before viewing the solution!');
+                }
+              }}
+              className={`px-3 py-2 text-xs sm:text-sm rounded-lg font-medium whitespace-nowrap ${
+                hasSolvedBefore
+                  ? 'bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-300'
+                  : 'bg-gray-50 dark:bg-zinc-900 text-gray-400 dark:text-zinc-600 cursor-not-allowed opacity-60'
+              }`}
+              disabled={!hasSolvedBefore}
             >
               {showSolution ? 'Hide' : 'Show'} Sol
             </button>
