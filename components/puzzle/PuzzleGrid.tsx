@@ -10,6 +10,7 @@ interface PuzzleGridProps {
     onWordFound?: (word: string) => void;
     onPuzzleComplete?: () => void;
     className?: string;
+    fullscreen?: boolean; // New prop for fullscreen mode
 }
 
 const WORD_COLORS = [
@@ -28,6 +29,7 @@ export function PuzzleGrid({
     onWordFound,
     onPuzzleComplete,
     className,
+    fullscreen = false,
 }: PuzzleGridProps) {
     const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
@@ -404,6 +406,7 @@ export function PuzzleGrid({
 
     // Calculate max width based on grid size for optimal display
     const getMaxWidth = (): string => {
+        if (fullscreen) return '100%';
         const size = grid.length;
         if (size <= 10) return '100%';
         if (size <= 12) return '90%';
@@ -414,7 +417,11 @@ export function PuzzleGrid({
         <div className={className}>
             <div className="w-full flex items-center justify-center">
                 <div
-                    className="grid gap-px border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl bg-white dark:bg-zinc-900 w-full"
+                    className={`grid gap-px bg-white dark:bg-zinc-900 w-full ${
+                        fullscreen
+                            ? 'border-0 rounded-none p-0 shadow-none'
+                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl'
+                    }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
                         maxWidth: getMaxWidth(),

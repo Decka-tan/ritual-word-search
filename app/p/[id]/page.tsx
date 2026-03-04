@@ -379,14 +379,14 @@ export default function PlayPage() {
         {/* Fullscreen content - grid is main, word list below on mobile */}
         <div className="flex flex-col flex-1 overflow-auto">
           {/* Grid - takes most space */}
-          <div className="flex-1 flex items-center justify-center p-2 sm:p-4 min-h-0">
+          <div className="flex-1 flex items-center justify-center p-0 min-h-0">
             <PuzzleGrid
               grid={puzzle.grid}
               placements={placements}
               showSolution={showSolution}
               onWordFound={handleWordFound}
               onPuzzleComplete={handlePuzzleComplete}
-              className="w-full h-full"
+              fullscreen={true}
             />
           </div>
 
