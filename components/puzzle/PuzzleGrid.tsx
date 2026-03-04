@@ -432,9 +432,12 @@ export function PuzzleGrid({
                     }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-                        width: fullscreen ? 'min(85vw, 70vh)' : 'auto',
-                        maxWidth: fullscreen ? 'none' : getMaxWidth(),
-                        height: fullscreen ? 'min(85vw, 70vh)' : 'auto',
+                        ...(fullscreen ? {
+                            width: 'min(90vw, 75vh)',
+                            height: 'min(90vw, 75vh)',
+                        } : {
+                            maxWidth: getMaxWidth(),
+                        }),
                     }}
                 >
                     {grid.map((row, rowIndex) =>
