@@ -85,7 +85,7 @@ export default function PlayPage() {
       const titleHeight = 80;
       const footerHeight = 60;
       const wordListWidth = 220;
-      const gridSize = puzzle.size;
+      const gridSize = puzzle.grid.length; // Use actual grid size, not slider value
       const wordSpacing = 22;
       const extraBottomPadding = 40; // Extra space at bottom
       const borderSize = 2; // Outer border size
