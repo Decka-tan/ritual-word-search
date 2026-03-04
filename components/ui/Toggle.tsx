@@ -7,11 +7,10 @@ export interface ToggleProps {
     label?: string;
     disabled?: boolean;
     className?: string;
-    icon?: string;
 }
 
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
-    ({ checked, onChange, label, disabled = false, className, icon }, ref) => {
+    ({ checked, onChange, label, disabled = false, className }, ref) => {
         const handleClick = () => {
             if (!disabled) {
                 onChange(!checked);
@@ -33,14 +32,11 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                     className
                 )}
             >
-                <div className="flex items-center gap-2">
-                    {icon && <span className="text-lg">{icon}</span>}
-                    {label && (
-                        <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">
-                            {label}
-                        </span>
-                    )}
-                </div>
+                {label && (
+                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">
+                        {label}
+                    </span>
+                )}
 
                 <div
                     className={cn(

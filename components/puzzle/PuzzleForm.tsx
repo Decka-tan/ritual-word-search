@@ -149,13 +149,11 @@ export function PuzzleForm({
                         checked={allowDiagonal}
                         onChange={setAllowDiagonal}
                         label="Diagonal Words"
-                        icon="📐"
                     />
                     <Toggle
                         checked={allowBackward}
                         onChange={setAllowBackward}
                         label="Backward Words"
-                        icon="↩️"
                     />
                 </div>
             </div>

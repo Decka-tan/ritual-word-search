@@ -19,7 +19,7 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-300 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-zinc-300 font-semibold transition-all"
             >
-                <span className="text-lg">⚙️</span>
+                <span>⚙️</span>
                 <span>Settings</span>
             </button>
 
@@ -50,7 +50,6 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                                 onChange={onShowSolutionChange}
                                 disabled={!isComplete}
                                 label="Show Solution"
-                                icon="👁️"
                             />
 
                             {/* Sound Effects - Cosmetic (Disabled) */}
@@ -59,7 +58,6 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                                 onChange={() => {}}
                                 disabled
                                 label="Sound Effects"
-                                icon="🔊"
                             />
 
                             {/* Highlight Words - Cosmetic (Always On) */}
@@ -68,7 +66,6 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                                 onChange={() => {}}
                                 disabled
                                 label="Highlight Words"
-                                icon="✨"
                             />
                         </div>
 
@@ -82,7 +79,6 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                             }}
                             className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
                         >
-                            <span>🔄</span>
                             <span>Reset Game</span>
                         </button>
                     </div>
