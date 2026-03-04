@@ -8,9 +8,22 @@ interface GameSettingsProps {
     showSolution: boolean;
     onReset: () => void;
     isComplete: boolean;
+    soundEnabled: boolean;
+    onSoundEnabledChange: (enabled: boolean) => void;
+    highlightWords: boolean;
+    onHighlightWordsChange: (highlight: boolean) => void;
 }
 
-export function GameSettings({ onShowSolutionChange, showSolution, onReset, isComplete }: GameSettingsProps) {
+export function GameSettings({
+    onShowSolutionChange,
+    showSolution,
+    onReset,
+    isComplete,
+    soundEnabled,
+    onSoundEnabledChange,
+    highlightWords,
+    onHighlightWordsChange,
+}: GameSettingsProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -19,7 +32,6 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-300 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-zinc-300 font-semibold transition-all"
             >
-                <span>⚙️</span>
                 <span>Settings</span>
             </button>
 
@@ -52,34 +64,32 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                                 label="Show Solution"
                             />
 
-                            {/* Sound Effects - Cosmetic (Disabled) */}
+                            {/* Sound Effects */}
                             <Toggle
-                                checked={false}
-                                onChange={() => {}}
-                                disabled
+                                checked={soundEnabled}
+                                onChange={onSoundEnabledChange}
                                 label="Sound Effects"
                             />
 
-                            {/* Highlight Words - Cosmetic (Always On) */}
+                            {/* Highlight Words */}
                             <Toggle
-                                checked
-                                onChange={() => {}}
-                                disabled
+                                checked={highlightWords}
+                                onChange={onHighlightWordsChange}
                                 label="Highlight Words"
                             />
                         </div>
 
                         <hr className="border-gray-200 dark:border-zinc-700 my-4" />
 
-                        {/* Reset Game - FUNCTIONAL */}
+                        {/* Reset Game */}
                         <button
                             onClick={() => {
                                 onReset();
                                 setIsOpen(false);
                             }}
-                            className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                            className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all"
                         >
-                            <span>Reset Game</span>
+                            Reset Game
                         </button>
                     </div>
                 </>

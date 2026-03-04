@@ -5,10 +5,11 @@ import { WordPlacement } from '@/lib/puzzle/types';
 interface WordListProps {
     placements: WordPlacement[];
     foundWords?: Set<string>;
+    highlightWords?: boolean;
     className?: string;
 }
 
-export function WordList({ placements, foundWords = new Set(), className }: WordListProps) {
+export function WordList({ placements, foundWords = new Set(), highlightWords = true, className }: WordListProps) {
     const words = placements.map((p) => p.word).sort();
 
     return (

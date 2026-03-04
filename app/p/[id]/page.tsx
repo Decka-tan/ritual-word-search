@@ -25,6 +25,8 @@ export default function PlayPage() {
   const [isComplete, setIsComplete] = useState(false);
   const [showNameInput, setShowNameInput] = useState(false);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [highlightWords, setHighlightWords] = useState(true);
   const puzzleRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -94,6 +96,12 @@ export default function PlayPage() {
   const handleWordFound = (word: string) => {
     setFoundWords((prev) => {
       const newSet = new Set(prev).add(word);
+
+      // Play sound if enabled
+      if (soundEnabled) {
+        // Could add sound effect here
+        console.log('🔊 Sound played for:', word);
+      }
 
       // Start timer on first word found
       if (prev.size === 0 && newSet.size === 1) {
@@ -240,6 +248,10 @@ export default function PlayPage() {
               showSolution={showSolution}
               onReset={handleReset}
               isComplete={isComplete}
+              soundEnabled={soundEnabled}
+              onSoundEnabledChange={setSoundEnabled}
+              highlightWords={highlightWords}
+              onHighlightWordsChange={setHighlightWords}
             />
             <ShareButtons
               puzzleId={params.id as string}
@@ -268,6 +280,7 @@ export default function PlayPage() {
               <WordList
                 placements={placements}
                 foundWords={foundWords}
+                highlightWords={highlightWords}
               />
             </div>
           </div>
