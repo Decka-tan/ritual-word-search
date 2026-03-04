@@ -24,9 +24,14 @@ export default function MyPuzzlesPage() {
   }, []);
 
   const handleDelete = (id: string) => {
-    const updated = puzzles.filter((p) => p.id !== id);
-    setPuzzles(updated);
-    localStorage.setItem('recent_puzzles', JSON.stringify(updated));
+    const puzzle = puzzles.find((p) => p.id === id);
+    const puzzleTitle = puzzle?.title || 'this puzzle';
+
+    if (confirm(`Are you sure you want to delete "${puzzleTitle}"? This action cannot be undone.`)) {
+      const updated = puzzles.filter((p) => p.id !== id);
+      setPuzzles(updated);
+      localStorage.setItem('recent_puzzles', JSON.stringify(updated));
+    }
   };
 
   if (loading) {

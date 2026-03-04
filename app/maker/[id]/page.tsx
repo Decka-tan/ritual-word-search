@@ -65,7 +65,7 @@ export default function EditPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this puzzle?')) return;
+    if (!confirm(`Are you sure you want to delete "${puzzle?.title || 'this puzzle'}"? This action cannot be undone.`)) return;
 
     try {
       const response = await fetch(`/api/puzzles/${params.id}`, {
