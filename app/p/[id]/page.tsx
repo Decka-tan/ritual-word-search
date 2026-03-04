@@ -88,8 +88,9 @@ export default function PlayPage() {
       const gridSize = puzzle.size;
       const wordSpacing = 22;
       const extraBottomPadding = 40; // Extra space at bottom
+      const borderSize = 2; // Outer border size
 
-      // Calculate dimensions
+      // Calculate dimensions (include border in calculation)
       const gridWidth = gridSize * cellSize;
       const gridHeight = gridSize * cellSize;
 
@@ -101,8 +102,8 @@ export default function PlayPage() {
 
       // Total dimensions (use max of grid height and word list height)
       const contentHeight = Math.max(gridHeight, wordListHeight);
-      const totalWidth = padding * 3 + gridWidth + wordListWidth;
-      const totalHeight = padding * 3 + titleHeight + contentHeight + footerHeight;
+      const totalWidth = padding * 3 + gridWidth + wordListWidth + borderSize * 2;
+      const totalHeight = padding * 3 + titleHeight + contentHeight + footerHeight + borderSize * 2;
 
       // Set canvas size (high DPI)
       const scale = 2;
@@ -131,9 +132,9 @@ export default function PlayPage() {
         ctx.fillText(subtitle, totalWidth / 2, padding + 60);
       }
 
-      // Grid starting position
-      const gridStartX = padding;
-      const gridStartY = padding + titleHeight;
+      // Grid starting position (leave space for borders)
+      const gridStartX = padding + borderSize;
+      const gridStartY = padding + titleHeight + borderSize;
 
       // Draw grid background
       ctx.fillStyle = '#f9fafb';
