@@ -273,9 +273,10 @@ export default function PlayPage() {
         </div>
 
         {/* Puzzle + Leaderboard - 3 Column Layout - SEAMLESS */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
-          {/* Word List - 2 columns */}
-          <div className="order-2 lg:order-1 lg:col-span-2 border-r border-gray-200 dark:border-zinc-800">
+        <div className="px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
+            {/* Word List - 2 columns */}
+            <div className="order-2 lg:order-1 lg:col-span-2 border-r border-gray-200 dark:border-zinc-800">
             <div className="p-4">
               <WordList
                 placements={placements}
@@ -304,6 +305,7 @@ export default function PlayPage() {
               <Leaderboard puzzleId={params.id as string} />
             </div>
           </div>
+        </div>
         </div>
       </div>
 
