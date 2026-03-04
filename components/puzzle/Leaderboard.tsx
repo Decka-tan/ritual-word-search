@@ -11,9 +11,10 @@ interface LeaderboardEntry {
 
 interface LeaderboardProps {
     puzzleId: string;
+    refreshKey?: number; // Add refresh trigger
 }
 
-export function Leaderboard({ puzzleId }: LeaderboardProps) {
+export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -33,7 +34,7 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
         };
 
         fetchLeaderboard();
-    }, [puzzleId]);
+    }, [puzzleId, refreshKey]); // Add refreshKey to dependencies
 
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);

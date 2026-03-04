@@ -29,6 +29,7 @@ export default function PlayPage() {
   const [highlightWords, setHighlightWords] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [hasSolvedBefore, setHasSolvedBefore] = useState(false);
+  const [leaderboardRefreshKey, setLeaderboardRefreshKey] = useState(0);
   const puzzleRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -298,6 +299,7 @@ export default function PlayPage() {
         const data = await response.json();
         console.log('✅ Score submitted successfully:', data);
         setScoreSubmitted(true);
+        setLeaderboardRefreshKey(prev => prev + 1); // Refresh leaderboard
         alert(`Score submitted! Time: ${formatTime(timer)}`);
       } else {
         const error = await response.json();
@@ -559,7 +561,7 @@ export default function PlayPage() {
           {/* Leaderboard Sidebar - 3 columns */}
           <div className="order-3 lg:col-span-3">
             <div className="p-4">
-              <Leaderboard puzzleId={params.id as string} />
+              <Leaderboard puzzleId={params.id as string} refreshKey={leaderboardRefreshKey} />
             </div>
           </div>
         </div>
