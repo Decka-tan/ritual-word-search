@@ -414,25 +414,57 @@ export function PuzzleGrid({
 
     // Calculate max width based on grid size for optimal display
     const getMaxWidth = (): string => {
-        if (fullscreen) return '100%';
+        if (fullscreen) return 'none'; // Remove max width constraint in fullscreen
         const size = grid.length;
         if (size <= 10) return '100%';
         if (size <= 12) return '90%';
         return '85%';
     };
 
+    // Calculate grid size for fullscreen mode using state
+    const [gridSize, setGridSize] = useState<{width: number; height: number} | null>(null);
+
+    useEffect(() => {
+        if (!fullscreen) {
+            setGridSize(null);
+            return;
+        }
+
+        const calculateSize = () => {
+            const container = document.querySelector('[data-fullscreen-container]');
+            if (!container) return;
+
+            const rect = container.getBoundingClientRect();
+            const availableWidth = rect.width - 32; // minus padding
+            const availableHeight = rect.height - 32;
+            const minDimension = Math.min(availableWidth, availableHeight);
+            const cellSize = Math.floor(minDimension / grid.length);
+            const size = cellSize * grid.length;
+
+            setGridSize({ width: size, height: size });
+        };
+
+        calculateSize();
+        window.addEventListener('resize', calculateSize);
+        return () => window.removeEventListener('resize', calculateSize);
+    }, [fullscreen, grid.length]);
+
     return (
-        <div className={className}>
+        <div className={className} {...(fullscreen && { 'data-fullscreen-container': true })}>
             <div className="w-full flex items-center justify-center">
                 <div
-                    className={`grid gap-px bg-white dark:bg-zinc-900 w-full ${
+                    className={`grid gap-px bg-white dark:bg-zinc-900 ${
                         fullscreen
                             ? 'border-0 rounded-none p-0 shadow-none'
-                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl'
+                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl w-full'
                     }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
                         maxWidth: getMaxWidth(),
+                        ...(fullscreen && gridSize && {
+                            width: `${gridSize.width}px`,
+                            height: `${gridSize.height}px`,
+                        }),
                     }}
                 >
                     {grid.map((row, rowIndex) =>
