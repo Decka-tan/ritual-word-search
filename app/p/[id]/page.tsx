@@ -51,6 +51,14 @@ export default function PlayPage() {
     };
   }, [isRunning, isComplete]);
 
+  // Check solved status separately
+  useEffect(() => {
+    if (!params.id) return;
+
+    const solvedPuzzles = JSON.parse(localStorage.getItem('solved_puzzles') || '[]');
+    setHasSolvedBefore(solvedPuzzles.includes(params.id));
+  }, [params.id]);
+
   useEffect(() => {
     const fetchPuzzle = async () => {
       try {
@@ -60,10 +68,6 @@ export default function PlayPage() {
         }
         const data = await response.json();
         setPuzzle(data.puzzle);
-
-        // Check if this puzzle was solved before on this device
-        const solvedPuzzles = JSON.parse(localStorage.getItem('solved_puzzles') || '[]');
-        setHasSolvedBefore(solvedPuzzles.includes(params.id));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load puzzle');
       } finally {
