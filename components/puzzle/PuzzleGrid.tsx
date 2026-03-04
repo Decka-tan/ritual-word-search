@@ -431,6 +431,12 @@ export function PuzzleGrid({
         }
 
         const calculateSize = () => {
+            // Only apply custom sizing on desktop (lg breakpoint: 1024px+)
+            if (window.innerWidth < 1024) {
+                setGridSize(null);
+                return;
+            }
+
             // Use window viewport directly for more reliable calculation
             const container = document.querySelector('[data-fullscreen-container]') as HTMLElement;
             if (!container) return;
