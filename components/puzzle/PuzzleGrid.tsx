@@ -374,9 +374,17 @@ export function PuzzleGrid({
         return deltas[direction] || [0, 1];
     };
 
-    // Dynamic font size based on grid size
+    // Dynamic font size based on grid size and fullscreen mode
     const getFontSizeClass = (): string => {
         const size = grid.length;
+        // Fullscreen mode - much larger text
+        if (fullscreen) {
+            if (size <= 10) return 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl';
+            if (size <= 12) return 'text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl';
+            if (size <= 15) return 'text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl';
+            return 'text-sm sm:text-base md:text-lg lg:text-xl';
+        }
+        // Normal mode
         if (size <= 10) return 'text-base sm:text-lg md:text-xl lg:text-2xl';
         if (size <= 12) return 'text-sm sm:text-base md:text-lg lg:text-xl';
         if (size <= 15) return 'text-xs sm:text-sm md:text-base lg:text-lg';

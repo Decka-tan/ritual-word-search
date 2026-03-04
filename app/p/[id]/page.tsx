@@ -411,9 +411,9 @@ export default function PlayPage() {
 
         {/* Fullscreen content - grid fills remaining space */}
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Grid container - fills available space */}
-          <div className="flex-1 flex items-center justify-center p-1 sm:p-2 min-h-0">
-            <div className="w-full h-full flex items-center justify-center">
+          {/* Grid container - fills available space with more room on desktop */}
+          <div className="flex-1 flex items-center justify-center p-2 sm:p-4 lg:p-8 min-h-0">
+            <div className="w-full h-full flex items-center justify-center max-w-[90vw] lg:max-w-[85vw]">
               <PuzzleGrid
                 grid={puzzle.grid}
                 placements={placements}
