@@ -13,6 +13,7 @@ interface PuzzleFormProps {
     defaultValues?: {
         title?: string;
         description?: string;
+        authorName?: string;
         words?: string[];
         options?: PuzzleOptions;
     };
