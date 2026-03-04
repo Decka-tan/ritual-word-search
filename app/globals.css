@@ -1,33 +1,20 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: #ffffff;
-  --color-foreground: #1e293b;
-  --color-background-dark: #000000;
-  --color-foreground-dark: #ffffff;
-
-  /* Dark mode configuration */
-  --dark-mode: 'class';
+/* Configure Tailwind dark mode */
+@config {
+  darkMode: "class";
 }
 
-/* Light mode (default, no class) */
+/* Light mode (default) */
 :root {
   --background: #fafaf9; /* stone-50 */
   --foreground: #1c1917; /* stone-900 */
-  --foreground-muted: #78716c; /* stone-500 */
-  --card-bg: #ffffff;
-  --card-border: #e7e5e4; /* stone-200 */
-  --accent: #8b5cf6;
-  --accent-hover: #7c3aed;
 }
 
-/* Dark mode (when .dark class is present) */
+/* Dark mode */
 .dark {
   --background: #09090b; /* zinc-950 */
   --foreground: #fafafa; /* zinc-50 */
-  --foreground-muted: #a1a1aa; /* zinc-400 */
-  --card-bg: #18181b; /* zinc-900 */
-  --card-border: #27272a; /* zinc-800 */
 }
 
 body {

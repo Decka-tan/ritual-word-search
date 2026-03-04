@@ -130,14 +130,14 @@ export function PuzzleForm({
                         id="size"
                         type="range"
                         min="10"
-                        max="30"
+                        max="15"
                         value={size}
                         onChange={(e) => setSize(Number(e.target.value))}
                         className="w-full accent-purple-500"
                     />
                     <div className="flex justify-between text-xs font-mono mt-1 text-gray-500 dark:text-zinc-500">
                         <span>10</span>
-                        <span>30</span>
+                        <span>15</span>
                     </div>
                 </div>
 
