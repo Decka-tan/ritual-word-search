@@ -179,7 +179,6 @@ export default function PlayPage() {
       ctx.fillStyle = '#374151';
       ctx.font = '13px Arial, sans-serif';
 
-      const words = puzzle.placements.map((p: any) => p.word).sort();
       words.forEach((word, index) => {
         const y = wordListY + 25 + index * wordSpacing;
         ctx.fillText(`${index + 1}. ${word}`, wordListX, y);
