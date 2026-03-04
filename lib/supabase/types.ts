@@ -19,6 +19,7 @@ export interface PuzzleRow {
     id: string;
     title: string;
     description: string | null;
+    author_name: string | null;
     words: string[];
     size: number;
     allow_diagonal: boolean;
@@ -34,6 +35,7 @@ export interface PuzzleInsert {
     id?: string;
     title: string;
     description?: string | null;
+    author_name?: string | null;
     words: string[];
     size: number;
     allow_diagonal: boolean;
@@ -70,18 +72,19 @@ export interface Placement {
 }
 
 // Helper to convert DB row to app types
-export function rowToPuzzle(row: PuzzleRow) {
+export function rowToPuzzle(row: PuzzleRow): Puzzle {
     return {
         id: row.id,
         title: row.title,
         description: row.description,
+        authorName: row.author_name,
         words: row.words,
         size: row.size,
         allowDiagonal: row.allow_diagonal,
         allowBackward: row.allow_backward,
         seed: row.seed,
         grid: row.grid,
-        placements: row.placements as any, // Type cast: DB placements match WordPlacement structure
+        placements: row.placements as WordPlacement[],
         editKey: row.edit_key,
         createdAt: row.created_at,
     };
@@ -91,6 +94,7 @@ export function rowToPuzzle(row: PuzzleRow) {
 export function puzzleToInsert(data: {
     title: string;
     description: string | null | undefined;
+    authorName: string | null | undefined;
     words: string[];
     size: number;
     allowDiagonal: boolean;
@@ -103,6 +107,7 @@ export function puzzleToInsert(data: {
     return {
         title: data.title,
         description: data.description ?? null,
+        author_name: data.authorName ?? null,
         words: data.words,
         size: data.size,
         allow_diagonal: data.allowDiagonal,
