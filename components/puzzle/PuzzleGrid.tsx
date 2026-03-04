@@ -425,14 +425,16 @@ export function PuzzleGrid({
         <div className={className}>
             <div className="w-full flex items-center justify-center">
                 <div
-                    className={`grid gap-px bg-white dark:bg-zinc-900 w-full ${
+                    className={`grid gap-px bg-white dark:bg-zinc-900 ${
                         fullscreen
                             ? 'border-0 rounded-none p-0 shadow-none'
-                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl'
+                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl w-full'
                     }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-                        maxWidth: getMaxWidth(),
+                        width: fullscreen ? '100%' : 'auto',
+                        maxWidth: fullscreen ? '100%' : getMaxWidth(),
+                        maxHeight: fullscreen ? '100%' : 'auto',
                     }}
                 >
                     {grid.map((row, rowIndex) =>

@@ -75,7 +75,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                     />
 
                     {/* Share Panel */}
-                    <div className="fixed left-4 right-4 top-28 sm:left-1/2 sm:-translate-x-1/2 sm:absolute sm:left-auto sm:-translate-x-1/2 sm:w-80 sm:top-full mt-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-2xl z-50 p-5">
+                    <div className="fixed left-4 right-4 top-28 sm:fixed sm:left-1/2 sm:-translate-x-1/2 sm:top-auto sm:mt-2 sm:w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-2xl z-50 p-5">
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-100">Share Puzzle</h3>
                             <button
