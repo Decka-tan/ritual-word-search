@@ -494,6 +494,7 @@ export default function PlayPage() {
               showSolution={showSolution}
               onReset={handleReset}
               isComplete={isComplete}
+              hasSolvedBefore={hasSolvedBefore}
               soundEnabled={soundEnabled}
               onSoundEnabledChange={setSoundEnabled}
               highlightWords={highlightWords}

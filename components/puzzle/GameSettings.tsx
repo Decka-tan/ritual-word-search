@@ -8,6 +8,7 @@ interface GameSettingsProps {
     showSolution: boolean;
     onReset: () => void;
     isComplete: boolean;
+    hasSolvedBefore?: boolean; // New prop
     soundEnabled: boolean;
     onSoundEnabledChange: (enabled: boolean) => void;
     highlightWords: boolean;
@@ -19,12 +20,15 @@ export function GameSettings({
     showSolution,
     onReset,
     isComplete,
+    hasSolvedBefore = false,
     soundEnabled,
     onSoundEnabledChange,
     highlightWords,
     onHighlightWordsChange,
 }: GameSettingsProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    const canShowSolution = isComplete || hasSolvedBefore;
 
     return (
         <div className="relative">
@@ -57,12 +61,25 @@ export function GameSettings({
 
                         <div className="space-y-2">
                             {/* Show Solution Toggle */}
-                            <Toggle
-                                checked={showSolution}
-                                onChange={onShowSolutionChange}
-                                disabled={!isComplete}
-                                label="Show Solution"
-                            />
+                            <div>
+                                <Toggle
+                                    checked={showSolution}
+                                    onChange={(checked) => {
+                                        if (canShowSolution) {
+                                            onShowSolutionChange(checked);
+                                        } else {
+                                            alert('⚠️ You need to complete this puzzle first before viewing the solution!');
+                                        }
+                                    }}
+                                    disabled={!canShowSolution}
+                                    label="Show Solution"
+                                />
+                                {!canShowSolution && (
+                                    <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                                        Complete this puzzle to unlock the solution
+                                    </p>
+                                )}
+                            </div>
 
                             {/* Sound Effects */}
                             <Toggle
