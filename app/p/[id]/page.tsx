@@ -203,7 +203,7 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      <div ref={puzzleRef} className="max-w-[1600px] mx-auto px-4 py-6">
+      <div ref={puzzleRef} className="max-w-[1600px] mx-auto px-6 lg:px-12 py-6">
         {/* Header with gradient */}
         <div className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-5 shadow-xl text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
@@ -273,10 +273,9 @@ export default function PlayPage() {
         </div>
 
         {/* Puzzle + Leaderboard - 3 Column Layout - SEAMLESS */}
-        <div className="px-8 lg:px-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
-            {/* Word List - 2 columns */}
-            <div className="order-2 lg:order-1 lg:col-span-2 border-r border-gray-200 dark:border-zinc-800">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
+          {/* Word List - 2 columns */}
+          <div className="order-2 lg:order-1 lg:col-span-2 border-r border-gray-200 dark:border-zinc-800">
             <div className="p-4">
               <WordList
                 placements={placements}
@@ -305,7 +304,6 @@ export default function PlayPage() {
               <Leaderboard puzzleId={params.id as string} />
             </div>
           </div>
-        </div>
         </div>
       </div>
 

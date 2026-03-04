@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
+/* Define dark mode variant for Tailwind v4 */
+@variant dark (.dark &);
+
 /* Light mode (default) */
 :root {
   --background: #fafaf9;
   --foreground: #1c1917;
 }
 
-/* Dark mode - these are CSS variables used by components */
+/* Dark mode */
 .dark {
   --background: #09090b;
   --foreground: #fafafa;
