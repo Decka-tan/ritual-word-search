@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -44,12 +44,54 @@ export function PuzzleForm({
         .filter((w) => w.length > 0);
 
     const wordCount = wordList.length;
-    const isValid = wordCount >= 10 && wordCount <= 30;
+
+    // Validation checks
+    const validation = useMemo(() => {
+        const errors: string[] = [];
+
+        // Check word count
+        if (wordCount < 10) {
+            errors.push(`Need ${10 - wordCount} more word${10 - wordCount > 1 ? 's' : ''}`);
+        }
+        if (wordCount > 30) {
+            errors.push(`${wordCount - 30} too many words`);
+        }
+
+        // Check word length (max 13 characters)
+        const tooLongWords = wordList.filter(w => w.length > 13);
+        if (tooLongWords.length > 0) {
+            errors.push(`Words too long (max 13 chars): ${tooLongWords.join(', ')}`);
+        }
+
+        // Check for duplicate words
+        const duplicates = wordList.filter((word, index) => wordList.indexOf(word) !== index);
+        if (duplicates.length > 0) {
+            errors.push(`Duplicate words: ${duplicates.join(', ')}`);
+        }
+
+        // Check for overlapping words (one word is substring of another)
+        const overlapping: string[] = [];
+        for (let i = 0; i < wordList.length; i++) {
+            for (let j = 0; j < wordList.length; j++) {
+                if (i !== j && wordList[i].includes(wordList[j]) && wordList[i] !== wordList[j]) {
+                    overlapping.push(`${wordList[j]} → ${wordList[i]}`);
+                }
+            }
+        }
+        if (overlapping.length > 0) {
+            errors.push(`Overlapping words: ${[...new Set(overlapping)].join(', ')}`);
+        }
+
+        return {
+            isValid: wordCount >= 10 && wordCount <= 30 && errors.length === 0,
+            errors
+        };
+    }, [wordList, wordCount]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!isValid) return;
+        if (!validation.isValid) return;
 
         onSubmit({
             title,
@@ -98,7 +140,7 @@ export function PuzzleForm({
                 <label htmlFor="words" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
                     Word List <span className="text-red-500 dark:text-red-400">*</span>
                     <span className="ml-2 text-gray-500 dark:text-zinc-500">
-                        ({wordCount}/30 words)
+                        ({wordCount}/30 words, max 13 chars each)
                     </span>
                 </label>
                 <Textarea
@@ -108,11 +150,18 @@ export function PuzzleForm({
                     placeholder="Enter one word per line (10-30 words)&#10;FUNCTION&#10;VARIABLE&#10;CONST"
                     required
                 />
-                {!isValid && wordCount > 0 && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-semibold">
-                        {wordCount < 10
-                            ? `Need 10 more words (${10 - wordCount} remaining)`
-                            : `Too many words (${wordCount - 30} over limit)`}
+                {validation.errors.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                        {validation.errors.map((error, idx) => (
+                            <p key={idx} className="mt-1 text-sm text-red-600 dark:text-red-400 font-semibold">
+                                ❌ {error}
+                            </p>
+                        ))}
+                    </div>
+                )}
+                {wordCount >= 10 && wordCount <= 30 && validation.errors.length === 0 && (
+                    <p className="mt-2 text-sm text-green-600 dark:text-green-400 font-semibold">
+                        ✅ Word list looks good!
                     </p>
                 )}
             </div>
@@ -162,7 +211,7 @@ export function PuzzleForm({
             <div className="flex gap-4">
                 <Button
                     type="submit"
-                    disabled={!isValid || isLoading}
+                    disabled={!validation.isValid || isLoading}
                     className="flex-1"
                 >
                     {isLoading ? 'Generating...' : submitLabel}
