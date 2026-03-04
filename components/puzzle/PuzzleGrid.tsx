@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface PuzzleGridProps {
@@ -94,14 +94,13 @@ export function PuzzleGrid({
         setSelectState({ firstCell: null, secondCell: null });
     };
 
-    // DRAG HANDLERS
+    // MOUSE HANDLERS
     const handleMouseDown = (row: number, col: number) => {
         setIsDragging(true);
         hasMovedRef.current = false;
         dragStartRef.current = { row, col };
         const cells = getCellsBetween({ row, col }, { row, col });
         dragCellsRef.current = cells;
-        // Don't set selectState here - let click handler or drag handle it
     };
 
     const handleMouseEnter = (row: number, col: number) => {
@@ -165,12 +164,107 @@ export function PuzzleGrid({
             hasMovedRef.current = false;
             setSelectState({ firstCell: null, secondCell: null });
         } else {
-            // No movement - reset drag state, let click handler work
+            // No movement - reset drag state
             setIsDragging(false);
             dragStartRef.current = null;
             dragCellsRef.current = [];
             hasMovedRef.current = false;
         }
+    };
+
+    // TOUCH HANDLERS
+    const handleTouchStart = (row: number, col: number) => {
+        setIsDragging(true);
+        hasMovedRef.current = false;
+        dragStartRef.current = { row, col };
+        const cells = getCellsBetween({ row, col }, { row, col });
+        dragCellsRef.current = cells;
+        setSelectState({
+            firstCell: { row, col },
+            secondCell: { row, col }
+        });
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isDragging || !dragStartRef.current) return;
+
+        // Get touch position
+        const touch = e.touches[0];
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (!element) return;
+
+        // Find cell from button element
+        const button = element.closest('button');
+        if (!button) return;
+
+        // Get cell position from button's aria-label or key
+        const ariaLabel = button.getAttribute('aria-label');
+        if (!ariaLabel) return;
+
+        const match = ariaLabel.match(/Cell (\d+),(\d+)/);
+        if (!match) return;
+
+        const row = parseInt(match[1]);
+        const col = parseInt(match[2]);
+
+        // Mark as moved if we're on a different cell
+        if (dragStartRef.current.row !== row || dragStartRef.current.col !== col) {
+            hasMovedRef.current = true;
+        }
+
+        const cells = getCellsBetween(dragStartRef.current, { row, col });
+        dragCellsRef.current = cells;
+
+        setSelectState({
+            firstCell: dragStartRef.current,
+            secondCell: { row, col }
+        });
+    };
+
+    const handleTouchEnd = () => {
+        if (!isDragging || !dragStartRef.current) {
+            setIsDragging(false);
+            return;
+        }
+
+        // Only process as drag if actually moved
+        if (hasMovedRef.current) {
+            const cells = dragCellsRef.current;
+            const word = cells
+                .map(key => {
+                    const [r, c] = key.split('-').map(Number);
+                    return grid[r][c];
+                })
+                .join('');
+
+            const reversed = word.split('').reverse().join('');
+            const allWords = placements.map((p) => p.word);
+            const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
+
+            if (foundWord && !foundWords.has(foundWord)) {
+                setFoundWords((prev) => {
+                    const newSet = new Set(prev).add(foundWord);
+                    const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                    setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
+
+                    const allWordsList = placements.map((p) => p.word);
+                    if (newSet.size === allWordsList.length) {
+                        onPuzzleComplete?.();
+                    }
+
+                    onWordFound?.(foundWord);
+                    return newSet;
+                });
+            }
+        }
+
+        // Reset all drag state
+        setIsDragging(false);
+        dragStartRef.current = null;
+        dragCellsRef.current = [];
+        hasMovedRef.current = false;
+        setSelectState({ firstCell: null, secondCell: null });
     };
 
     // Global mouse up listener
@@ -292,7 +386,7 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square`;
+        const base = `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square touch-none`;
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
@@ -305,7 +399,6 @@ export function PuzzleGrid({
         if (color) return color;
         if (isInSelection(row, col)) return 'rgba(59, 130, 246, 0.5)';
         if (selectState.firstCell?.row === row && selectState.firstCell?.col === col) return 'rgba(250, 204, 21, 0.5)';
-        // Return empty string to let CSS handle background
         return '';
     };
 
@@ -334,6 +427,9 @@ export function PuzzleGrid({
                                 onClick={() => handleCellClick(rowIndex, colIndex)}
                                 onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
                                 onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                                onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
                                 style={{
                                     backgroundColor: getCellBackground(rowIndex, colIndex),
                                 }}
@@ -348,7 +444,7 @@ export function PuzzleGrid({
             </div>
 
             <p className="text-sm text-gray-600 dark:text-zinc-400 mt-4 text-center font-medium">
-                🖱️ DRAG across letters OR 👆 Click first & last letter to select words
+                👆 Tap first & last letter OR 🖱️ DRAG to select words
             </p>
         </div>
     );
