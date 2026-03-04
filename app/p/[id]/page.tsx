@@ -84,14 +84,22 @@ export default function PlayPage() {
       const padding = 40;
       const titleHeight = 80;
       const footerHeight = 60;
-      const wordListWidth = 200;
+      const wordListWidth = 220;
       const gridSize = puzzle.size;
+      const wordSpacing = 22;
 
       // Calculate dimensions
       const gridWidth = gridSize * cellSize;
       const gridHeight = gridSize * cellSize;
+
+      // Word list height (dynamic based on word count)
+      const words = puzzle.placements.map((p: any) => p.word).sort();
+      const wordListHeight = 40 + words.length * wordSpacing;
+
+      // Total dimensions (use max of grid height and word list height)
+      const contentHeight = Math.max(gridHeight, wordListHeight);
       const totalWidth = padding * 3 + gridWidth + wordListWidth;
-      const totalHeight = padding * 3 + titleHeight + gridHeight + footerHeight;
+      const totalHeight = padding * 3 + titleHeight + contentHeight + footerHeight;
 
       // Set canvas size (high DPI)
       const scale = 2;
@@ -162,7 +170,6 @@ export default function PlayPage() {
       // Word list
       const wordListX = gridStartX + gridWidth + padding * 2;
       const wordListY = gridStartY;
-      const wordSpacing = 22;
 
       ctx.fillStyle = '#1f2937';
       ctx.font = 'bold 14px Arial, sans-serif';
@@ -179,7 +186,7 @@ export default function PlayPage() {
       });
 
       // Footer with URL
-      const footerY = gridStartY + gridHeight + padding;
+      const footerY = gridStartY + contentHeight + padding;
       ctx.fillStyle = '#6b7280';
       ctx.font = '12px Arial, sans-serif';
       ctx.textAlign = 'center';
@@ -187,7 +194,7 @@ export default function PlayPage() {
       ctx.fillText(
         `Play this puzzle online at: ${baseUrl}/p/${params.id}`,
         totalWidth / 2,
-        footerY + 20
+        footerY + 25
       );
 
       // Download
