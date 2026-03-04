@@ -18,22 +18,17 @@ function applyTheme(theme: Theme) {
     const html = document.documentElement;
     const body = document.body;
 
-    // Remove both classes first
-    html.classList.remove('dark', 'light');
-    body.classList.remove('dark', 'light');
-
-    // Add current theme class
-    html.classList.add(theme);
-    body.classList.add(theme);
-
-    // Apply styles to body
+    // For Tailwind dark mode: only add 'dark' class for dark mode
     if (theme === 'dark') {
-        body.style.backgroundColor = '#000000';
-        body.style.color = '#ffffff';
+        html.classList.add('dark');
+        body.classList.add('dark');
     } else {
-        body.style.backgroundColor = '#ffffff';
-        body.style.color = '#1e293b';
+        html.classList.remove('dark');
+        body.classList.remove('dark');
     }
+
+    // Note: CSS variables in globals.css handle the actual colors
+    // No need for inline styles here
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -74,4 +69,3 @@ export function useTheme() {
     }
     return context;
 }
-

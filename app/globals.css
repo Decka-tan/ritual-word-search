@@ -10,32 +10,33 @@
   --dark-mode: 'class';
 }
 
+/* Light mode (default, no class) */
 :root {
-  --background: #ffffff;
-  --foreground: #1e293b;
-  --foreground-muted: #a1a1aa;
+  --background: #fafaf9; /* stone-50 */
+  --foreground: #1c1917; /* stone-900 */
+  --foreground-muted: #78716c; /* stone-500 */
   --card-bg: #ffffff;
-  --card-border: #e5e7eb;
+  --card-border: #e7e5e4; /* stone-200 */
   --accent: #8b5cf6;
   --accent-hover: #7c3aed;
 }
 
+/* Dark mode (when .dark class is present) */
 .dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --foreground-muted: #a1a1aa;
-  --card-bg: #111111;
-  --card-border: #222222;
+  --background: #09090b; /* zinc-950 */
+  --foreground: #fafafa; /* zinc-50 */
+  --foreground-muted: #a1a1aa; /* zinc-400 */
+  --card-bg: #18181b; /* zinc-900 */
+  --card-border: #27272a; /* zinc-800 */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Smooth transitions */
+/* Smooth transitions for theme changes */
 * {
   transition-property: color, background-color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
