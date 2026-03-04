@@ -388,9 +388,7 @@ export function PuzzleGrid({
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = fullscreen
-            ? `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer touch-none`
-            : `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square touch-none`;
+        const base = `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square touch-none`;
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
@@ -417,10 +415,13 @@ export function PuzzleGrid({
 
     return (
         <div className={className}>
-            {!fullscreen ? (
-              <div className="w-full flex items-center justify-center">
+            <div className="w-full flex items-center justify-center">
                 <div
-                    className="grid gap-px border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl bg-white dark:bg-zinc-900 w-full"
+                    className={`grid gap-px bg-white dark:bg-zinc-900 w-full ${
+                        fullscreen
+                            ? 'border-0 rounded-none p-0 shadow-none'
+                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl'
+                    }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
                         maxWidth: getMaxWidth(),
@@ -447,42 +448,11 @@ export function PuzzleGrid({
                         ))
                     )}
                 </div>
-              </div>
-            ) : (
-              <div
-                  className="grid gap-px bg-white dark:bg-zinc-900 w-full h-full"
-                  style={{
-                      gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-                  }}
-              >
-                  {grid.map((row, rowIndex) =>
-                      row.map((cell, colIndex) => (
-                          <button
-                              key={`${rowIndex}-${colIndex}`}
-                              onClick={() => handleCellClick(rowIndex, colIndex)}
-                              onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                              onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                              onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
-                              onTouchMove={handleTouchMove}
-                              onTouchEnd={handleTouchEnd}
-                              style={{
-                                  backgroundColor: getCellBackground(rowIndex, colIndex),
-                              }}
-                              className={getCellStyle(rowIndex, colIndex)}
-                              aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
-                          >
-                              {cell}
-                          </button>
-                      ))
-                  )}
-              </div>
-            )}
+            </div>
 
-            {!fullscreen && (
-              <p className="text-sm text-gray-600 dark:text-zinc-400 mt-4 text-center font-medium">
-                  👆 Tap first & last letter OR 🖱️ DRAG to select words
-              </p>
-            )}
+            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-4 text-center font-medium">
+                👆 Tap first & last letter OR 🖱️ DRAG to select words
+            </p>
         </div>
     );
 }
