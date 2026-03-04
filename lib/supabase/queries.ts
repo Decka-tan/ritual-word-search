@@ -19,6 +19,7 @@ export function generateEditKey(): string {
 export async function createPuzzle(data: {
     title: string;
     description: string | null;
+    authorName: string | null;
     words: string[];
     size: number;
     allowDiagonal: boolean;

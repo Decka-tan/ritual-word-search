@@ -34,6 +34,7 @@ export interface Puzzle {
     id: string;
     title: string;
     description: string | null;
+    authorName: string | null;
     words: string[];
     size: number;
     allowDiagonal: boolean;
@@ -48,6 +49,7 @@ export interface Puzzle {
 export interface CreatePuzzleInput {
     title: string;
     description?: string;
+    authorName?: string;
     words: string[];
     options: PuzzleOptions;
     seed?: number;
@@ -65,6 +67,7 @@ export interface PublicPuzzle {
     id: string;
     title: string;
     description: string | null;
+    authorName: string | null;
     words: string[];
     size: number;
     allowDiagonal: boolean;

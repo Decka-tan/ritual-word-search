@@ -7,7 +7,7 @@ import { PuzzleOptions } from './types';
 
 // Puzzle options schema
 export const PuzzleOptionsSchema = z.object({
-    size: z.number().int().min(10).max(30),
+    size: z.number().int().min(10).max(15),
     allowDiagonal: z.boolean(),
     allowBackward: z.boolean(),
 });
@@ -16,6 +16,7 @@ export const PuzzleOptionsSchema = z.object({
 export const CreatePuzzleSchema = z.object({
     title: z.string().min(1).max(200).trim(),
     description: z.string().max(1000).trim().optional().nullable(),
+    authorName: z.string().max(50).trim().optional().nullable(),
     words: z.array(z.string().min(2).max(20)).min(10).max(30),
     options: PuzzleOptionsSchema,
     seed: z.number().int().positive().optional(),

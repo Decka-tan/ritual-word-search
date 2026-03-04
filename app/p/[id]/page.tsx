@@ -207,9 +207,15 @@ export default function PlayPage() {
         {/* Header with gradient */}
         <div className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-5 shadow-xl text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
-          {puzzle.description && (
-            <p className="text-purple-100 mb-4">{puzzle.description}</p>
-          )}
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            {puzzle.authorName && (
+              <p className="text-purple-100 text-sm">Puzzle made by <span className="font-semibold text-white">{puzzle.authorName}</span></p>
+            )}
+            {puzzle.authorName && puzzle.description && <span className="text-purple-200">•</span>}
+            {puzzle.description && (
+              <p className="text-purple-100 text-sm">{puzzle.description}</p>
+            )}
+          </div>
 
           {/* Stats */}
           <div className="flex flex-wrap items-center gap-6">

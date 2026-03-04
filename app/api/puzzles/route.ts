@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
         const puzzle = await createPuzzle({
             title: input.title,
             description: input.description ?? null,
+            authorName: input.authorName ?? null,
             words: input.words,
             size: input.options.size,
             allowDiagonal: input.options.allowDiagonal,

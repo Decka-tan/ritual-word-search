@@ -26,6 +26,7 @@ export function PuzzleForm({
     submitLabel = 'Generate Puzzle',
 }: PuzzleFormProps) {
     const [title, setTitle] = useState(defaultValues?.title ?? '');
+    const [authorName, setAuthorName] = useState(defaultValues?.authorName ?? '');
     const [description, setDescription] = useState(defaultValues?.description ?? '');
     const [words, setWords] = useState(
         defaultValues?.words ? defaultValues.words.join('\n') : ''
@@ -96,6 +97,7 @@ export function PuzzleForm({
         onSubmit({
             title,
             description: description || undefined,
+            authorName: authorName || undefined,
             words: wordList,
             options: {
                 size,
@@ -119,6 +121,20 @@ export function PuzzleForm({
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., JavaScript Terms"
                     required
+                />
+            </div>
+
+            {/* Author Name */}
+            <div>
+                <label htmlFor="authorName" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
+                    Made By (Optional)
+                </label>
+                <Input
+                    id="authorName"
+                    type="text"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    placeholder="e.g., Decka"
                 />
             </div>
 
