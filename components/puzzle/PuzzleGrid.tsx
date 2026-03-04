@@ -414,11 +414,10 @@ export function PuzzleGrid({
 
     // Calculate max width based on grid size for optimal display
     const getMaxWidth = (): string => {
-        if (fullscreen) return '100%';
         const size = grid.length;
-        if (size <= 10) return '100%';
-        if (size <= 12) return '90%';
-        return '85%';
+        if (size <= 12) return '100%';
+        if (size <= 15) return '95%';
+        return '90%';
     };
 
     return (
