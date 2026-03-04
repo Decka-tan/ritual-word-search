@@ -205,6 +205,9 @@ export function PuzzleForm({
                         <span>10</span>
                         <span>15</span>
                     </div>
+                    <p className="mt-2 text-xs text-amber-600 dark:text-amber-400 italic">
+                        ⚠️ The puzzle grid size is responsive to your word list, so the actual grid may be larger than this setting to fit all words.
+                    </p>
                 </div>
 
                 <hr className="border-gray-200 dark:border-zinc-700" />
