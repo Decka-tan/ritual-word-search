@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Toggle } from '@/components/ui/Toggle';
 
 interface GameSettingsProps {
     onShowSolutionChange: (show: boolean) => void;
@@ -42,68 +43,48 @@ export function GameSettings({ onShowSolutionChange, showSolution, onReset, isCo
                             </button>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-2">
                             {/* Show Solution Toggle */}
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg">👁️</span>
-                                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Show Solution</span>
-                                </div>
-                                <button
-                                    onClick={() => onShowSolutionChange(!showSolution)}
-                                    disabled={!isComplete}
-                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-200 ${
-                                        !isComplete ? 'opacity-50 cursor-not-allowed' : ''
-                                    } ${showSolution ? 'bg-purple-600' : 'bg-gray-300 dark:bg-zinc-700'}`}
-                                >
-                                    <span
-                                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200 ${
-                                            showSolution ? 'translate-x-6' : 'translate-x-1'
-                                        }`}
-                                    />
-                                </button>
-                            </div>
+                            <Toggle
+                                checked={showSolution}
+                                onChange={onShowSolutionChange}
+                                disabled={!isComplete}
+                                label="Show Solution"
+                                icon="👁️"
+                            />
 
-                            {/* Sound Effects - Cosmetic */}
-                            <div className="flex items-center justify-between opacity-50">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg">🔊</span>
-                                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Sound Effects</span>
-                                </div>
-                                <button
-                                    className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 dark:bg-zinc-700 cursor-not-allowed"
-                                >
-                                    <span className="inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200 translate-x-1" />
-                                </button>
-                            </div>
+                            {/* Sound Effects - Cosmetic (Disabled) */}
+                            <Toggle
+                                checked={false}
+                                onChange={() => {}}
+                                disabled
+                                label="Sound Effects"
+                                icon="🔊"
+                            />
 
-                            {/* Highlight Words - Cosmetic */}
-                            <div className="flex items-center justify-between opacity-50">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg">✨</span>
-                                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Highlight Words</span>
-                                </div>
-                                <button
-                                    className="relative inline-flex h-6 w-11 items-center rounded-full bg-purple-600 cursor-not-allowed"
-                                >
-                                    <span className="inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200 translate-x-6" />
-                                </button>
-                            </div>
-
-                            <hr className="border-gray-200 dark:border-zinc-700" />
-
-                            {/* Reset Game - FUNCTIONAL */}
-                            <button
-                                onClick={() => {
-                                    onReset();
-                                    setIsOpen(false);
-                                }}
-                                className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
-                            >
-                                <span>🔄</span>
-                                <span>Reset Game</span>
-                            </button>
+                            {/* Highlight Words - Cosmetic (Always On) */}
+                            <Toggle
+                                checked
+                                onChange={() => {}}
+                                disabled
+                                label="Highlight Words"
+                                icon="✨"
+                            />
                         </div>
+
+                        <hr className="border-gray-200 dark:border-zinc-700 my-4" />
+
+                        {/* Reset Game - FUNCTIONAL */}
+                        <button
+                            onClick={() => {
+                                onReset();
+                                setIsOpen(false);
+                            }}
+                            className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                        >
+                            <span>🔄</span>
+                            <span>Reset Game</span>
+                        </button>
                     </div>
                 </>
             )}

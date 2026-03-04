@@ -141,17 +141,21 @@ export function PuzzleForm({
                     </div>
                 </div>
 
+                <hr className="border-gray-200 dark:border-zinc-700" />
+
                 {/* Toggles */}
-                <div className="flex gap-8">
+                <div className="space-y-2">
                     <Toggle
                         checked={allowDiagonal}
                         onChange={setAllowDiagonal}
                         label="Diagonal Words"
+                        icon="📐"
                     />
                     <Toggle
                         checked={allowBackward}
                         onChange={setAllowBackward}
                         label="Backward Words"
+                        icon="↩️"
                     />
                 </div>
             </div>

@@ -7,10 +7,11 @@ export interface ToggleProps {
     label?: string;
     disabled?: boolean;
     className?: string;
+    icon?: string;
 }
 
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
-    ({ checked, onChange, label, disabled = false, className }, ref) => {
+    ({ checked, onChange, label, disabled = false, className, icon }, ref) => {
         const handleClick = () => {
             if (!disabled) {
                 onChange(!checked);
@@ -26,22 +27,37 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                 disabled={disabled}
                 onClick={handleClick}
                 className={cn(
-                    'relative inline-flex h-7 w-13 items-center rounded-full transition-all duration-200',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900',
-                    checked ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-gray-300 dark:bg-zinc-700',
+                    'flex items-center justify-between gap-3 w-full',
+                    'py-2',
                     disabled && 'opacity-50 cursor-not-allowed',
                     className
                 )}
             >
-                <span
-                    className={cn(
-                        'inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200',
-                        checked ? 'translate-x-7' : 'translate-x-1'
+                <div className="flex items-center gap-2">
+                    {icon && <span className="text-lg">{icon}</span>}
+                    {label && (
+                        <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">
+                            {label}
+                        </span>
                     )}
-                />
-                {label && (
-                    <span className="ml-3 text-sm font-semibold text-gray-700 dark:text-zinc-300">{label}</span>
-                )}
+                </div>
+
+                <div
+                    className={cn(
+                        'relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-all duration-200',
+                        checked
+                            ? 'bg-gradient-to-r from-purple-600 to-blue-600'
+                            : 'bg-gray-300 dark:bg-zinc-700',
+                        disabled && 'cursor-not-allowed'
+                    )}
+                >
+                    <span
+                        className={cn(
+                            'inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200',
+                            checked ? 'translate-x-6' : 'translate-x-1'
+                        )}
+                    />
+                </div>
             </button>
         );
     }
