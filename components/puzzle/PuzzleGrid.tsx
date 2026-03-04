@@ -414,70 +414,26 @@ export function PuzzleGrid({
 
     // Calculate max width based on grid size for optimal display
     const getMaxWidth = (): string => {
-        if (fullscreen) return 'none'; // Remove max width constraint in fullscreen
+        if (fullscreen) return '100%';
         const size = grid.length;
         if (size <= 10) return '100%';
         if (size <= 12) return '90%';
         return '85%';
     };
 
-    // Calculate grid size for fullscreen mode using state
-    const [gridSize, setGridSize] = useState<{width: number; height: number} | null>(null);
-
-    useEffect(() => {
-        if (!fullscreen) {
-            setGridSize(null);
-            return;
-        }
-
-        const calculateSize = () => {
-            // Only apply custom sizing on desktop (lg breakpoint: 1024px+)
-            if (window.innerWidth < 1024) {
-                setGridSize(null);
-                return;
-            }
-
-            // Use window viewport directly for more reliable calculation
-            const container = document.querySelector('[data-fullscreen-container]') as HTMLElement;
-            if (!container) return;
-
-            const rect = container.getBoundingClientRect();
-            // More conservative padding to prevent overflow
-            const padding = 48;
-            const availableWidth = rect.width - padding;
-            const availableHeight = rect.height - padding;
-
-            // Calculate cell size that fits in both dimensions
-            const maxCellWidth = Math.floor(availableWidth / grid.length);
-            const maxCellHeight = Math.floor(availableHeight / grid.length);
-            const cellSize = Math.min(maxCellWidth, maxCellHeight, 80); // Max 80px per cell
-
-            const size = cellSize * grid.length;
-
-            setGridSize({ width: size, height: size });
-        };
-
-        calculateSize();
-        window.addEventListener('resize', calculateSize);
-        return () => window.removeEventListener('resize', calculateSize);
-    }, [fullscreen, grid.length]);
-
     return (
-        <div className={className} {...(fullscreen && { 'data-fullscreen-container': true })}>
+        <div className={className}>
             <div className="w-full flex items-center justify-center">
                 <div
                     className={`grid gap-px bg-white dark:bg-zinc-900 ${
                         fullscreen
-                            ? 'border-0 rounded-none p-0 shadow-none'
+                            ? 'border-0 rounded-none p-0 shadow-none w-full h-full'
                             : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl w-full'
                     }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
                         maxWidth: getMaxWidth(),
-                        ...(fullscreen && gridSize && {
-                            width: `${gridSize.width}px`,
-                            height: `${gridSize.height}px`,
-                        }),
+                        maxHeight: fullscreen ? '100%' : 'auto',
                     }}
                 >
                     {grid.map((row, rowIndex) =>
