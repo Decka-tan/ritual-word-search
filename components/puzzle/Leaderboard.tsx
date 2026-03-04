@@ -70,11 +70,11 @@ export function Leaderboard({ puzzleId }: LeaderboardProps) {
             case 1:
                 return 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white';
             case 2:
-                return 'bg-gradient-to-r from-zinc-400 to-zinc-500 text-zinc-900';
+                return 'bg-gradient-to-r from-zinc-400 to-zinc-500 text-white';
             case 3:
                 return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white';
             default:
-                return 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border border-gray-200 dark:border-zinc-700';
+                return 'bg-gray-100 dark:bg-zinc-800 text-white border border-gray-200 dark:border-zinc-700';
         }
     };
 
