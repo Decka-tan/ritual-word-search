@@ -11,13 +11,14 @@ interface WordListProps {
 
 export function WordList({ placements, foundWords = new Set(), highlightWords = true, className }: WordListProps) {
     const words = placements.map((p) => p.word).sort();
+    const useDoubleColumn = words.length > 15;
 
     return (
         <div className={className}>
             <h3 className="text-xs font-bold uppercase tracking-wider mb-3 pb-2 border-b-2 border-gray-200 dark:border-zinc-700 text-gray-800 dark:text-zinc-300">
                 Words ({foundWords.size}/{words.length})
             </h3>
-            <ul className="space-y-2">
+            <ul className={useDoubleColumn ? "grid grid-cols-2 gap-x-2 gap-y-2" : "space-y-2"}>
                 {words.map((word) => {
                     const found = foundWords.has(word);
                     return (
