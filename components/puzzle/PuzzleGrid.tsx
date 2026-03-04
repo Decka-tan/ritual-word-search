@@ -278,12 +278,21 @@ export function PuzzleGrid({
         return deltas[direction] || [0, 1];
     };
 
+    // Dynamic font size based on grid size
+    const getFontSizeClass = (): string => {
+        const size = grid.length;
+        if (size <= 10) return 'text-base sm:text-lg md:text-xl lg:text-2xl';
+        if (size <= 12) return 'text-sm sm:text-base md:text-lg lg:text-xl';
+        if (size <= 15) return 'text-xs sm:text-sm md:text-base lg:text-lg';
+        return 'text-xs';
+    };
+
     const getCellStyle = (row: number, col: number): string => {
         const color = getCellColor(row, col);
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
 
-        const base = 'w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-150 cursor-pointer aspect-square';
+        const base = `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square`;
 
         if (color) return `${base} text-white shadow-md scale-105`;
         if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
