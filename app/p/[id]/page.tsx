@@ -71,17 +71,126 @@ export default function PlayPage() {
   }, [params.id]);
 
   const handleExportPNG = async () => {
-    if (!puzzleRef.current) return;
+    if (!puzzle) return;
 
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(puzzleRef.current, {
-        backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#ffffff',
-        scale: 2, // Higher quality
-        logging: false,
+      // Create canvas with proper dimensions
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Failed to get canvas context');
+
+      // Settings
+      const cellSize = 40;
+      const padding = 40;
+      const titleHeight = 80;
+      const footerHeight = 60;
+      const wordListWidth = 200;
+      const gridSize = puzzle.size;
+
+      // Calculate dimensions
+      const gridWidth = gridSize * cellSize;
+      const gridHeight = gridSize * cellSize;
+      const totalWidth = padding * 3 + gridWidth + wordListWidth;
+      const totalHeight = padding * 3 + titleHeight + gridHeight + footerHeight;
+
+      // Set canvas size (high DPI)
+      const scale = 2;
+      canvas.width = totalWidth * scale;
+      canvas.height = totalHeight * scale;
+      ctx.scale(scale, scale);
+
+      // Background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, totalWidth, totalHeight);
+
+      // Title
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 28px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(puzzle.title, totalWidth / 2, padding + 35);
+
+      // Subtitle (author + description)
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '14px Arial, sans-serif';
+      let subtitle = '';
+      if (puzzle.authorName) subtitle = `By ${puzzle.authorName}`;
+      if (puzzle.authorName && puzzle.description) subtitle += ' • ';
+      if (puzzle.description) subtitle += puzzle.description;
+      if (subtitle) {
+        ctx.fillText(subtitle, totalWidth / 2, padding + 60);
+      }
+
+      // Grid starting position
+      const gridStartX = padding;
+      const gridStartY = padding + titleHeight;
+
+      // Draw grid background
+      ctx.fillStyle = '#f9fafb';
+      ctx.fillRect(gridStartX - 5, gridStartY - 5, gridWidth + 10, gridHeight + 10);
+
+      // Draw grid cells
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+          const x = gridStartX + col * cellSize + cellSize / 2;
+          const y = gridStartY + row * cellSize + cellSize / 2;
+
+          // Cell border
+          ctx.strokeStyle = '#d1d5db';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(
+            gridStartX + col * cellSize,
+            gridStartY + row * cellSize,
+            cellSize,
+            cellSize
+          );
+
+          // Letter
+          ctx.fillStyle = '#111827';
+          ctx.font = 'bold 20px Arial, sans-serif';
+          ctx.fillText(puzzle.grid[row][col], x, y);
+        }
+      }
+
+      // Draw outer grid border
+      ctx.strokeStyle = '#9ca3af';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(gridStartX, gridStartY, gridWidth, gridHeight);
+
+      // Word list
+      const wordListX = gridStartX + gridWidth + padding * 2;
+      const wordListY = gridStartY;
+      const wordSpacing = 22;
+
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 14px Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('WORDS TO FIND:', wordListX, wordListY);
+
+      ctx.fillStyle = '#374151';
+      ctx.font = '13px Arial, sans-serif';
+
+      const words = puzzle.placements.map((p: any) => p.word).sort();
+      words.forEach((word, index) => {
+        const y = wordListY + 25 + index * wordSpacing;
+        ctx.fillText(`${index + 1}. ${word}`, wordListX, y);
       });
 
-      // Create download link
+      // Footer with URL
+      const footerY = gridStartY + gridHeight + padding;
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '12px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      ctx.fillText(
+        `Play this puzzle online at: ${baseUrl}/p/${params.id}`,
+        totalWidth / 2,
+        footerY + 20
+      );
+
+      // Download
       const link = document.createElement('a');
       const safeTitle = puzzle?.title?.replace(/[^a-z0-9]/gi, '_') || 'puzzle';
       link.download = `${safeTitle}_word_search.png`;
