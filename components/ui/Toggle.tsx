@@ -27,8 +27,8 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                 onClick={handleClick}
                 className={cn(
                     'relative inline-flex h-7 w-13 items-center rounded-full transition-all duration-200',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-zinc-900',
-                    checked ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-zinc-700',
+                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900',
+                    checked ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-gray-300 dark:bg-zinc-700',
                     disabled && 'opacity-50 cursor-not-allowed',
                     className
                 )}
@@ -40,7 +40,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                     )}
                 />
                 {label && (
-                    <span className="ml-3 text-sm font-semibold text-zinc-300">{label}</span>
+                    <span className="ml-3 text-sm font-semibold text-gray-700 dark:text-zinc-300">{label}</span>
                 )}
             </button>
         );
