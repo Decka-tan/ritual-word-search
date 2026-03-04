@@ -342,42 +342,44 @@ export default function PlayPage() {
 
   // Fullscreen mode - only grid + word list
   if (isFullscreen) {
+    const words = puzzle.placements.map((p: any) => p.word).sort();
+
     return (
-      <div className="fixed inset-0 z-50 bg-white dark:bg-zinc-900 overflow-auto">
+      <div className="fixed inset-0 z-50 bg-white dark:bg-zinc-900 overflow-auto flex flex-col">
         {/* Fullscreen header bar */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg font-bold text-gray-800 dark:text-zinc-100 truncate">{puzzle.title}</h2>
-            <div className="bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-lg">
+        <div className="sticky top-0 z-10 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <h2 className="text-base font-bold text-gray-800 dark:text-zinc-100 truncate flex-1">{puzzle.title}</h2>
+            <div className="bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-lg shrink-0">
               <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">{foundWords.size}/{totalWords}</span>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto overflow-x-auto">
             <button
               onClick={() => setShowSolution(!showSolution)}
-              className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300"
+              className="px-3 py-2 text-xs sm:text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300 whitespace-nowrap"
             >
-              {showSolution ? 'Hide' : 'Show'} Solution
+              {showSolution ? 'Hide' : 'Show'} Sol
             </button>
             <button
               onClick={handleReset}
-              className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300"
+              className="px-3 py-2 text-xs sm:text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300 whitespace-nowrap"
             >
               Reset
             </button>
             <button
               onClick={toggleFullscreen}
-              className="px-3 py-2 text-sm bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-lg font-medium text-red-700 dark:text-red-300"
+              className="px-3 py-2 text-xs sm:text-sm bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-lg font-medium text-red-700 dark:text-red-300 whitespace-nowrap"
             >
-              Exit Fullscreen
+              Exit
             </button>
           </div>
         </div>
 
-        {/* Fullscreen content - grid takes most space, word list collapsible */}
-        <div className="flex flex-col lg:flex-row h-[calc(100vh-60px)]">
-          {/* Grid - takes remaining space */}
-          <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
+        {/* Fullscreen content - grid is main, word list below on mobile */}
+        <div className="flex flex-col flex-1 overflow-auto">
+          {/* Grid - takes most space */}
+          <div className="flex-1 flex items-center justify-center p-2 sm:p-4 min-h-0">
             <PuzzleGrid
               grid={puzzle.grid}
               placements={placements}
@@ -388,17 +390,24 @@ export default function PlayPage() {
             />
           </div>
 
-          {/* Word list - collapsible sidebar */}
-          <div className="lg:w-64 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-950 p-4 overflow-auto">
-            <h3 className="text-sm font-bold uppercase mb-3 text-gray-700 dark:text-zinc-300">
-              Words ({totalWords})
-            </h3>
-            <WordList
-              placements={placements}
-              foundWords={foundWords}
-              highlightWords={highlightWords}
-              compact
-            />
+          {/* Word list - comma separated compact view for mobile */}
+          <div className="border-t border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-950 p-3 sm:p-4 shrink-0">
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm">
+              {words.map((word) => {
+                const found = foundWords.has(word);
+                return (
+                  <span
+                    key={word}
+                    className={`font-mono ${found
+                        ? 'text-green-500 line-through font-semibold'
+                        : 'text-gray-700 dark:text-zinc-300'
+                    }`}
+                  >
+                    {word}
+                  </span>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
