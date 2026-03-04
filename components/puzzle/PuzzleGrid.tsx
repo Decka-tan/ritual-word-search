@@ -431,14 +431,21 @@ export function PuzzleGrid({
         }
 
         const calculateSize = () => {
-            const container = document.querySelector('[data-fullscreen-container]');
+            // Use window viewport directly for more reliable calculation
+            const container = document.querySelector('[data-fullscreen-container]') as HTMLElement;
             if (!container) return;
 
             const rect = container.getBoundingClientRect();
-            const availableWidth = rect.width - 32; // minus padding
-            const availableHeight = rect.height - 32;
-            const minDimension = Math.min(availableWidth, availableHeight);
-            const cellSize = Math.floor(minDimension / grid.length);
+            // More conservative padding to prevent overflow
+            const padding = 48;
+            const availableWidth = rect.width - padding;
+            const availableHeight = rect.height - padding;
+
+            // Calculate cell size that fits in both dimensions
+            const maxCellWidth = Math.floor(availableWidth / grid.length);
+            const maxCellHeight = Math.floor(availableHeight / grid.length);
+            const cellSize = Math.min(maxCellWidth, maxCellHeight, 80); // Max 80px per cell
+
             const size = cellSize * grid.length;
 
             setGridSize({ width: size, height: size });
