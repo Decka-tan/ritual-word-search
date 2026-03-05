@@ -464,14 +464,11 @@ export function PuzzleGrid({
                                     aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    animate={{
-                                        scale: isSelected ? 1.1 : isFirst ? 1.15 : 1,
-                                        transition: { duration: 0.15, ease: "easeOut" }
-                                    }}
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{
                                         opacity: 1,
-                                        scale: isSelected ? 1.1 : isFirst ? 1.15 : 1
+                                        scale: isSelected ? 1.1 : isFirst ? 1.15 : 1,
+                                        transition: { duration: 0.15, ease: "easeOut" }
                                     }}
                                 >
                                     <span className={color ? 'text-white' : isSelected || isFirst ? 'text-[#00FF94]' : 'text-[#FAFAFA]'}>
