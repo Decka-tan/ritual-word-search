@@ -112,22 +112,22 @@ export function PuzzleForm({
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-                <label htmlFor="title" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
-                    Title <span className="text-red-500 dark:text-red-400">*</span>
+                <label htmlFor="title" className="block text-sm font-bold uppercase mb-2 text-text-primary font-mono tracking-wider">
+                    Title <span className="text-accent">*</span>
                 </label>
                 <Input
                     id="title"
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g., JavaScript Terms"
+                    placeholder="Television Shows, Movies, Food & Drinks, etc."
                     required
                 />
             </div>
 
             {/* Author Name */}
             <div>
-                <label htmlFor="authorName" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
+                <label htmlFor="authorName" className="block text-sm font-bold uppercase mb-2 text-text-primary font-mono tracking-wider">
                     Made By (Optional)
                 </label>
                 <Input
@@ -141,7 +141,7 @@ export function PuzzleForm({
 
             {/* Description */}
             <div>
-                <label htmlFor="description" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
+                <label htmlFor="description" className="block text-sm font-bold uppercase mb-2 text-text-primary font-mono tracking-wider">
                     Description
                 </label>
                 <Textarea
@@ -154,9 +154,9 @@ export function PuzzleForm({
 
             {/* Words */}
             <div>
-                <label htmlFor="words" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
-                    Word List <span className="text-red-500 dark:text-red-400">*</span>
-                    <span className="ml-2 text-gray-500 dark:text-zinc-500">
+                <label htmlFor="words" className="block text-sm font-bold uppercase mb-2 text-text-primary font-mono tracking-wider">
+                    Word List <span className="text-accent">*</span>
+                    <span className="ml-2 text-text-secondary">
                         ({wordCount}/30 words, max 13 chars each)
                     </span>
                 </label>
@@ -164,32 +164,32 @@ export function PuzzleForm({
                     id="words"
                     value={words}
                     onChange={(e) => setWords(e.target.value)}
-                    placeholder="Enter one word per line (10-30 words)&#10;FUNCTION&#10;VARIABLE&#10;CONST"
+                    placeholder="Enter one word per line (10-30 words)&#10;Examples: Adventure, Comedy, Action, Drama..."
                     required
                 />
                 {validation.errors.length > 0 && (
                     <div className="mt-2 space-y-1">
                         {validation.errors.map((error, idx) => (
-                            <p key={idx} className="mt-1 text-sm text-red-600 dark:text-red-400 font-semibold">
+                            <p key={idx} className="mt-1 text-sm text-red-400 font-semibold">
                                 ❌ {error}
                             </p>
                         ))}
                     </div>
                 )}
                 {wordCount >= 10 && wordCount <= 30 && validation.errors.length === 0 && (
-                    <p className="mt-2 text-sm text-green-600 dark:text-green-400 font-semibold">
+                    <p className="mt-2 text-sm text-accent font-semibold">
                         ✅ Word list looks good!
                     </p>
                 )}
             </div>
 
             {/* Options */}
-            <div className="border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 space-y-4 rounded-xl">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-zinc-100">Options</h3>
+            <div className="border border-border bg-surface p-6 space-y-4 rounded-xl">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-text-primary font-display">OPTIONS</h3>
 
                 {/* Grid Size */}
                 <div>
-                    <label htmlFor="size" className="block text-sm font-bold uppercase mb-2 text-gray-700 dark:text-zinc-300">
+                    <label htmlFor="size" className="block text-sm font-bold uppercase mb-2 text-text-primary font-mono tracking-wider">
                         Grid Size: {size}x{size}
                     </label>
                     <input
@@ -199,18 +199,18 @@ export function PuzzleForm({
                         max="15"
                         value={size}
                         onChange={(e) => setSize(Number(e.target.value))}
-                        className="w-full accent-purple-500"
+                        className="w-full accent-accent"
                     />
-                    <div className="flex justify-between text-xs font-mono mt-1 text-gray-500 dark:text-zinc-500">
+                    <div className="flex justify-between text-xs font-mono mt-1 text-text-secondary">
                         <span>10</span>
                         <span>15</span>
                     </div>
-                    <p className="mt-2 text-xs text-amber-600 dark:text-amber-400 italic">
+                    <p className="mt-2 text-xs text-accent italic">
                         ⚠️ The puzzle grid size is responsive to your word list, so the actual grid may be larger than this setting to fit all words.
                     </p>
                 </div>
 
-                <hr className="border-gray-200 dark:border-zinc-700" />
+                <hr className="border-border" />
 
                 {/* Toggles */}
                 <div className="space-y-2">
@@ -228,11 +228,11 @@ export function PuzzleForm({
             </div>
 
             {/* Submit */}
-            <div className="flex gap-4">
+            <div className="flex justify-center">
                 <Button
                     type="submit"
                     disabled={!validation.isValid || isLoading}
-                    className="flex-1"
+                    className="w-full max-w-md"
                 >
                     {isLoading ? 'Generating...' : submitLabel}
                 </Button>

@@ -18,9 +18,9 @@ export function PuzzleCard({ puzzle, onPlay, onEdit, onDelete }: PuzzleCardProps
     });
 
     return (
-        <div className="border-2 border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
-            <h3 className="font-bold text-lg mb-1 text-gray-800 dark:text-zinc-100">{puzzle.title}</h3>
-            <p className="text-sm text-gray-600 dark:text-zinc-400 mb-4 font-mono">{date}</p>
+        <div className="border border-border bg-surface p-4 rounded-xl hover:border-accent/50 transition-all group">
+            <h3 className="font-bold text-lg mb-1 text-text-primary font-display tracking-wide">{puzzle.title}</h3>
+            <p className="text-sm text-text-secondary mb-4 font-mono uppercase tracking-wider">{date}</p>
 
             <div className="flex gap-2">
                 <Button

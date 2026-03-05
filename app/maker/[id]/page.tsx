@@ -93,10 +93,10 @@ export default function EditPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-lg font-semibold text-gray-700 dark:text-zinc-300">Loading puzzle...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-mono text-text-secondary uppercase tracking-wider">Loading puzzle...</p>
         </div>
       </div>
     );
@@ -104,9 +104,9 @@ export default function EditPage() {
 
   if (error || !puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
-        <div className="text-center p-8 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-xl max-w-md">
-          <p className="text-lg mb-4 text-red-600 dark:text-red-400">{error || 'Puzzle not found'}</p>
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="text-center p-8 bg-surface border border-border rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-400">{error || 'Puzzle not found'}</p>
           <Button onClick={() => router.back()}>Go Back</Button>
         </div>
       </div>
@@ -114,24 +114,24 @@ export default function EditPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-bg px-6 py-12 flex flex-col">
+      <div className="max-w-2xl mx-auto w-full pt-12">
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-zinc-100">EDIT PUZZLE</h1>
-            <p className="text-gray-600 dark:text-zinc-400">{puzzle.title}</p>
+            <h1 className="text-3xl sm:text-4xl font-display tracking-tight uppercase mb-2">EDIT PUZZLE</h1>
+            <p className="text-text-secondary font-mono text-sm uppercase tracking-wider">{puzzle.title}</p>
           </div>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 border-2 border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-semibold transition-all"
+            className="px-4 py-2 border-2 border-red-500 text-red-400 hover:bg-red-500/20 rounded-xl font-mono text-sm uppercase tracking-wider transition-all"
           >
             Delete
           </button>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 border-2 border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-400 rounded-xl">
-            {error}
+          <div className="mb-6 p-4 border border-red-500/50 bg-red-500/10 text-red-400 rounded-xl font-mono text-sm">
+            ⚠️ {error}
           </div>
         )}
 

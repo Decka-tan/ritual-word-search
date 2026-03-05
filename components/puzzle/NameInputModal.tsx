@@ -33,20 +33,20 @@ export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameI
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div className="bg-surface border border-border rounded-2xl shadow-2xl max-w-md w-full p-8">
                 {/* Celebration */}
                 <div className="text-center mb-6">
                     <div className="text-6xl mb-4">🎉</div>
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-2">Puzzle Complete!</h2>
-                    <p className="text-gray-600 dark:text-zinc-400">
-                        Your time: <span className="font-mono font-bold text-2xl text-purple-600 dark:text-purple-400">{formatTime(timeSeconds)}</span>
+                    <h2 className="text-2xl font-bold text-text-primary font-display tracking-wide mb-2">PUZZLE COMPLETE!</h2>
+                    <p className="text-text-secondary">
+                        Your time: <span className="font-mono font-bold text-2xl text-accent">{formatTime(timeSeconds)}</span>
                     </p>
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="playerName" className="block text-sm font-bold text-gray-700 dark:text-zinc-300 mb-2">
+                        <label htmlFor="playerName" className="block text-sm font-bold text-text-primary font-mono uppercase tracking-wider mb-2">
                             Enter your name for the leaderboard:
                         </label>
                         <input
@@ -58,23 +58,23 @@ export function NameInputModal({ isOpen, timeSeconds, onSubmit, onClose }: NameI
                             maxLength={30}
                             required
                             autoFocus
-                            className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border-2 border-gray-200 dark:border-zinc-700 text-gray-800 dark:text-zinc-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-sans text-sm placeholder:text-gray-400 dark:placeholder:text-zinc-500"
+                            className="w-full px-4 py-3 bg-bg border border-border text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent font-sans text-sm placeholder:text-text-secondary"
                         />
-                        <p className="text-xs text-gray-500 dark:text-zinc-500 mt-1">Max 30 characters</p>
+                        <p className="text-xs text-text-secondary mt-1 font-mono">Max 30 characters</p>
                     </div>
 
                     <div className="flex gap-3">
                         <button
                             type="submit"
                             disabled={!name.trim() || isSubmitting}
-                            className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                            className="flex-1 px-6 py-3 bg-accent text-black font-mono text-sm uppercase tracking-wider font-semibold rounded-xl hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                         >
                             {isSubmitting ? 'Submitting...' : 'Submit Score'}
                         </button>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 bg-gray-200 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 font-semibold rounded-xl hover:bg-gray-300 dark:hover:bg-zinc-700 transition-all border border-gray-300 dark:border-zinc-700"
+                            className="px-6 py-3 bg-border text-text-primary font-mono text-sm uppercase tracking-wider font-semibold rounded-xl hover:bg-border/80 transition-all border border-border"
                         >
                             Skip
                         </button>

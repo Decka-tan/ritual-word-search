@@ -8,7 +8,6 @@ import { NameInputModal } from '@/components/puzzle/NameInputModal';
 import { Leaderboard } from '@/components/puzzle/Leaderboard';
 import { GameSettings } from '@/components/puzzle/GameSettings';
 import { ShareButtons } from '@/components/puzzle/ShareButtons';
-import { Footer } from '@/components/puzzle/Footer';
 import { Button } from '@/components/ui/Button';
 import { PublicPuzzle, WordPlacement } from '@/lib/puzzle/types';
 
@@ -123,17 +122,17 @@ export default function PlayPage() {
       ctx.scale(scale, scale);
 
       // Background
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#050505';
       ctx.fillRect(0, 0, totalWidth, totalHeight);
 
       // Title
-      ctx.fillStyle = '#1f2937';
+      ctx.fillStyle = '#FAFAFA';
       ctx.font = 'bold 28px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(puzzle.title, totalWidth / 2, padding + 35);
 
       // Subtitle (author + description)
-      ctx.fillStyle = '#6b7280';
+      ctx.fillStyle = '#A3A3A3';
       ctx.font = '14px Arial, sans-serif';
       let subtitle = '';
       if (puzzle.authorName) subtitle = `By ${puzzle.authorName}`;
@@ -148,7 +147,7 @@ export default function PlayPage() {
       const gridStartY = padding + titleHeight + borderSize;
 
       // Draw grid background
-      ctx.fillStyle = '#f9fafb';
+      ctx.fillStyle = '#121212';
       ctx.fillRect(gridStartX - 5, gridStartY - 5, gridWidth + 10, gridHeight + 10);
 
       // Draw grid cells
@@ -161,7 +160,7 @@ export default function PlayPage() {
           const y = gridStartY + row * cellSize + cellSize / 2;
 
           // Cell border
-          ctx.strokeStyle = '#d1d5db';
+          ctx.strokeStyle = '#262626';
           ctx.lineWidth = 1;
           ctx.strokeRect(
             gridStartX + col * cellSize,
@@ -171,14 +170,14 @@ export default function PlayPage() {
           );
 
           // Letter
-          ctx.fillStyle = '#111827';
+          ctx.fillStyle = '#FAFAFA';
           ctx.font = 'bold 20px Arial, sans-serif';
           ctx.fillText(puzzle.grid[row][col], x, y);
         }
       }
 
       // Draw outer grid border
-      ctx.strokeStyle = '#9ca3af';
+      ctx.strokeStyle = '#A3A3A3';
       ctx.lineWidth = 2;
       ctx.strokeRect(gridStartX, gridStartY, gridWidth, gridHeight);
 
@@ -189,12 +188,12 @@ export default function PlayPage() {
       // Reset text baseline for word list (was 'middle' for grid)
       ctx.textBaseline = 'alphabetic';
 
-      ctx.fillStyle = '#1f2937';
+      ctx.fillStyle = '#FAFAFA';
       ctx.font = 'bold 14px Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('WORDS TO FIND:', wordListX, wordListY);
 
-      ctx.fillStyle = '#374151';
+      ctx.fillStyle = '#A3A3A3';
       ctx.font = '13px Arial, sans-serif';
 
       words.forEach((word, index) => {
@@ -204,7 +203,7 @@ export default function PlayPage() {
 
       // Footer with URL
       const footerY = gridStartY + contentHeight + padding;
-      ctx.fillStyle = '#6b7280';
+      ctx.fillStyle = '#A3A3A3';
       ctx.font = '12px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
@@ -230,17 +229,7 @@ export default function PlayPage() {
   const handleWordFound = (word: string) => {
     setFoundWords((prev) => {
       const newSet = new Set(prev).add(word);
-
-      // Play sound if enabled
-      if (soundEnabled) {
-        // Could add sound effect here
-        console.log('🔊 Sound played for:', word);
-      }
-
-      // Start timer on first word found
-      if (prev.size === 0 && newSet.size === 1) {
-        setIsRunning(true);
-      }
+      const isFirstWord = prev.size === 0 && newSet.size === 1;
 
       // Check if complete
       const allWords = puzzle?.placements.map((p) => p.word) || [];
@@ -260,6 +249,16 @@ export default function PlayPage() {
 
         // Show name input modal
         setTimeout(() => setShowNameInput(true), 500);
+      }
+
+      // Start timer OUTSIDE callback
+      if (isFirstWord) {
+        setTimeout(() => setIsRunning(true), 0);
+      }
+
+      // Play sound if enabled
+      if (soundEnabled) {
+        console.log('🔊 Sound played for:', word);
       }
 
       return newSet;
@@ -340,10 +339,10 @@ export default function PlayPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-lg font-semibold text-gray-700 dark:text-zinc-300">Loading puzzle...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-mono text-text-secondary uppercase tracking-wider">Loading puzzle...</p>
         </div>
       </div>
     );
@@ -351,9 +350,9 @@ export default function PlayPage() {
 
   if (error || !puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
-        <div className="text-center p-8 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-xl max-w-md">
-          <p className="text-lg mb-4 text-red-600 dark:text-red-400">{error || 'Puzzle not found'}</p>
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="text-center p-8 bg-surface border border-border rounded-2xl shadow-xl max-w-md">
+          <p className="text-lg mb-4 text-red-400">{error || 'Puzzle not found'}</p>
           <Button onClick={() => router.push('/')}>Back Home</Button>
         </div>
       </div>
@@ -367,13 +366,13 @@ export default function PlayPage() {
     const words = puzzle.placements.map((p: any) => p.word).sort();
 
     return (
-      <div className="fixed inset-0 z-50 bg-white dark:bg-zinc-900 flex flex-col">
+      <div className="fixed inset-0 z-50 bg-bg flex flex-col">
         {/* Fullscreen header bar */}
-        <div className="shrink-0 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+        <div className="shrink-0 bg-bg border-b border-border px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-            <h2 className="text-sm sm:text-base font-bold text-gray-800 dark:text-zinc-100 truncate flex-1">{puzzle.title}</h2>
-            <div className="bg-purple-100 dark:bg-purple-900/30 px-2 sm:px-3 py-1 rounded-lg shrink-0">
-              <span className="text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-300">{foundWords.size}/{totalWords}</span>
+            <h2 className="text-sm sm:text-base font-bold text-text-primary truncate flex-1 font-display tracking-wide">{puzzle.title}</h2>
+            <div className="bg-accent/20 px-2 sm:px-3 py-1 rounded-lg shrink-0">
+              <span className="text-xs sm:text-sm font-semibold text-accent">{foundWords.size}/{totalWords}</span>
             </div>
           </div>
           <div className="flex gap-1 sm:gap-2 w-full sm:w-auto overflow-x-auto">
@@ -387,8 +386,8 @@ export default function PlayPage() {
               }}
               className={`px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-medium whitespace-nowrap ${
                 hasSolvedBefore
-                  ? 'bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-300'
-                  : 'bg-gray-50 dark:bg-zinc-900 text-gray-400 dark:text-zinc-600 cursor-not-allowed opacity-60'
+                  ? 'bg-surface hover:bg-border text-text-primary'
+                  : 'bg-surface text-text-secondary cursor-not-allowed opacity-60'
               }`}
               disabled={!hasSolvedBefore}
             >
@@ -396,13 +395,13 @@ export default function PlayPage() {
             </button>
             <button
               onClick={handleReset}
-              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg font-medium text-gray-700 dark:text-zinc-300 whitespace-nowrap"
+              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-surface hover:bg-border rounded-lg font-medium text-text-primary whitespace-nowrap"
             >
               Reset
             </button>
             <button
               onClick={toggleFullscreen}
-              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-lg font-medium text-red-700 dark:text-red-300 whitespace-nowrap"
+              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500/20 hover:bg-red-500/30 rounded-lg font-medium text-red-400 whitespace-nowrap"
             >
               Exit
             </button>
@@ -426,7 +425,7 @@ export default function PlayPage() {
           </div>
 
           {/* Word list - compact at bottom */}
-          <div className="shrink-0 border-t border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-950 p-2 sm:p-3">
+          <div className="shrink-0 border-t border-border bg-surface p-2 sm:p-3">
             <div className="flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-[10px] sm:text-xs">
               {words.map((word) => {
                 const found = foundWords.has(word);
@@ -434,8 +433,8 @@ export default function PlayPage() {
                   <span
                     key={word}
                     className={`font-mono ${found
-                        ? 'text-green-600 dark:text-green-400 line-through font-semibold'
-                        : 'text-gray-700 dark:text-zinc-300'
+                        ? 'text-accent line-through font-semibold'
+                        : 'text-text-primary'
                     }`}
                   >
                     {word}
@@ -450,38 +449,38 @@ export default function PlayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      <div ref={puzzleRef} className="max-w-[1400px] mx-auto px-6 lg:px-16 xl:px-20 py-6">
-        {/* Header with gradient */}
-        <div className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-5 shadow-xl text-white">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{puzzle.title}</h1>
-          <div className="flex flex-wrap items-center gap-2 mb-2">
+    <div className="min-h-screen bg-bg pt-24 pb-12">
+      <div ref={puzzleRef} className="max-w-[1400px] mx-auto px-6">
+        {/* Header with Ritual theme */}
+        <div className="mb-6 bg-surface border border-border rounded-2xl p-5 shadow-xl">
+          <h1 className="text-2xl sm:text-3xl font-display tracking-tight uppercase mb-2 text-text-primary">{puzzle.title}</h1>
+          <div className="flex flex-wrap items-center gap-2 mb-4">
             {puzzle.authorName && (
-              <p className="text-purple-100 text-sm">Puzzle made by <span className="font-semibold text-white">{puzzle.authorName}</span></p>
+              <p className="text-text-secondary text-sm font-mono uppercase tracking-wider">Made by <span className="font-semibold text-accent">{puzzle.authorName}</span></p>
             )}
-            {puzzle.authorName && puzzle.description && <span className="text-purple-200">•</span>}
+            {puzzle.authorName && puzzle.description && <span className="text-text-secondary">•</span>}
             {puzzle.description && (
-              <p className="text-purple-100 text-sm">{puzzle.description}</p>
+              <p className="text-text-secondary text-sm">{puzzle.description}</p>
             )}
           </div>
 
           {/* Stats */}
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             {/* Timer */}
-            <div className="bg-white/20 backdrop-blur rounded-xl px-4 py-2">
-              <span className="text-sm font-medium">Time: </span>
-              <span className="text-2xl font-bold font-mono">{formatTime(timer)}</span>
+            <div className="bg-bg border border-border rounded-xl px-4 py-2">
+              <span className="text-sm font-medium text-text-secondary font-mono uppercase tracking-wider">Time: </span>
+              <span className="text-2xl font-bold font-mono text-text-primary">{formatTime(timer)}</span>
             </div>
 
             {/* Progress */}
-            <div className="bg-white/20 backdrop-blur rounded-xl px-4 py-2 flex-1 min-w-[200px]">
+            <div className="bg-bg border border-border rounded-xl px-4 py-2 flex-1 min-w-[200px]">
               <div className="flex justify-between text-sm mb-1">
-                <span>Progress</span>
-                <span className="font-bold">{foundWords.size}/{totalWords}</span>
+                <span className="text-text-secondary font-mono uppercase tracking-wider">Progress</span>
+                <span className="font-bold text-text-primary">{foundWords.size}/{totalWords}</span>
               </div>
-              <div className="bg-white/30 rounded-full h-2 overflow-hidden">
+              <div className="bg-border rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-white h-full transition-all duration-300"
+                  className="bg-accent h-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -489,8 +488,8 @@ export default function PlayPage() {
 
             {/* Completion Badge */}
             {isComplete && (
-              <div className="bg-green-500 rounded-xl px-4 py-2 animate-pulse">
-                <span className="font-bold">🎉 Complete!</span>
+              <div className="bg-accent text-black rounded-xl px-4 py-2">
+                <span className="font-bold font-mono text-sm uppercase tracking-wider">🎉 Complete!</span>
               </div>
             )}
           </div>
@@ -514,30 +513,28 @@ export default function PlayPage() {
               timeSeconds={timer}
               isComplete={isComplete}
             />
-            <Button variant="ghost" onClick={handleExportPNG} className="bg-white/20 hover:bg-white/30 text-white border-none">
+            <Button variant="secondary" onClick={handleExportPNG}>
               Export PNG
             </Button>
             <Button
               variant="secondary"
               onClick={toggleFullscreen}
-              className="bg-white/20 hover:bg-white/30 text-white border-none"
             >
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             </Button>
             <Button
               variant="secondary"
               onClick={() => router.push('/maker')}
-              className="bg-white/20 hover:bg-white/30 text-white border-none"
             >
               Create Your Own
             </Button>
           </div>
         </div>
 
-        {/* Puzzle + Leaderboard - 3 Column Layout - SEAMLESS */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden">
+        {/* Puzzle + Leaderboard - 3 Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-surface border border-border rounded-2xl shadow-xl overflow-hidden">
           {/* Word List - 3 columns */}
-          <div className="order-2 lg:order-1 lg:col-span-3 border-r border-gray-200 dark:border-zinc-800">
+          <div className="order-2 lg:order-1 lg:col-span-3 border-r border-border">
             <div className="p-4">
               <WordList
                 placements={placements}
@@ -548,7 +545,7 @@ export default function PlayPage() {
           </div>
 
           {/* Grid - Center Column - 6 columns */}
-          <div className="order-1 lg:order-2 lg:col-span-6 border-r border-gray-200 dark:border-zinc-800">
+          <div className="order-1 lg:order-2 lg:col-span-6 border-r border-border">
             <div className="p-6">
               <PuzzleGrid
                 grid={puzzle.grid}
@@ -576,9 +573,6 @@ export default function PlayPage() {
         onSubmit={handleSubmitScore}
         onClose={() => setShowNameInput(false)}
       />
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

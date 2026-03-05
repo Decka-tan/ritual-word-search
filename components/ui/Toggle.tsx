@@ -33,7 +33,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                 )}
             >
                 {label && (
-                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">
+                    <span className="text-sm font-semibold text-text-primary">
                         {label}
                     </span>
                 )}
@@ -42,14 +42,14 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
                     className={cn(
                         'relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-all duration-200',
                         checked
-                            ? 'bg-gradient-to-r from-purple-600 to-blue-600'
-                            : 'bg-gray-300 dark:bg-zinc-700',
+                            ? 'bg-accent'
+                            : 'bg-border',
                         disabled && 'cursor-not-allowed'
                     )}
                 >
                     <span
                         className={cn(
-                            'inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200',
+                            'inline-block h-4 w-4 transform rounded-full bg-bg shadow-md transition-transform duration-200',
                             checked ? 'translate-x-6' : 'translate-x-1'
                         )}
                     />

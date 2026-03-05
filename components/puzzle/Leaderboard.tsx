@@ -11,7 +11,7 @@ interface LeaderboardEntry {
 
 interface LeaderboardProps {
     puzzleId: string;
-    refreshKey?: number; // Add refresh trigger
+    refreshKey?: number;
 }
 
 export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
@@ -34,7 +34,7 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
         };
 
         fetchLeaderboard();
-    }, [puzzleId, refreshKey]); // Add refreshKey to dependencies
+    }, [puzzleId, refreshKey]);
 
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);
@@ -69,34 +69,34 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
     const getRankStyle = (rank: number): string => {
         switch (rank) {
             case 1:
-                return 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white';
+                return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
             case 2:
-                return 'bg-gradient-to-r from-zinc-400 to-zinc-500 text-white';
+                return 'bg-zinc-500/20 text-zinc-300 border border-zinc-500/30';
             case 3:
-                return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white';
+                return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
             default:
-                return 'bg-gray-100 dark:bg-zinc-800 text-gray-800 dark:text-zinc-100 border border-gray-200 dark:border-zinc-700';
+                return 'bg-border text-text-primary border border-border';
         }
     };
 
     if (loading) {
         return (
             <div className="p-4">
-                <h3 className="text-base font-bold mb-3 text-gray-800 dark:text-zinc-100">🏆 Leaderboard</h3>
-                <p className="text-gray-500 dark:text-zinc-500 text-sm">Loading...</p>
+                <h3 className="text-base font-bold mb-3 text-text-primary font-display tracking-wide">🏆 LEADERBOARD</h3>
+                <p className="text-text-secondary text-sm">Loading...</p>
             </div>
         );
     }
 
     return (
         <div className="p-4">
-            <h3 className="text-base font-bold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <h3 className="text-base font-bold mb-3 text-text-primary font-display tracking-wide flex items-center gap-2">
                 <span>🏆</span>
-                <span>Leaderboard</span>
+                <span>LEADERBOARD</span>
             </h3>
 
             {entries.length === 0 ? (
-                <p className="text-gray-500 dark:text-zinc-500 text-xs text-center py-3">
+                <p className="text-text-secondary text-xs text-center py-3 font-mono uppercase tracking-wider">
                     No scores yet. Be the first!
                 </p>
             ) : (
@@ -114,7 +114,7 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
                                     {entry.playerName}
                                 </div>
                                 {entry.createdAt && (
-                                    <div className="text-[10px] opacity-75">
+                                    <div className="text-[10px] opacity-75 font-mono">
                                         {formatTimestamp(entry.createdAt)}
                                     </div>
                                 )}

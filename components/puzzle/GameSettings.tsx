@@ -8,7 +8,7 @@ interface GameSettingsProps {
     showSolution: boolean;
     onReset: () => void;
     isComplete: boolean;
-    hasSolvedBefore?: boolean; // New prop
+    hasSolvedBefore?: boolean;
     soundEnabled: boolean;
     onSoundEnabledChange: (enabled: boolean) => void;
     highlightWords: boolean;
@@ -34,7 +34,7 @@ export function GameSettings({
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 border border-gray-300 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-zinc-300 font-semibold transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-border border border-border rounded-xl text-text-primary font-mono text-sm uppercase tracking-wider transition-all"
             >
                 <span>Settings</span>
             </button>
@@ -48,12 +48,12 @@ export function GameSettings({
                     />
 
                     {/* Settings Panel */}
-                    <div className="fixed left-4 right-4 top-28 sm:fixed sm:left-1/2 sm:-translate-x-1/2 sm:top-auto sm:mt-2 sm:w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-2xl z-50 p-5 max-h-[60vh] overflow-y-auto">
+                    <div className="fixed left-4 right-4 top-28 sm:fixed sm:left-1/2 sm:-translate-x-1/2 sm:top-auto sm:mt-2 sm:w-80 bg-bg border border-border rounded-2xl shadow-2xl z-50 p-5 max-h-[60vh] overflow-y-auto">
                         <div className="flex items-center justify-between mb-5">
-                            <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-100">Game Settings</h3>
+                            <h3 className="text-lg font-bold text-text-primary font-display tracking-wide">GAME SETTINGS</h3>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-gray-400 dark:text-zinc-400 hover:text-gray-200 dark:hover:text-zinc-200 text-2xl leading-none transition-colors"
+                                className="text-text-secondary hover:text-text-primary text-2xl leading-none transition-colors"
                             >
                                 ×
                             </button>
@@ -75,7 +75,7 @@ export function GameSettings({
                                     label="Show Solution"
                                 />
                                 {!canShowSolution && (
-                                    <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                                    <p className="mt-1 text-xs text-accent">
                                         Complete this puzzle to unlock the solution
                                     </p>
                                 )}
@@ -96,7 +96,7 @@ export function GameSettings({
                             />
                         </div>
 
-                        <hr className="border-gray-200 dark:border-zinc-700 my-4" />
+                        <hr className="border-border my-4" />
 
                         {/* Reset Game */}
                         <button
@@ -104,7 +104,7 @@ export function GameSettings({
                                 onReset();
                                 setIsOpen(false);
                             }}
-                            className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all"
+                            className="w-full px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-mono text-sm uppercase tracking-wider rounded-xl transition-all"
                         >
                             Reset Game
                         </button>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PuzzleForm } from '@/components/puzzle/PuzzleForm';
-import { Footer } from '@/components/puzzle/Footer';
 import { CreatePuzzleInput, Puzzle } from '@/lib/puzzle/types';
 
 export default function MakerPage() {
@@ -53,54 +52,50 @@ export default function MakerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black">
-      <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-bg px-6 py-12 flex flex-col">
+      <div className="max-w-2xl mx-auto w-full pt-12">
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-gray-800 dark:text-zinc-100">CREATE PUZZLE</h1>
-          <p className="text-gray-600 dark:text-zinc-400">Make your own word search game on any topic you like, simply by providing between 10 and 30 words.</p>
+          <h1 className="text-4xl sm:text-5xl font-display tracking-tight uppercase mb-4">CREATE PUZZLE</h1>
+          <p className="text-text-secondary font-light">Make your own word search game on any topic you like, simply by providing between 10 and 30 words.</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 border-2 border-red-500 bg-red-50 dark:bg-red-500/20 text-red-900 dark:text-red-400 rounded-xl">
-            {error}
+          <div className="mb-6 p-4 border border-red-500/50 bg-red-500/10 text-red-400 rounded-xl font-mono text-sm">
+            ⚠️ {error}
           </div>
         )}
 
         <PuzzleForm onSubmit={handleSubmit} isLoading={isLoading} />
 
         {/* Instructions */}
-        <div className="mt-12 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-xl">
-          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
-            <span>📋</span>
-            <span>Instructions</span>
+        <div className="mt-12 bg-surface border border-border rounded-2xl p-6">
+          <h2 className="text-xl font-display tracking-wide uppercase mb-4 text-text-primary">
+            📋 INSTRUCTIONS
           </h2>
-          <ul className="space-y-3 text-gray-600 dark:text-zinc-400 text-sm">
+          <ul className="space-y-3 text-text-secondary text-sm">
             <li className="flex gap-3">
-              <span className="text-purple-500 dark:text-purple-400 font-bold flex-shrink-0">•</span>
+              <span className="text-accent font-bold flex-shrink-0">•</span>
               <span>To create a word search puzzle you must supply a word list of at least 10 words.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-purple-500 dark:text-purple-400 font-bold flex-shrink-0">•</span>
+              <span className="text-accent font-bold flex-shrink-0">•</span>
               <span>The word list should be based on a single theme or topic. For example a television show or a movie you enjoy.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-purple-500 dark:text-purple-400 font-bold flex-shrink-0">•</span>
+              <span className="text-accent font-bold flex-shrink-0">•</span>
               <span>Words can only contain the letters a-z and a maximum of two spaces or dashes. Spaces and dashes will be removed when words are added to the word search grid.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-purple-500 dark:text-purple-400 font-bold flex-shrink-0">•</span>
+              <span className="text-accent font-bold flex-shrink-0">•</span>
               <span>Words can have a maximum length of 14 letters.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-purple-500 dark:text-purple-400 font-bold flex-shrink-0">•</span>
+              <span className="text-accent font-bold flex-shrink-0">•</span>
               <span>All puzzles created will be playable on the site, will be deleted automatically after 60 days of inactivity.</span>
             </li>
           </ul>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

@@ -36,33 +36,33 @@ export default function MyPuzzlesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-lg font-semibold text-gray-700 dark:text-zinc-300">Loading puzzles...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mx-auto mb-4"></div>
+          <p className="text-lg font-mono text-text-secondary uppercase tracking-wider">Loading puzzles...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-bg px-6 py-12 flex flex-col">
+      <div className="max-w-4xl mx-auto w-full pt-12">
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-zinc-100">MY PUZZLES</h1>
-            <p className="text-gray-600 dark:text-zinc-400">
+            <h1 className="text-4xl sm:text-5xl font-display tracking-tight uppercase mb-2">MY PUZZLES</h1>
+            <p className="text-text-secondary font-mono text-sm uppercase tracking-wider">
               {puzzles.length} {puzzles.length === 1 ? 'puzzle' : 'puzzles'} stored on this device
             </p>
           </div>
-          <Button onClick={() => router.push('/maker')}>
+          <Button onClick={() => router.push('/maker')} size="sm">
             Create New
           </Button>
         </div>
 
         {puzzles.length === 0 ? (
-          <div className="text-center py-16 border-2 border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 rounded-2xl">
-            <p className="text-lg mb-6 text-gray-800 dark:text-zinc-100">No puzzles yet.</p>
+          <div className="flex flex-col items-center justify-center py-24 border border-border bg-surface rounded-2xl">
+            <p className="text-lg mb-6 text-text-primary font-display tracking-wide text-center">No puzzles yet.</p>
             <Button onClick={() => router.push('/maker')}>
               Create Your First Puzzle
             </Button>

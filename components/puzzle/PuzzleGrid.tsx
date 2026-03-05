@@ -11,7 +11,7 @@ interface PuzzleGridProps {
     onWordFound?: (word: string) => void;
     onPuzzleComplete?: () => void;
     className?: string;
-    fullscreen?: boolean; // New prop for fullscreen mode
+    fullscreen?: boolean;
 }
 
 const WORD_COLORS = [
@@ -316,7 +316,7 @@ export function PuzzleGrid({
         return cells.includes(`${row}-${col}`);
     };
 
-    // Get color for a cell
+    // Get color for a cell - with opacity for background
     const getCellColor = useCallback((row: number, col: number): string | null => {
         // Check found words
         for (const [word, color] of foundWordColors) {
@@ -330,7 +330,14 @@ export function PuzzleGrid({
             let c = startCol;
 
             do {
-                if (r === row && c === col) return color;
+                if (r === row && c === col) {
+                    // Add opacity for highlight effect
+                    const hex = color.replace('#', '');
+                    const r_val = parseInt(hex.substr(0, 2), 16);
+                    const g = parseInt(hex.substr(2, 2), 16);
+                    const b = parseInt(hex.substr(4, 2), 16);
+                    return `rgba(${r_val}, ${g}, ${b}, 0.7)`;
+                }
                 if (r === endRow && c === endCol) break;
                 r += rowDelta;
                 c += colDelta;
@@ -349,7 +356,13 @@ export function PuzzleGrid({
                 do {
                     if (r === row && c === col) {
                         const colorIndex = placements.indexOf(placement) % WORD_COLORS.length;
-                        return WORD_COLORS[colorIndex];
+                        const color = WORD_COLORS[colorIndex];
+                        // Add opacity for solution highlight
+                        const hex = color.replace('#', '');
+                        const r_val = parseInt(hex.substr(0, 2), 16);
+                        const g = parseInt(hex.substr(2, 2), 16);
+                        const b = parseInt(hex.substr(4, 2), 16);
+                        return `rgba(${r_val}, ${g}, ${b}, 0.7)`;
                     }
                     if (r === endRow && c === endCol) break;
                     r += rowDelta;
@@ -375,17 +388,15 @@ export function PuzzleGrid({
         return deltas[direction] || [0, 1];
     };
 
-    // Dynamic font size based on grid size and fullscreen mode
+    // Dynamic font size based on grid size
     const getFontSizeClass = (): string => {
         const size = grid.length;
-        // Fullscreen mode - much larger text
         if (fullscreen) {
             if (size <= 10) return 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl';
             if (size <= 12) return 'text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl';
             if (size <= 15) return 'text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl';
             return 'text-sm sm:text-base md:text-lg lg:text-xl';
         }
-        // Normal mode
         if (size <= 10) return 'text-base sm:text-lg md:text-xl lg:text-2xl';
         if (size <= 12) return 'text-sm sm:text-base md:text-lg lg:text-xl';
         if (size <= 15) return 'text-xs sm:text-sm md:text-base lg:text-lg';
@@ -396,25 +407,15 @@ export function PuzzleGrid({
         const color = getCellColor(row, col);
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
-        const isWordCell = color !== '';
 
         const base = `w-full h-full border flex items-center justify-center font-mono font-bold ${getFontSizeClass()} cursor-pointer aspect-square touch-none transition-all duration-200`;
 
-        if (isWordCell) return `${base} border-white/10`;
+        if (color) return `${base} border-white/10`;
         if (isSelected) return `${base} border-[#00FF94]/50`;
         if (isFirst) return `${base} border-[#00FF94]`;
         return `${base} border-[#262626] bg-[#050505] hover:bg-[#121212] hover:border-[#A3A3A3]/50`;
     };
 
-    const getCellBackground = (row: number, col: number): string => {
-        const color = getCellColor(row, col);
-        if (color) return color;
-        if (isInSelection(row, col)) return 'rgba(59, 130, 246, 0.5)';
-        if (selectState.firstCell?.row === row && selectState.firstCell?.col === col) return 'rgba(250, 204, 21, 0.5)';
-        return '';
-    };
-
-    // Calculate max width based on grid size for optimal display
     const getMaxWidth = (): string => {
         const size = grid.length;
         if (size <= 12) return '100%';
@@ -426,10 +427,10 @@ export function PuzzleGrid({
         <div className={className}>
             <div className="w-full flex items-center justify-center">
                 <div
-                    className={`grid gap-px bg-white dark:bg-zinc-900 ${
+                    className={`grid gap-px bg-surface ${
                         fullscreen
                             ? 'border-0 rounded-none p-0 shadow-none'
-                            : 'border-2 border-gray-300 dark:border-zinc-700 rounded-lg p-2 shadow-xl w-full'
+                            : 'border-2 border-border rounded-lg p-2 shadow-xl w-full'
                     }`}
                     style={{
                         gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
@@ -444,7 +445,6 @@ export function PuzzleGrid({
                     {grid.map((row, rowIndex) =>
                         row.map((cell, colIndex) => {
                             const cellKey = `${rowIndex}-${colIndex}`;
-                            const color = getCellColor(rowIndex, colIndex);
                             const isSelected = isInSelection(rowIndex, colIndex);
                             const isFirst = selectState.firstCell?.row === rowIndex && selectState.firstCell?.col === colIndex;
 
@@ -458,7 +458,7 @@ export function PuzzleGrid({
                                     onTouchMove={handleTouchMove}
                                     onTouchEnd={handleTouchEnd}
                                     style={{
-                                        backgroundColor: getCellBackground(rowIndex, colIndex),
+                                        backgroundColor: getCellColor(rowIndex, colIndex) || undefined,
                                     }}
                                     className={getCellStyle(rowIndex, colIndex)}
                                     aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
@@ -471,7 +471,7 @@ export function PuzzleGrid({
                                         transition: { duration: 0.15, ease: "easeOut" }
                                     }}
                                 >
-                                    <span className={color ? 'text-white' : isSelected || isFirst ? 'text-[#00FF94]' : 'text-[#FAFAFA]'}>
+                                    <span className={isSelected || isFirst ? 'text-[#00FF94]' : 'text-[#FAFAFA]'}>
                                         {cell}
                                     </span>
                                 </motion.button>
@@ -481,7 +481,7 @@ export function PuzzleGrid({
                 </div>
             </div>
 
-            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-4 text-center font-medium">
+            <p className="text-sm text-text-secondary mt-4 text-center font-mono uppercase tracking-wider">
                 👆 Tap first & last letter OR 🖱️ DRAG to select words
             </p>
         </div>
