@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { WordPlacement } from '@/lib/puzzle/types';
 
 interface PuzzleGridProps {
@@ -395,13 +396,14 @@ export function PuzzleGrid({
         const color = getCellColor(row, col);
         const isSelected = isInSelection(row, col);
         const isFirst = selectState.firstCell?.row === row && selectState.firstCell?.col === col;
+        const isWordCell = color !== '';
 
-        const base = `w-full h-full border border-gray-300 dark:border-zinc-700 flex items-center justify-center font-mono font-bold ${getFontSizeClass()} transition-all duration-150 cursor-pointer aspect-square touch-none`;
+        const base = `w-full h-full border flex items-center justify-center font-mono font-bold ${getFontSizeClass()} cursor-pointer aspect-square touch-none transition-all duration-200`;
 
-        if (color) return `${base} text-white shadow-md scale-105`;
-        if (isSelected) return `${base} bg-blue-500 scale-105 shadow-md`;
-        if (isFirst) return `${base} bg-yellow-500 scale-110 shadow-md`;
-        return `${base} bg-white dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 hover:scale-105 text-gray-800 dark:text-zinc-100`;
+        if (isWordCell) return `${base} border-white/10`;
+        if (isSelected) return `${base} border-[#00FF94]/50`;
+        if (isFirst) return `${base} border-[#00FF94]`;
+        return `${base} border-[#262626] bg-[#050505] hover:bg-[#121212] hover:border-[#A3A3A3]/50`;
     };
 
     const getCellBackground = (row: number, col: number): string => {
@@ -440,24 +442,44 @@ export function PuzzleGrid({
                     }}
                 >
                     {grid.map((row, rowIndex) =>
-                        row.map((cell, colIndex) => (
-                            <button
-                                key={`${rowIndex}-${colIndex}`}
-                                onClick={() => handleCellClick(rowIndex, colIndex)}
-                                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                                onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
-                                onTouchMove={handleTouchMove}
-                                onTouchEnd={handleTouchEnd}
-                                style={{
-                                    backgroundColor: getCellBackground(rowIndex, colIndex),
-                                }}
-                                className={getCellStyle(rowIndex, colIndex)}
-                                aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
-                            >
-                                {cell}
-                            </button>
-                        ))
+                        row.map((cell, colIndex) => {
+                            const cellKey = `${rowIndex}-${colIndex}`;
+                            const color = getCellColor(rowIndex, colIndex);
+                            const isSelected = isInSelection(rowIndex, colIndex);
+                            const isFirst = selectState.firstCell?.row === rowIndex && selectState.firstCell?.col === colIndex;
+
+                            return (
+                                <motion.button
+                                    key={cellKey}
+                                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                                    onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                                    onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                                    onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={handleTouchEnd}
+                                    style={{
+                                        backgroundColor: getCellBackground(rowIndex, colIndex),
+                                    }}
+                                    className={getCellStyle(rowIndex, colIndex)}
+                                    aria-label={`Cell ${rowIndex},${colIndex}: ${cell}`}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    animate={{
+                                        scale: isSelected ? 1.1 : isFirst ? 1.15 : 1,
+                                        transition: { duration: 0.15, ease: "easeOut" }
+                                    }}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{
+                                        opacity: 1,
+                                        scale: isSelected ? 1.1 : isFirst ? 1.15 : 1
+                                    }}
+                                >
+                                    <span className={color ? 'text-white' : isSelected || isFirst ? 'text-[#00FF94]' : 'text-[#FAFAFA]'}>
+                                        {cell}
+                                    </span>
+                                </motion.button>
+                            );
+                        })
                     )}
                 </div>
             </div>
