@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 export function Header() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -28,6 +29,7 @@ export function Header() {
                 <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
 
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-text-primary">
                 <Link href="/maker" className="hover:text-accent transition-colors">Create</Link>
                 <Link href="/my-puzzles" className="hover:text-accent transition-colors">My Puzzles</Link>
@@ -44,7 +46,99 @@ export function Header() {
                 )}
             </nav>
 
-            {/* Mobile menu button could go here */}
+            {/* Mobile Menu Button */}
+            <button
+                className="md:hidden text-text-primary p-2"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+            >
+                <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    {mobileMenuOpen ? (
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    ) : (
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    )}
+                </svg>
+            </button>
+
+            {/* Mobile Menu Sidebar */}
+            {mobileMenuOpen && (
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                        onClick={() => setMobileMenuOpen(false)}
+                    />
+
+                    {/* Sidebar */}
+                    <div className="fixed right-0 top-0 bottom-0 w-72 bg-surface border-l border-border z-50 md:hidden flex flex-col">
+                        {/* Close Button */}
+                        <div className="flex items-center justify-between p-6 border-b border-border">
+                            <span className="font-display text-lg uppercase text-text-primary">Menu</span>
+                            <button
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-text-secondary hover:text-text-primary text-2xl"
+                                aria-label="Close menu"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        {/* Navigation Links */}
+                        <nav className="flex-1 p-6 space-y-4">
+                            <Link
+                                href="/maker"
+                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                Create
+                            </Link>
+                            <Link
+                                href="/my-puzzles"
+                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                My Puzzles
+                            </Link>
+                            <a
+                                href="https://github.com/Decka-tan/ritual-word-search"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                            >
+                                GitHub
+                            </a>
+
+                            {/* Theme Toggle */}
+                            {mounted && (
+                                <div className="pt-4 border-t border-border">
+                                    <button
+                                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                        className="w-full font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 text-left"
+                                    >
+                                        {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                                    </button>
+                                </div>
+                            )}
+                        </nav>
+                    </div>
+                </>
+            )}
         </header>
     );
 }
