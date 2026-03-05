@@ -6,6 +6,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-display: "Anton", sans-serif;
 
+  /* Default: Dark Mode (Ritual Theme) */
   --color-bg: #050505;
   --color-surface: #121212;
   --color-border: #262626;
@@ -14,12 +15,23 @@
   --color-text-secondary: #A3A3A3;
 }
 
+/* Light Mode Override */
+.light {
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-border: #E0E0E0;
+  --color-accent: #00AA6C;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #666666;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
@@ -40,4 +52,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
 }
-

@@ -29,6 +29,7 @@ export default function PlayPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [hasSolvedBefore, setHasSolvedBefore] = useState(false);
   const [leaderboardRefreshKey, setLeaderboardRefreshKey] = useState(0);
+  const [showExportModal, setShowExportModal] = useState(false);
   const puzzleRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -80,7 +81,11 @@ export default function PlayPage() {
     }
   }, [params.id]);
 
-  const handleExportPNG = async () => {
+  const handleExportPNG = () => {
+    setShowExportModal(true);
+  };
+
+  const exportPNG = async (darkMode: boolean) => {
     if (!puzzle) return;
 
     try {
@@ -99,6 +104,23 @@ export default function PlayPage() {
       const wordSpacing = 22;
       const extraBottomPadding = 40; // Extra space at bottom
       const borderSize = 2; // Outer border size
+
+      // Color scheme based on mode
+      const colors = darkMode ? {
+        bg: '#050505',
+        gridBg: '#121212',
+        textPrimary: '#FAFAFA',
+        textSecondary: '#A3A3A3',
+        cellBorder: '#262626',
+        gridBorder: '#A3A3A3',
+      } : {
+        bg: '#FFFFFF',
+        gridBg: '#F5F5F5',
+        textPrimary: '#1A1A1A',
+        textSecondary: '#666666',
+        cellBorder: '#E0E0E0',
+        gridBorder: '#1A1A1A',
+      };
 
       // Calculate dimensions (include border in calculation)
       const gridWidth = gridSize * cellSize;
@@ -122,17 +144,17 @@ export default function PlayPage() {
       ctx.scale(scale, scale);
 
       // Background
-      ctx.fillStyle = '#050505';
+      ctx.fillStyle = colors.bg;
       ctx.fillRect(0, 0, totalWidth, totalHeight);
 
       // Title
-      ctx.fillStyle = '#FAFAFA';
+      ctx.fillStyle = colors.textPrimary;
       ctx.font = 'bold 28px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(puzzle.title, totalWidth / 2, padding + 35);
 
       // Subtitle (author + description)
-      ctx.fillStyle = '#A3A3A3';
+      ctx.fillStyle = colors.textSecondary;
       ctx.font = '14px Arial, sans-serif';
       let subtitle = '';
       if (puzzle.authorName) subtitle = `By ${puzzle.authorName}`;
@@ -147,7 +169,7 @@ export default function PlayPage() {
       const gridStartY = padding + titleHeight + borderSize;
 
       // Draw grid background
-      ctx.fillStyle = '#121212';
+      ctx.fillStyle = colors.gridBg;
       ctx.fillRect(gridStartX - 5, gridStartY - 5, gridWidth + 10, gridHeight + 10);
 
       // Draw grid cells
@@ -160,7 +182,7 @@ export default function PlayPage() {
           const y = gridStartY + row * cellSize + cellSize / 2;
 
           // Cell border
-          ctx.strokeStyle = '#262626';
+          ctx.strokeStyle = colors.cellBorder;
           ctx.lineWidth = 1;
           ctx.strokeRect(
             gridStartX + col * cellSize,
@@ -170,14 +192,14 @@ export default function PlayPage() {
           );
 
           // Letter
-          ctx.fillStyle = '#FAFAFA';
+          ctx.fillStyle = colors.textPrimary;
           ctx.font = 'bold 20px Arial, sans-serif';
           ctx.fillText(puzzle.grid[row][col], x, y);
         }
       }
 
       // Draw outer grid border
-      ctx.strokeStyle = '#A3A3A3';
+      ctx.strokeStyle = colors.gridBorder;
       ctx.lineWidth = 2;
       ctx.strokeRect(gridStartX, gridStartY, gridWidth, gridHeight);
 
@@ -188,12 +210,12 @@ export default function PlayPage() {
       // Reset text baseline for word list (was 'middle' for grid)
       ctx.textBaseline = 'alphabetic';
 
-      ctx.fillStyle = '#FAFAFA';
+      ctx.fillStyle = colors.textPrimary;
       ctx.font = 'bold 14px Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('WORDS TO FIND:', wordListX, wordListY);
 
-      ctx.fillStyle = '#A3A3A3';
+      ctx.fillStyle = colors.textSecondary;
       ctx.font = '13px Arial, sans-serif';
 
       words.forEach((word, index) => {
@@ -203,7 +225,7 @@ export default function PlayPage() {
 
       // Footer with URL
       const footerY = gridStartY + contentHeight + padding;
-      ctx.fillStyle = '#A3A3A3';
+      ctx.fillStyle = colors.textSecondary;
       ctx.font = '12px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
@@ -217,9 +239,11 @@ export default function PlayPage() {
       // Download
       const link = document.createElement('a');
       const safeTitle = puzzle?.title?.replace(/[^a-z0-9]/gi, '_') || 'puzzle';
-      link.download = `${safeTitle}_word_search.png`;
+      link.download = `${safeTitle}_word_search${darkMode ? '_dark' : '_light'}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+
+      setShowExportModal(false);
     } catch (error) {
       console.error('Export failed:', error);
       alert('Failed to export image. Please try again.');
@@ -568,6 +592,56 @@ export default function PlayPage() {
         onSubmit={handleSubmitScore}
         onClose={() => setShowNameInput(false)}
       />
+
+      {/* Export PNG Modal */}
+      {showExportModal && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowExportModal(false)}
+          />
+
+          {/* Modal */}
+          <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-bg border border-border rounded-2xl shadow-2xl p-6 w-80">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-text-primary font-display tracking-wide">EXPORT PNG</h3>
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="text-text-secondary hover:text-text-primary text-2xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-sm text-text-secondary mb-4">Choose export style:</p>
+
+              <button
+                onClick={() => exportPNG(true)}
+                className="w-full px-4 py-4 bg-[#050505] hover:bg-[#121212] border border-border text-text-primary font-mono text-sm uppercase tracking-wider rounded-xl transition-all flex items-center justify-between gap-3"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-lg">🌙</span>
+                  <span>Dark Mode</span>
+                </span>
+                <span className="text-xs text-text-secondary">Ritual style</span>
+              </button>
+
+              <button
+                onClick={() => exportPNG(false)}
+                className="w-full px-4 py-4 bg-white hover:bg-gray-100 border border-gray-300 text-gray-900 font-mono text-sm uppercase tracking-wider rounded-xl transition-all flex items-center justify-between gap-3"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-lg">☀️</span>
+                  <span>Light Mode</span>
+                </span>
+                <span className="text-xs text-gray-600">Print friendly</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
