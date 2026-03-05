@@ -60,7 +60,7 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-border border border-border rounded-xl text-text-primary font-mono text-sm uppercase tracking-wider transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-border border border-border rounded-xl text-text-primary font-mono text-sm uppercase tracking-wider font-semibold transition-all"
             >
                 <span className="text-lg">📤</span>
                 <span>Share</span>
@@ -77,7 +77,10 @@ export function ShareButtons({ puzzleId, puzzleTitle, timeSeconds, isComplete }:
                     {/* Share Panel */}
                     <div className="fixed left-4 right-4 top-28 sm:fixed sm:left-1/2 sm:-translate-x-1/2 sm:top-auto sm:mt-2 sm:w-80 bg-bg border border-border rounded-2xl shadow-2xl z-50 p-5">
                         <div className="flex items-center justify-between mb-5">
-                            <h3 className="text-lg font-bold text-text-primary font-display tracking-wide">SHARE PUZZLE</h3>
+                            <h3 className="text-base font-bold text-text-primary font-mono uppercase tracking-wider flex items-center gap-2">
+                                <span>📤</span>
+                                <span>SHARE PUZZLE</span>
+                            </h3>
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="text-text-secondary hover:text-text-primary text-2xl leading-none transition-colors"

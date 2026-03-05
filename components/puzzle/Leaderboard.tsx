@@ -71,7 +71,7 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
             case 1:
                 return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
             case 2:
-                return 'bg-zinc-500/20 text-zinc-300 border border-zinc-500/30';
+                return 'bg-gray-500/20 text-gray-600 border border-gray-500/30 dark:text-zinc-300';
             case 3:
                 return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
             default:

@@ -411,9 +411,9 @@ export function PuzzleGrid({
         const base = `w-full h-full border flex items-center justify-center font-mono font-bold ${getFontSizeClass()} cursor-pointer aspect-square touch-none transition-all duration-200`;
 
         if (color) return `${base} border-white/10`;
-        if (isSelected) return `${base} border-[#00FF94]/50`;
-        if (isFirst) return `${base} border-[#00FF94]`;
-        return `${base} border-[#262626] bg-[#050505] hover:bg-[#121212] hover:border-[#A3A3A3]/50`;
+        if (isSelected) return `${base} border-accent/50`;
+        if (isFirst) return `${base} border-accent`;
+        return `${base} border-border bg-bg hover:bg-surface hover:border-text-secondary/50`;
     };
 
     const getMaxWidth = (): string => {
@@ -471,7 +471,7 @@ export function PuzzleGrid({
                                         transition: { duration: 0.15, ease: "easeOut" }
                                     }}
                                 >
-                                    <span className={isSelected || isFirst ? 'text-[#00FF94]' : 'text-[#FAFAFA]'}>
+                                    <span className={isSelected || isFirst ? 'text-accent' : 'text-text-primary'}>
                                         {cell}
                                     </span>
                                 </motion.button>
