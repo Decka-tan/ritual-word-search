@@ -514,14 +514,14 @@ export default function PlayPage() {
               isComplete={isComplete}
             />
             <Button variant="secondary" size="sm" onClick={handleExportPNG}>
-              Export PNG
+              📷 Export PNG
             </Button>
             <Button
               variant="secondary"
               size="sm"
               onClick={toggleFullscreen}
             >
-              {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+              {isFullscreen ? '⛶ Exit' : '⛶ Fullscreen'}
             </Button>
           </div>
         </div>

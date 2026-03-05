@@ -36,6 +36,7 @@ export function GameSettings({
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-border border border-border rounded-xl text-text-primary font-mono text-sm uppercase tracking-wider transition-all"
             >
+                <span>⚙️</span>
                 <span>Settings</span>
             </button>
 

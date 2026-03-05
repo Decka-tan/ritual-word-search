@@ -82,7 +82,10 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
     if (loading) {
         return (
             <div className="p-4">
-                <h3 className="text-base font-bold mb-3 text-text-primary font-display tracking-wide">🏆 LEADERBOARD</h3>
+                <h3 className="text-base font-bold mb-3 text-text-primary font-mono uppercase tracking-wider flex items-center gap-2">
+                    <span>🏆</span>
+                    <span>LEADERBOARD</span>
+                </h3>
                 <p className="text-text-secondary text-sm">Loading...</p>
             </div>
         );
@@ -90,7 +93,7 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
 
     return (
         <div className="p-4">
-            <h3 className="text-base font-bold mb-3 text-text-primary font-display tracking-wide flex items-center gap-2">
+            <h3 className="text-base font-bold mb-3 text-text-primary font-mono uppercase tracking-wider flex items-center gap-2">
                 <span>🏆</span>
                 <span>LEADERBOARD</span>
             </h3>
