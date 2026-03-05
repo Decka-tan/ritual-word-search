@@ -69,11 +69,11 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
     const getRankStyle = (rank: number): string => {
         switch (rank) {
             case 1:
-                return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
+                return 'bg-yellow-500/20 text-amber-600 dark:text-yellow-400 border border-yellow-500/30';
             case 2:
                 return 'bg-gray-500/20 text-gray-600 border border-gray-500/30 dark:text-zinc-300';
             case 3:
-                return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
+                return 'bg-orange-500/20 text-orange-700 dark:text-orange-400 border border-orange-500/30';
             default:
                 return 'bg-border text-text-primary border border-border';
         }
