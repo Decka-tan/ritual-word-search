@@ -86,7 +86,7 @@ export function Header() {
                     />
 
                     {/* Sidebar */}
-                    <div className="absolute right-6 top-20 w-64 bg-bg/95 backdrop-blur-md border border-border rounded-2xl z-50 md:hidden shadow-2xl">
+                    <div className="absolute right-6 top-20 w-64 bg-surface border border-border rounded-2xl z-50 md:hidden shadow-2xl">
                         {/* Navigation Links */}
                         <nav className="p-4 space-y-2">
                             <Link
