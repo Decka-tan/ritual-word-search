@@ -57,25 +57,16 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
         return `${diffDays}d ago`;
     };
 
-    const getRankIcon = (rank: number): string => {
-        switch (rank) {
-            case 1: return '🥇';
-            case 2: return '🥈';
-            case 3: return '🥉';
-            default: return `#${rank}`;
-        }
-    };
-
     const getRankStyle = (rank: number): string => {
         switch (rank) {
             case 1:
-                return 'bg-yellow-500/20 text-amber-600 dark:text-yellow-400 border border-yellow-500/30';
+                return 'bg-orange-500 text-white';
             case 2:
-                return 'bg-gray-500/20 text-gray-600 border border-gray-500/30 dark:text-zinc-300';
+                return 'bg-yellow-500 text-gray-900';
             case 3:
-                return 'bg-orange-500/20 text-orange-700 dark:text-orange-400 border border-orange-500/30';
+                return 'bg-blue-500 text-white';
             default:
-                return 'bg-border text-text-primary border border-border';
+                return 'bg-border text-text-primary';
         }
     };
 
@@ -110,7 +101,7 @@ export function Leaderboard({ puzzleId, refreshKey }: LeaderboardProps) {
                             className={`flex items-center gap-2 p-2 rounded-lg ${getRankStyle(entry.rank)}`}
                         >
                             <span className="text-base w-7 text-center font-bold flex-shrink-0">
-                                {getRankIcon(entry.rank)}
+                                #{entry.rank}
                             </span>
                             <div className="flex-1 min-w-0">
                                 <div className="font-semibold truncate text-xs">
