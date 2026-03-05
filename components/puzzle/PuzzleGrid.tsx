@@ -12,6 +12,7 @@ interface PuzzleGridProps {
     onPuzzleComplete?: () => void;
     className?: string;
     fullscreen?: boolean;
+    foundWords?: Set<string>;
 }
 
 const WORD_COLORS = [
@@ -31,8 +32,12 @@ export function PuzzleGrid({
     onPuzzleComplete,
     className,
     fullscreen = false,
+    foundWords: externalFoundWords,
 }: PuzzleGridProps) {
-    const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
+    // Use external foundWords if provided, otherwise use internal state
+    const [internalFoundWords, setInternalFoundWords] = useState<Set<string>>(new Set());
+    const foundWords = externalFoundWords || internalFoundWords;
+
     const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
     const [selectState, setSelectState] = useState<SelectState>({ firstCell: null, secondCell: null });
 
@@ -78,7 +83,7 @@ export function PuzzleGrid({
         const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
 
         if (foundWord && !foundWords.has(foundWord)) {
-            setFoundWords((prev) => {
+            const updateFoundWords = (prev: Set<string>) => {
                 const newSet = new Set(prev).add(foundWord);
                 const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
                 setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
@@ -90,7 +95,15 @@ export function PuzzleGrid({
 
                 onWordFound?.(foundWord);
                 return newSet;
-            });
+            };
+
+            // Update the appropriate state
+            if (externalFoundWords) {
+                // External state managed by parent, just notify
+                onWordFound?.(foundWord);
+            } else {
+                setInternalFoundWords(updateFoundWords);
+            }
         }
 
         // Reset selection
@@ -146,19 +159,20 @@ export function PuzzleGrid({
             const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
 
             if (foundWord && !foundWords.has(foundWord)) {
-                setFoundWords((prev) => {
-                    const newSet = new Set(prev).add(foundWord);
-                    const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                    setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
+                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
 
-                    const allWordsList = placements.map((p) => p.word);
-                    if (newSet.size === allWordsList.length) {
-                        onPuzzleComplete?.();
-                    }
+                const allWordsList = placements.map((p) => p.word);
+                if (foundWords.size + 1 === allWordsList.length) {
+                    onPuzzleComplete?.();
+                }
 
-                    onWordFound?.(foundWord);
-                    return newSet;
-                });
+                onWordFound?.(foundWord);
+
+                // Only update internal state if we're not using external state
+                if (!externalFoundWords) {
+                    setInternalFoundWords((prev) => new Set(prev).add(foundWord));
+                }
             }
 
             setIsDragging(false);
@@ -246,19 +260,20 @@ export function PuzzleGrid({
             const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
 
             if (foundWord && !foundWords.has(foundWord)) {
-                setFoundWords((prev) => {
-                    const newSet = new Set(prev).add(foundWord);
-                    const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                    setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
+                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
+                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
 
-                    const allWordsList = placements.map((p) => p.word);
-                    if (newSet.size === allWordsList.length) {
-                        onPuzzleComplete?.();
-                    }
+                const allWordsList = placements.map((p) => p.word);
+                if (foundWords.size + 1 === allWordsList.length) {
+                    onPuzzleComplete?.();
+                }
 
-                    onWordFound?.(foundWord);
-                    return newSet;
-                });
+                onWordFound?.(foundWord);
+
+                // Only update internal state if we're not using external state
+                if (!externalFoundWords) {
+                    setInternalFoundWords((prev) => new Set(prev).add(foundWord));
+                }
             }
         }
 

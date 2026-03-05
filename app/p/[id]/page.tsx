@@ -444,6 +444,7 @@ export default function PlayPage() {
                 onWordFound={handleWordFound}
                 onPuzzleComplete={handlePuzzleComplete}
                 fullscreen={true}
+                foundWords={foundWords}
               />
             </div>
           </div>
@@ -572,6 +573,7 @@ export default function PlayPage() {
                 showSolution={showSolution}
                 onWordFound={handleWordFound}
                 onPuzzleComplete={handlePuzzleComplete}
+                foundWords={foundWords}
               />
             </div>
           </div>
