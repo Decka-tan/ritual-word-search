@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function Header() {
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between mix-blend-difference">
+        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between bg-gradient-to-b from-black/90 via-black/50 to-transparent">
             <Link href="/" className="flex items-center gap-3 group">
                 <div className="w-8 h-8 relative flex items-center justify-center overflow-hidden">
                     <Image

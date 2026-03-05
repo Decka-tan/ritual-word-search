@@ -513,20 +513,15 @@ export default function PlayPage() {
               timeSeconds={timer}
               isComplete={isComplete}
             />
-            <Button variant="secondary" onClick={handleExportPNG}>
+            <Button variant="secondary" size="sm" onClick={handleExportPNG}>
               Export PNG
             </Button>
             <Button
               variant="secondary"
+              size="sm"
               onClick={toggleFullscreen}
             >
               {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => router.push('/maker')}
-            >
-              Create Your Own
             </Button>
           </div>
         </div>
