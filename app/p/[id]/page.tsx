@@ -619,13 +619,13 @@ export default function PlayPage() {
 
               <button
                 onClick={() => exportPNG(true)}
-                className="w-full px-4 py-4 bg-[#050505] hover:bg-[#121212] border border-border text-text-primary font-mono text-sm uppercase tracking-wider rounded-xl transition-all flex items-center justify-between gap-3"
+                className="w-full px-4 py-4 bg-[#050505] hover:bg-[#121212] border border-border text-white font-mono text-sm uppercase tracking-wider rounded-xl transition-all flex items-center justify-between gap-3"
               >
                 <span className="flex items-center gap-2">
                   <span className="text-lg">🌙</span>
                   <span>Dark Mode</span>
                 </span>
-                <span className="text-xs text-text-secondary">Ritual style</span>
+                <span className="text-xs text-gray-400">Ritual style</span>
               </button>
 
               <button
