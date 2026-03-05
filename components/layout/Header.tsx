@@ -15,7 +15,7 @@ export function Header() {
     }, []);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between bg-bg/90 backdrop-blur-sm">
+        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
                 <div className="w-8 h-8 relative flex items-center justify-center overflow-hidden">
                     <Image
@@ -86,31 +86,19 @@ export function Header() {
                     />
 
                     {/* Sidebar */}
-                    <div className="fixed right-0 top-0 bottom-0 w-72 bg-surface border-l border-border z-50 md:hidden flex flex-col">
-                        {/* Close Button */}
-                        <div className="flex items-center justify-between p-6 border-b border-border">
-                            <span className="font-display text-lg uppercase text-text-primary">Menu</span>
-                            <button
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="text-text-secondary hover:text-text-primary text-2xl"
-                                aria-label="Close menu"
-                            >
-                                ×
-                            </button>
-                        </div>
-
+                    <div className="absolute right-6 top-20 w-64 bg-bg/95 backdrop-blur-md border border-border rounded-2xl z-50 md:hidden shadow-2xl">
                         {/* Navigation Links */}
-                        <nav className="flex-1 p-6 space-y-4">
+                        <nav className="p-4 space-y-2">
                             <Link
                                 href="/maker"
-                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                                className="block font-mono text-xs uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 px-3 rounded-lg hover:bg-surface"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
                                 Create
                             </Link>
                             <Link
                                 href="/my-puzzles"
-                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                                className="block font-mono text-xs uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 px-3 rounded-lg hover:bg-surface"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
                                 My Puzzles
@@ -119,17 +107,17 @@ export function Header() {
                                 href="https://github.com/Decka-tan/ritual-word-search"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2"
+                                className="block font-mono text-xs uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 px-3 rounded-lg hover:bg-surface"
                             >
                                 GitHub
                             </a>
 
                             {/* Theme Toggle */}
                             {mounted && (
-                                <div className="pt-4 border-t border-border">
+                                <div className="pt-2 border-t border-border">
                                     <button
                                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                                        className="w-full font-mono text-sm uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 text-left"
+                                        className="w-full font-mono text-xs uppercase tracking-wider text-text-primary hover:text-accent transition-colors py-2 px-3 rounded-lg hover:bg-surface text-left"
                                     >
                                         {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
                                     </button>
