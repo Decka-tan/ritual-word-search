@@ -15,26 +15,11 @@
   --foreground: #fafafa;
 }
 
-/* Custom theme colors */
-@layer base {
-  :root {
-    --color-bg: #050505;
-    --color-surface: #121212;
-    --color-border: #262626;
-    --color-accent: #00FF94;
-    --color-text-primary: #FAFAFA;
-    --color-text-secondary: #A3A3A3;
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-bg text-text-primary;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  background-color: #050505;
+  color: #fafafa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Smooth transitions */
@@ -49,19 +34,19 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: #262626;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-secondary);
+  background: #A3A3A3;
 }
 
 /* Selection */
 ::selection {
-  background: var(--color-accent);
+  background: #00FF94;
   color: #000;
 }
 
