@@ -19,6 +19,16 @@ const WORD_COLORS = [
     '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899',
 ];
 
+// Deterministically generate color for a word based on its content
+const getWordColor = (word: string): string => {
+  let hash = 0;
+  for (let i = 0; i < word.length; i++) {
+    hash = word.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return WORD_COLORS[Math.abs(hash) % WORD_COLORS.length];
+};
+
+
 interface SelectState {
     firstCell: { row: number; col: number } | null;
     secondCell: { row: number; col: number } | null;
@@ -38,7 +48,6 @@ export function PuzzleGrid({
     const [internalFoundWords, setInternalFoundWords] = useState<Set<string>>(new Set());
     const foundWords = externalFoundWords || internalFoundWords;
 
-    const [foundWordColors, setFoundWordColors] = useState<Map<string, string>>(new Map());
     const [selectState, setSelectState] = useState<SelectState>({ firstCell: null, secondCell: null });
 
     // Drag state
@@ -85,8 +94,6 @@ export function PuzzleGrid({
         if (foundWord && !foundWords.has(foundWord)) {
             const updateFoundWords = (prev: Set<string>) => {
                 const newSet = new Set(prev).add(foundWord);
-                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
 
                 const allWordsList = placements.map((p) => p.word);
                 if (newSet.size === allWordsList.length) {
@@ -159,9 +166,6 @@ export function PuzzleGrid({
             const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
 
             if (foundWord && !foundWords.has(foundWord)) {
-                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
-
                 const allWordsList = placements.map((p) => p.word);
                 if (foundWords.size + 1 === allWordsList.length) {
                     onPuzzleComplete?.();
@@ -260,9 +264,6 @@ export function PuzzleGrid({
             const foundWord = allWords.includes(word) ? word : (allWords.includes(reversed) ? reversed : null);
 
             if (foundWord && !foundWords.has(foundWord)) {
-                const color = WORD_COLORS[foundWordColors.size % WORD_COLORS.length];
-                setFoundWordColors((prev) => new Map(prev).set(foundWord, color));
-
                 const allWordsList = placements.map((p) => p.word);
                 if (foundWords.size + 1 === allWordsList.length) {
                     onPuzzleComplete?.();
@@ -334,12 +335,13 @@ export function PuzzleGrid({
     // Get color for a cell - with opacity for background
     const getCellColor = useCallback((row: number, col: number): string | null => {
         // Check found words
-        for (const [word, color] of foundWordColors) {
+        for (const word of foundWords) {
             const placement = placements.find((p) => p.word === word);
             if (!placement) continue;
 
             const { startRow, startCol, endRow, endCol, direction } = placement;
             const [rowDelta, colDelta] = getDirectionDelta(direction);
+            const color = getWordColor(word);
 
             let r = startRow;
             let c = startCol;
@@ -387,7 +389,7 @@ export function PuzzleGrid({
         }
 
         return null;
-    }, [placements, foundWordColors, showSolution]);
+    }, [placements, foundWords, showSolution]);
 
     const getDirectionDelta = (direction: string): [number, number] => {
         const deltas: Record<string, [number, number]> = {
@@ -487,10 +489,6 @@ export function PuzzleGrid({
                                     }}
                                 >
                                     <span className={`relative z-10 ${isSelected || isFirst ? 'text-accent' : 'text-text-primary'}`}>
-                                        {cell}
-                                    </span>
-                                </motion.button>
-                                    <span className={isSelected || isFirst ? 'text-accent' : 'text-text-primary'}>
                                         {cell}
                                     </span>
                                 </motion.button>
