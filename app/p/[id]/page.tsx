@@ -306,6 +306,10 @@ export default function PlayPage() {
     console.log('🎯 Submitting score:', { puzzleId: params.id, playerName, timeSeconds: timer });
 
     try {
+      // Generate puzzle completion timestamp for validation
+      const completedAt = Date.now();
+      const timeChecksum = `${timer}-${completedAt}`;
+
       const response = await fetch('/api/leaderboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -313,6 +317,8 @@ export default function PlayPage() {
           puzzleId: params.id,
           playerName,
           timeSeconds: timer,
+          completedAt,
+          timeChecksum,
         }),
       });
 
