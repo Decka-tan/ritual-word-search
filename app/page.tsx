@@ -4,21 +4,17 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Bio } from '@/components/layout/Bio';
+import { HeroBackground } from '@/components/HeroBackground';
+import { ChevronDown } from 'lucide-react';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-bg text-text-primary">
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
-        {/* Animated W Background */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.03, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-display leading-none text-accent pointer-events-none select-none"
-        >
-          W
-        </motion.div>
+
+        {/* Hero Background Component */}
+        <HeroBackground />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto">
           <motion.h1
@@ -61,6 +57,22 @@ export default function HomePage() {
             </Link>
           </motion.div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1, ease: "easeOut" }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-text-secondary z-10"
+        >
+          <span className="text-xs uppercase tracking-[0.2em] mb-2 font-mono">Scroll for more</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-5 h-5 opacity-50" />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Features */}

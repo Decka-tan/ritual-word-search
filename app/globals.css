@@ -59,3 +59,25 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
 }
+
+/* Hero Background Animations */
+@keyframes mask-run {
+  0% {
+    -webkit-mask-position: 200% 0;
+    mask-position: 200% 0;
+  }
+  100% {
+    -webkit-mask-position: -200% 0;
+    mask-position: -200% 0;
+  }
+}
+
+@layer utilities {
+  .animate-mask-run {
+    -webkit-mask-image: linear-gradient(135deg, transparent 0%, transparent 30%, black 45%, black 55%, transparent 70%, transparent 100%);
+    mask-image: linear-gradient(135deg, transparent 0%, transparent 30%, black 45%, black 55%, transparent 70%, transparent 100%);
+    -webkit-mask-size: 300% 300%;
+    mask-size: 300% 300%;
+    animation: mask-run 8s linear infinite;
+  }
+}
