@@ -16,7 +16,38 @@ interface PuzzleGridProps {
 }
 
 const WORD_COLORS = [
-    '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899',
+    '#ef4444', // Red
+    '#f97316', // Orange
+    '#eab308', // Yellow
+    '#22c55e', // Green
+    '#06b6d4', // Cyan
+    '#3b82f6', // Blue
+    '#8b5cf6', // Violet
+    '#ec4899', // Pink
+    '#f43f5e', // Rose
+    '#d946ef', // Fuchsia
+    '#a855f7', // Purple
+    '#6366f1', // Indigo
+    '#0ea5e9', // Sky
+    '#14b8a6', // Teal
+    '#10b981', // Emerald
+    '#84cc16', // Lime
+    '#eab308', // Yellow (repeated for more yellows)
+    '#f59e0b', // Amber
+    '#f97316', // Orange (repeated)
+    '#ef4444', // Red (repeated)
+    '#dc2626', // Red-600
+    '#ca8a04', // Yellow-600
+    '#16a34a', // Green-600
+    '#0891b2', // Cyan-600
+    '#2563eb', // Blue-600
+    '#7c3aed', // Violet-600
+    '#db2777', // Pink-600
+    '#e11d48', // Rose-600
+    '#c026d3', // Fuchsia-600
+    '#9333ea', // Purple-600
+    '#4f46e5', // Indigo-600
+    '#0284c7', // Sky-600
 ];
 
 // Deterministically generate color for a word based on its content
