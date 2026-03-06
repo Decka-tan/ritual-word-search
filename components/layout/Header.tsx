@@ -17,14 +17,22 @@ export function Header() {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
-                <div className="flex items-center justify-center">
-                    <Image
-                        src="/ritual-logo.png"
-                        alt="Ritual"
-                        width={14}
-                        height={14}
-                        className="object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-                    />
+                {/* Custom 2x2 Grid Logo */}
+                <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center overflow-hidden border border-white/10 shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                    <div className="grid grid-cols-2 grid-rows-2 w-full h-full p-1 gap-0">
+                        <div className="flex items-center justify-center text-white font-mono font-bold text-xs leading-none">R</div>
+                        <div className="flex items-center justify-center text-accent font-mono font-bold text-xs leading-none">W</div>
+                        <div className="flex items-center justify-center text-accent font-mono font-bold text-xs leading-none">S</div>
+                        <div className="flex items-center justify-center">
+                            <Image
+                                src="/ritual-logo.png"
+                                alt="Ritual"
+                                width={14}
+                                height={14}
+                                className="object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
