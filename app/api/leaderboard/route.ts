@@ -5,11 +5,41 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServiceRoleClient } from '@/lib/supabase/client';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const { puzzleId, playerName, timeSeconds, completedAt, timeChecksum } = body;
+
+        // Get client IP for rate limiting
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
+                   request.headers.get('x-real-ip') ||
+                   'unknown';
+
+        // Rate limiting: per puzzle + per IP (3 submissions per minute per puzzle)
+        const puzzleRateLimit = rateLimit(`${puzzleId}:${ip}`, 3, 60 * 1000);
+        if (!puzzleRateLimit.success) {
+            return NextResponse.json(
+                {
+                    error: 'Too many submissions for this puzzle. Please wait a minute.',
+                    retryAfter: Math.ceil((puzzleRateLimit.resetTime! - Date.now()) / 1000),
+                },
+                { status: 429 }
+            );
+        }
+
+        // Rate limiting: global (max 10 submissions per minute per IP)
+        const globalRateLimit = rateLimit(`global:${ip}`, 10, 60 * 1000);
+        if (!globalRateLimit.success) {
+            return NextResponse.json(
+                {
+                    error: 'Too many submissions. Please wait a minute.',
+                    retryAfter: Math.ceil((globalRateLimit.resetTime! - Date.now()) / 1000),
+                },
+                { status: 429 }
+            );
+        }
 
         // Validate
         if (!puzzleId || !playerName || typeof timeSeconds !== 'number') {
