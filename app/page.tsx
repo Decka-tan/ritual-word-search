@@ -5,7 +5,35 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Bio } from '@/components/layout/Bio';
 import { HeroBackground } from '@/components/HeroBackground';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Play } from 'lucide-react';
+import { Typewriter } from '@/components/ui/Typewriter';
+
+const FEATURED_PUZZLES = [
+  {
+    id: 'ritual-tech-1',
+    title: 'Ritual Tech #1',
+    author: 'Decka-tan',
+    desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
+  },
+  {
+    id: 'ritual-tech-2',
+    title: 'Ritual Tech #2',
+    author: 'Decka-tan',
+    desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
+  },
+  {
+    id: 'ritual-discord-1',
+    title: 'Ritual Discord #1',
+    author: 'Decka-tan',
+    desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
+  },
+  {
+    id: 'ritualist-name-1',
+    title: 'Ritualist Name #1',
+    author: 'Decka-tan',
+    desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
+  }
+];
 
 export default function HomePage() {
   return (
@@ -73,6 +101,73 @@ export default function HomePage() {
             <ChevronDown className="w-5 h-5 opacity-50" />
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* Featured Puzzles Section */}
+      <section className="py-24 px-6 border-t border-border bg-bg relative overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-display tracking-wide uppercase mb-4"
+            >
+              MAKE YOUR OWN PUZZLE!
+            </motion.h2>
+            <div className="text-accent font-mono text-lg md:text-xl h-8">
+              <Typewriter text="Or try these hand-crafted templates..." delay={40} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {FEATURED_PUZZLES.map((puzzle, i) => (
+              <motion.div
+                key={puzzle.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Link
+                  href={`/p/${puzzle.id}`}
+                  className="group block border border-border bg-surface rounded-2xl overflow-hidden hover:border-accent transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,148,0.1)]"
+                >
+                  {/* Thumbnail Area */}
+                  <div className="aspect-[2/1] bg-bg relative overflow-hidden border-b border-border flex items-center justify-center">
+                    {/* Placeholder Logo */}
+                    <div className="text-5xl font-display text-border group-hover:scale-110 transition-transform duration-700 opacity-50 group-hover:opacity-100 group-hover:text-accent">
+                      RITUAL
+                    </div>
+
+                    {/* Play Overlay */}
+                    <div className="absolute inset-0 bg-accent/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="flex items-center gap-3 text-black transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <Play className="w-8 h-8 fill-black" />
+                        <span className="font-display text-3xl uppercase tracking-wider mt-1">Play Now</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content Area */}
+                  <div className="p-6 md:p-8">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+                      <h3 className="font-display text-2xl md:text-3xl uppercase group-hover:text-accent transition-colors">
+                        {puzzle.title}
+                      </h3>
+                      <span className="text-xs font-mono text-text-secondary border border-border px-3 py-1.5 rounded-full whitespace-nowrap">
+                        By: {puzzle.author}
+                      </span>
+                    </div>
+                    <p className="text-text-secondary text-sm md:text-base leading-relaxed">
+                      {puzzle.desc}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Features */}
