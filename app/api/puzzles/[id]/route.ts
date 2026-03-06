@@ -137,7 +137,10 @@ export async function PUT(
             );
         }
 
-        return NextResponse.json(updated);
+        // Strip editKey from response (user already has it in URL)
+        const { editKey, ...publicPuzzle } = updated;
+
+        return NextResponse.json(publicPuzzle);
     } catch (error) {
         console.error('Error updating puzzle:', error);
 
