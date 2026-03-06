@@ -33,8 +33,8 @@ export default function MakerPage() {
       const entry = {
         id: puzzle.id,
         title: puzzle.title,
-        playUrl: `/p/${puzzle.id}`,
-        editUrl: `/maker/${puzzle.id}?key=${puzzle.editKey}`,
+        playUrl: `/p/${puzzle.slug}`,
+        editUrl: `/maker/${puzzle.slug}?key=${puzzle.editKey}`,
         createdAt: puzzle.createdAt,
       };
       localStorage.setItem(
@@ -43,7 +43,7 @@ export default function MakerPage() {
       );
 
       // Redirect to play page
-      router.push(`/p/${puzzle.id}`);
+      router.push(`/p/${puzzle.slug}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

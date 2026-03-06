@@ -66,6 +66,7 @@ export default function EditPage() {
 
   const handleDelete = async () => {
     if (!confirm(`Are you sure you want to delete "${puzzle?.title || 'this puzzle'}"? This action cannot be undone.`)) return;
+    if (!puzzle) return;
 
     try {
       const response = await fetch(`/api/puzzles/${params.id}`, {
@@ -82,7 +83,7 @@ export default function EditPage() {
       const recent = JSON.parse(localStorage.getItem('recent_puzzles') || '[]');
       localStorage.setItem(
         'recent_puzzles',
-        JSON.stringify(recent.filter((p: any) => p.id !== params.id))
+        JSON.stringify(recent.filter((p: any) => p.id !== puzzle.id))
       );
 
       router.push('/my-puzzles');

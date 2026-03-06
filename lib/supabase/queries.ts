@@ -19,7 +19,7 @@ export function generateUUID(): string {
 }
 
 // Generate slug from title and author name
-export function generateSlug(title: string, authorName?: string | null): string {
+export function generateSlug(title: string, authorName?: string | null, counter?: number): string {
     const titleSlug = title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -32,7 +32,13 @@ export function generateSlug(title: string, authorName?: string | null): string 
             .replace(/^-+|-+$/g, '')
         : 'anonymous';
 
-    return `${titleSlug}-${authorSlug}`;
+    let slug = `${titleSlug}-${authorSlug}`;
+
+    if (counter && counter > 0) {
+        slug = `${slug}-${counter}`;
+    }
+
+    return slug;
 }
 
 /**
@@ -53,21 +59,41 @@ export async function createPuzzle(data: {
     const supabase = getServiceRoleClient();
     const editKey = generateEditKey();
     const id = generateUUID();
-    const slug = generateSlug(data.title, data.authorName);
 
-    const insert = puzzleToInsert({ ...data, id, slug, editKey });
+    let counter = 0;
+    let lastError: any = null;
 
-    const { data: puzzle, error } = await supabase
-        .from('puzzles')
-        .insert(insert)
-        .select()
-        .single();
+    while (counter < 100) { // Max 100 retries
+        const slug = generateSlug(data.title, data.authorName, counter);
+        const insert = puzzleToInsert({ ...data, id, slug, editKey });
 
-    if (error) {
+        const { data: puzzle, error } = await supabase
+            .from('puzzles')
+            .insert(insert)
+            .select()
+            .single();
+
+        if (!error) {
+            return rowToPuzzle(puzzle as PuzzleRow);
+        }
+
+        // Check if it's a duplicate key error for slug
+        // Postgres unique violation code is 23505
+        const isDuplicateError = error.code === '23505' &&
+            (error.message.includes('slug') || error.message.includes('puzzles_slug_key'));
+
+        if (isDuplicateError) {
+            console.log(`Duplicate slug detected: ${slug}, retrying with counter ${counter + 1}`);
+            counter++;
+            lastError = error;
+            continue; // Try with next counter
+        }
+
+        // If it's not a duplicate error, throw immediately
         throw new Error(`Failed to create puzzle: ${error.message}`);
     }
 
-    return rowToPuzzle(puzzle as PuzzleRow);
+    throw new Error(`Failed to create puzzle: ${lastError?.message || 'Could not generate unique slug'}`);
 }
 
 /**

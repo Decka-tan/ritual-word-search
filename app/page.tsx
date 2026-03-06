@@ -11,24 +11,28 @@ import { Typewriter } from '@/components/ui/Typewriter';
 const FEATURED_PUZZLES = [
   {
     id: 'ritual-tech-1',
+    slug: 'ritual-tech-1-decka-tan',
     title: 'Ritual Tech #1',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
   },
   {
     id: 'ritual-tech-2',
+    slug: 'ritual-tech-2-decka-tan',
     title: 'Ritual Tech #2',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
   },
   {
     id: 'ritual-discord-1',
+    slug: 'ritual-discord-1-decka-tan',
     title: 'Ritual Discord #1',
     author: 'Decka-tan',
     desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
   },
   {
     id: 'ritualist-name-1',
+    slug: 'ritualist-name-1-decka-tan',
     title: 'Ritualist Name #1',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
@@ -130,7 +134,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link
-                  href={`/p/${puzzle.id}`}
+                  href={`/p/${puzzle.slug}`}
                   className="group block border border-border bg-surface rounded-2xl overflow-hidden hover:border-accent transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,148,0.1)]"
                 >
                   {/* Thumbnail Area */}
