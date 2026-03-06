@@ -24,7 +24,6 @@ export function Header() {
                     height={40}
                     className="shrink-0 group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
 
             {/* Desktop Navigation */}
