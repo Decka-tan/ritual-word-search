@@ -5,7 +5,6 @@
 import { getServiceRoleClient } from './client';
 import { PuzzleRow, rowToPuzzle, puzzleToInsert } from './types';
 import { Puzzle } from '../puzzle/types';
-import { nanoid } from 'nanoid';
 
 // Generate a secure random edit key
 export function generateEditKey(): string {
@@ -16,7 +15,7 @@ export function generateEditKey(): string {
 
 // Generate UUID for puzzle ID
 export function generateUUID(): string {
-    return nanoid(21);
+    return crypto.randomUUID();
 }
 
 // Generate slug from title and author name
