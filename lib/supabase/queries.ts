@@ -5,12 +5,32 @@
 import { getServiceRoleClient } from './client';
 import { PuzzleRow, rowToPuzzle, puzzleToInsert } from './types';
 import { Puzzle } from '../puzzle/types';
+import { nanoid } from 'nanoid';
 
 // Generate a secure random edit key
 export function generateEditKey(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
     return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// Generate slug from title and author name
+export function generateSlug(title: string, authorName?: string | null): string {
+    const titleSlug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    const authorSlug = authorName
+        ? authorName
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+        : 'anonymous';
+
+    const randomStr = nanoid(6);
+
+    return `${titleSlug}-${authorSlug}-${randomStr}`;
 }
 
 /**
@@ -31,7 +51,10 @@ export async function createPuzzle(data: {
     const supabase = getServiceRoleClient();
     const editKey = generateEditKey();
 
-    const insert = puzzleToInsert({ ...data, editKey });
+    // Generate slug-based ID
+    const id = generateSlug(data.title, data.authorName);
+
+    const insert = puzzleToInsert({ ...data, id, editKey });
 
     const { data: puzzle, error } = await supabase
         .from('puzzles')

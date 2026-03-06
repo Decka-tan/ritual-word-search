@@ -94,6 +94,7 @@ export function rowToPuzzle(row: PuzzleRow): Puzzle {
 
 // Helper to convert app types to DB insert
 export function puzzleToInsert(data: {
+    id?: string;
     title: string;
     description: string | null | undefined;
     authorName: string | null | undefined;
@@ -107,6 +108,7 @@ export function puzzleToInsert(data: {
     editKey: string;
 }): PuzzleInsert {
     return {
+        id: data.id,
         title: data.title,
         description: data.description ?? null,
         author_name: data.authorName ?? null,
