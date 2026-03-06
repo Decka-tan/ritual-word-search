@@ -15,7 +15,7 @@ export function Header() {
     }, []);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between bg-gradient-to-b from-bg via-bg/80 to-transparent backdrop-blur-md">
             <Link href="/" className="flex items-center gap-3 group">
                 {/* Custom 2x2 Grid Logo */}
                 <div className="w-10 h-10 rounded-full bg-black dark:bg-white flex items-center justify-center overflow-hidden border border-white/10 dark:border-black/10 shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] dark:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
