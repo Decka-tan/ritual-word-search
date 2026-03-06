@@ -425,7 +425,7 @@ export function PuzzleGrid({
 
         const base = `w-full h-full border flex items-center justify-center font-mono font-bold ${getFontSizeClass()} cursor-pointer aspect-square touch-none transition-all duration-200`;
 
-        if (color) return `${base} border-white/10`;
+        if (color) return `${base} border-white/10`.trim();
         if (isSelected) return `${base} border-accent/50`;
         if (isFirst) return `${base} border-accent`;
         return `${base} border-border bg-bg hover:bg-surface hover:border-text-secondary/50`;
@@ -486,6 +486,10 @@ export function PuzzleGrid({
                                         transition: { duration: 0.15, ease: "easeOut" }
                                     }}
                                 >
+                                    <span className={`relative z-10 ${isSelected || isFirst ? 'text-accent' : 'text-text-primary'}`}>
+                                        {cell}
+                                    </span>
+                                </motion.button>
                                     <span className={isSelected || isFirst ? 'text-accent' : 'text-text-primary'}>
                                         {cell}
                                     </span>
