@@ -19,6 +19,7 @@ export interface Database {
 
 export interface PuzzleRow {
     id: string;
+    slug: string;
     title: string;
     description: string | null;
     author_name: string | null;
@@ -35,6 +36,7 @@ export interface PuzzleRow {
 
 export interface PuzzleInsert {
     id?: string;
+    slug?: string;
     title: string;
     description?: string | null;
     author_name?: string | null;
@@ -77,6 +79,7 @@ export interface Placement {
 export function rowToPuzzle(row: PuzzleRow): Puzzle {
     return {
         id: row.id,
+        slug: row.slug,
         title: row.title,
         description: row.description,
         authorName: row.author_name,
@@ -95,6 +98,7 @@ export function rowToPuzzle(row: PuzzleRow): Puzzle {
 // Helper to convert app types to DB insert
 export function puzzleToInsert(data: {
     id?: string;
+    slug?: string;
     title: string;
     description: string | null | undefined;
     authorName: string | null | undefined;
@@ -109,6 +113,7 @@ export function puzzleToInsert(data: {
 }): PuzzleInsert {
     return {
         id: data.id,
+        slug: data.slug,
         title: data.title,
         description: data.description ?? null,
         author_name: data.authorName ?? null,

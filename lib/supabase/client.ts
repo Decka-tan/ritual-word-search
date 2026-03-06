@@ -37,6 +37,10 @@ export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
  * IMPORTANT: Only use this in API routes, never expose to client.
  */
 export function getServiceRoleClient() {
+    if (typeof window !== 'undefined') {
+        throw new Error('Service role client can only be used on the server side');
+    }
+
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!serviceRoleKey) {

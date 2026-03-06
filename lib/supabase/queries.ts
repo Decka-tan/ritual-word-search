@@ -14,6 +14,11 @@ export function generateEditKey(): string {
     return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
+// Generate UUID for puzzle ID
+export function generateUUID(): string {
+    return nanoid(21);
+}
+
 // Generate slug from title and author name
 export function generateSlug(title: string, authorName?: string | null): string {
     const titleSlug = title
@@ -28,9 +33,7 @@ export function generateSlug(title: string, authorName?: string | null): string 
             .replace(/^-+|-+$/g, '')
         : 'anonymous';
 
-    const randomStr = nanoid(6);
-
-    return `${titleSlug}-${authorSlug}-${randomStr}`;
+    return `${titleSlug}-${authorSlug}`;
 }
 
 /**
@@ -50,11 +53,10 @@ export async function createPuzzle(data: {
 }): Promise<Puzzle> {
     const supabase = getServiceRoleClient();
     const editKey = generateEditKey();
+    const id = generateUUID();
+    const slug = generateSlug(data.title, data.authorName);
 
-    // Generate slug-based ID
-    const id = generateSlug(data.title, data.authorName);
-
-    const insert = puzzleToInsert({ ...data, id, editKey });
+    const insert = puzzleToInsert({ ...data, id, slug, editKey });
 
     const { data: puzzle, error } = await supabase
         .from('puzzles')
@@ -70,7 +72,26 @@ export async function createPuzzle(data: {
 }
 
 /**
- * Get a puzzle by ID (includes editKey for validation).
+ * Get a puzzle by slug (used for public URLs).
+ */
+export async function getPuzzleBySlug(slug: string): Promise<Puzzle | null> {
+    const supabase = getServiceRoleClient();
+
+    const { data, error } = await supabase
+        .from('puzzles')
+        .select()
+        .eq('slug', slug)
+        .single();
+
+    if (error || !data) {
+        return null;
+    }
+
+    return rowToPuzzle(data as PuzzleRow);
+}
+
+/**
+ * Get a puzzle by ID (includes editKey for validation) - internal use only.
  */
 export async function getPuzzleById(id: string): Promise<Puzzle | null> {
     const supabase = getServiceRoleClient();
@@ -89,10 +110,10 @@ export async function getPuzzleById(id: string): Promise<Puzzle | null> {
 }
 
 /**
- * Update a puzzle (validates editKey).
+ * Update a puzzle by slug (validates editKey).
  */
 export async function updatePuzzle(
-    id: string,
+    slug: string,
     editKey: string,
     updates: {
         title?: string;
@@ -108,8 +129,8 @@ export async function updatePuzzle(
 ): Promise<Puzzle | null> {
     const supabase = getServiceRoleClient();
 
-    // First verify the edit key
-    const existing = await getPuzzleById(id);
+    // First verify the edit key by looking up by slug
+    const existing = await getPuzzleBySlug(slug);
 
     if (!existing) {
         return null;
@@ -150,11 +171,11 @@ export async function updatePuzzle(
 /**
  * Delete a puzzle (validates editKey).
  */
-export async function deletePuzzle(id: string, editKey: string): Promise<boolean> {
+export async function deletePuzzle(slug: string, editKey: string): Promise<boolean> {
     const supabase = getServiceRoleClient();
 
-    // First verify the edit key
-    const existing = await getPuzzleById(id);
+    // First verify the edit key by looking up by slug
+    const existing = await getPuzzleBySlug(slug);
 
     if (!existing) {
         return false;
@@ -168,7 +189,7 @@ export async function deletePuzzle(id: string, editKey: string): Promise<boolean
     const { error } = await supabase
         .from('puzzles')
         .delete()
-        .eq('id', id);
+        .eq('id', existing.id);
 
     if (error) {
         throw new Error(`Failed to delete puzzle: ${error.message}`);

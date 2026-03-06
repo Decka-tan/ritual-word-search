@@ -1,25 +1,25 @@
 /**
  * API route for individual puzzle operations.
- * GET /api/puzzles/[id] - Get a puzzle (public)
- * PUT /api/puzzles/[id] - Update a puzzle (requires editKey)
- * DELETE /api/puzzles/[id] - Delete a puzzle (requires editKey)
+ * GET /api/puzzles/[id] - Get a puzzle (public, [id] is slug)
+ * PUT /api/puzzles/[id] - Update a puzzle (requires editKey, [id] is slug)
+ * DELETE /api/puzzles/[id] - Delete a puzzle (requires editKey, [id] is slug)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getPuzzleById, updatePuzzle, deletePuzzle } from '@/lib/supabase/queries';
+import { getPuzzleBySlug, updatePuzzle, deletePuzzle, getPuzzleById } from '@/lib/supabase/queries';
 import { validateUpdateInput, validateDeleteInput } from '@/lib/puzzle/validator';
 import { generatePuzzle } from '@/lib/puzzle/generator';
 import type { Puzzle } from '@/lib/puzzle/types';
 
-// GET /api/puzzles/[id] - Public read access
+// GET /api/puzzles/[id] - Public read access (lookup by slug)
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = await params;
+        const { id: slug } = await params;
 
-        const puzzle = await getPuzzleById(id);
+        const puzzle = await getPuzzleBySlug(slug);
 
         if (!puzzle) {
             return NextResponse.json(
@@ -41,20 +41,20 @@ export async function GET(
     }
 }
 
-// PUT /api/puzzles/[id] - Update puzzle (requires editKey)
+// PUT /api/puzzles/[id] - Update puzzle (requires editKey, [id] is slug)
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = await params;
+        const { id: slug } = await params;
         const body = await request.json();
 
         // Validate input
         const input = validateUpdateInput(body);
 
-        // Get existing puzzle
-        const existing = await getPuzzleById(id);
+        // Get existing puzzle by slug to verify editKey
+        const existing = await getPuzzleBySlug(slug);
 
         if (!existing) {
             return NextResponse.json(
@@ -127,8 +127,8 @@ export async function PUT(
             }
         }
 
-        // Update puzzle
-        const updated = await updatePuzzle(id, input.editKey, updates);
+        // Update puzzle by slug
+        const updated = await updatePuzzle(slug, input.editKey, updates);
 
         if (!updated) {
             return NextResponse.json(
@@ -165,20 +165,20 @@ export async function PUT(
     }
 }
 
-// DELETE /api/puzzles/[id] - Delete puzzle (requires editKey)
+// DELETE /api/puzzles/[id] - Delete puzzle (requires editKey, [id] is slug)
 export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = await params;
+        const { id: slug } = await params;
         const body = await request.json();
 
         // Validate input
         const input = validateDeleteInput(body);
 
-        // Delete puzzle (validates editKey internally)
-        const deleted = await deletePuzzle(id, input.editKey);
+        // Delete puzzle by slug (validates editKey internally)
+        const deleted = await deletePuzzle(slug, input.editKey);
 
         if (!deleted) {
             return NextResponse.json(

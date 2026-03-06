@@ -32,6 +32,7 @@ export interface GeneratedPuzzle {
 
 export interface Puzzle {
     id: string;
+    slug: string;
     title: string;
     description: string | null;
     authorName: string | null;
@@ -65,6 +66,7 @@ export interface UpdatePuzzleInput {
 
 export interface PublicPuzzle {
     id: string;
+    slug: string;
     title: string;
     description: string | null;
     authorName: string | null;
