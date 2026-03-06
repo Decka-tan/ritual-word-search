@@ -157,7 +157,7 @@ export async function updatePuzzle(
     const { data, error } = await supabase
         .from('puzzles')
         .update(updateData)
-        .eq('id', id)
+        .eq('id', existing.id)
         .select()
         .single();
 
