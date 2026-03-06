@@ -86,25 +86,6 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // 3. Check for impossibly fast times (less than 1 second per word minimum)
-        // This is a basic heuristic - can be improved
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/puzzles/${puzzleId}`);
-        if (response.ok) {
-            const puzzleData = await response.json();
-            const puzzle = puzzleData.puzzle;
-            const wordCount = puzzle.words.length;
-
-            // Reasonable minimum: 1 second per word + 5 seconds buffer
-            const minReasonableTime = (wordCount * 1) + 5;
-
-            if (timeSeconds < minReasonableTime && timeSeconds < wordCount) {
-                return NextResponse.json(
-                    { error: `Suspicious time: ${timeSeconds}s for ${wordCount} words. Minimum: ${minReasonableTime}s` },
-                    { status: 400 }
-                );
-            }
-        }
-
         const supabase = getServiceRoleClient();
 
         const { data, error } = await supabase
