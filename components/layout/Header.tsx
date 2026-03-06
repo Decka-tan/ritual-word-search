@@ -18,11 +18,11 @@ export function Header() {
         <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between bg-gradient-to-b from-bg via-bg/80 to-transparent backdrop-blur-md">
             <Link href="/" className="flex items-center gap-3 group">
                 <Image
-                    src="/ritual-logo.png"
+                    src={theme === 'dark' ? '/ritual-logo.png' : '/ritual-logo-light.png'}
                     alt="Ritual Word Search"
                     width={40}
                     height={40}
-                    className="shrink-0 group-hover:scale-105 transition-transform duration-300 brightness-0 dark:brightness-100"
+                    className="shrink-0 group-hover:scale-105 transition-transform duration-300"
                 />
                 <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
