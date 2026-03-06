@@ -22,7 +22,7 @@ export function Header() {
                     alt="Ritual Word Search"
                     width={40}
                     height={40}
-                    className="shrink-0 group-hover:scale-105 transition-transform duration-300 invert dark:invert-0"
+                    className="shrink-0 group-hover:scale-105 transition-transform duration-300 brightness-0 dark:brightness-100"
                 />
                 <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
