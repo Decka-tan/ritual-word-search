@@ -11,7 +11,7 @@ import { Typewriter } from '@/components/ui/Typewriter';
 const FEATURED_PUZZLES = [
   {
     id: 'ritual-tech-1',
-    slug: 'ritual-tech-1-decka-tan',
+    slug: 'ritual-tech-1-decka-tan-1',
     title: 'Ritual Tech #1',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
@@ -31,9 +31,23 @@ const FEATURED_PUZZLES = [
     desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
   },
   {
+    id: 'ritual-discord-2',
+    slug: 'ritual-discord-2-decka-tan',
+    title: 'Ritual Discord #2',
+    author: 'Decka-tan',
+    desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
+  },
+  {
     id: 'ritualist-name-1',
     slug: 'ritualist-name-1-decka-tan',
     title: 'Ritualist Name #1',
+    author: 'Decka-tan',
+    desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
+  },
+  {
+    id: 'ritualist-name-2',
+    slug: 'ritualist-name-2-decka-tan',
+    title: 'Ritualist Name #2',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
   }
