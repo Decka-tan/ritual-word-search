@@ -5,22 +5,25 @@ import { useEffect, useState } from 'react';
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export function HeroBackground() {
-  const [grid, setGrid] = useState<{char: string, isGreen: boolean}[]>([]);
+  const [grid, setGrid] = useState<{char: string, isGreen: boolean, size: number}[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const updateGrid = () => {
-      // Calculate how many letters fit in the screen
-      const charWidth = 24; // approx width of a monospace char
-      const charHeight = 24;
+      // Mobile: 24px (denser), Desktop: 36px (less dense for better performance)
+      const isMobile = window.innerWidth < 768;
+      const charWidth = isMobile ? 24 : 36;
+      const charHeight = isMobile ? 24 : 36;
+
       const c = Math.ceil(window.innerWidth / charWidth);
       const r = Math.ceil(window.innerHeight / charHeight);
 
       const newGrid = Array.from({ length: c * r }).map(() => ({
         char: LETTERS[Math.floor(Math.random() * LETTERS.length)],
-        isGreen: Math.random() > 0.95 // 5% chance to be green
+        isGreen: Math.random() > 0.95, // 5% chance to be green
+        size: charWidth
       }));
 
       setGrid(newGrid);
@@ -49,7 +52,7 @@ export function HeroBackground() {
       {/* Base layer (dim) */}
       <div className="absolute inset-0 text-text-secondary opacity-10 flex flex-wrap content-start">
         {grid.map((item, i) => (
-          <span key={`base-${i}`} style={{ width: 24, height: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span key={`base-${i}`} style={{ width: item.size, height: item.size, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             {item.char}
           </span>
         ))}
@@ -61,7 +64,7 @@ export function HeroBackground() {
           <span
             key={`top-${i}`}
             className={item.isGreen ? 'text-accent font-bold drop-shadow-[0_0_8px_rgba(0,255,148,0.8)]' : 'text-text-primary opacity-80'}
-            style={{ width: 24, height: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ width: item.size, height: item.size, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
           >
             {item.char}
           </span>
