@@ -172,13 +172,13 @@ export default function HomePage() {
 
       {/* Features */}
       <section className="py-24 px-6 bg-surface border-t border-border">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-2xl sm:text-3xl font-display tracking-wide uppercase text-center mb-12"
+            className="text-4xl md:text-6xl font-display tracking-wide uppercase text-center mb-12"
           >
             WHY USE RITUAL WORD SEARCH?
           </motion.h2>
