@@ -16,7 +16,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Tech #1',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
-    thumbnail: '/ritual-discord-thumb.png',
+    thumbnail: '/ritual-tech-thumb.png',
   },
   {
     id: 'ritual-tech-2',
@@ -24,7 +24,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Tech #2',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
-    thumbnail: '/ritual-discord-thumb.png',
+    thumbnail: '/ritual-tech-thumb.png',
   },
   {
     id: 'ritual-discord-1',
@@ -48,7 +48,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritualist Name #1',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
-    thumbnail: '/ritual-discord-thumb.png',
+    thumbnail: '/ritualist-name-thumb.png',
   },
   {
     id: 'ritualist-name-2',
@@ -56,7 +56,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritualist Name #2',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
-    thumbnail: '/ritual-discord-thumb.png',
+    thumbnail: '/ritualist-name-thumb.png',
   }
 ];
 
