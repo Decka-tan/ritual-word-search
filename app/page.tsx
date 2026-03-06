@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Bio } from '@/components/layout/Bio';
 import { HeroBackground } from '@/components/HeroBackground';
@@ -15,6 +16,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Tech #1',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
+    thumbnail: '/ritual-discord-thumb.png',
   },
   {
     id: 'ritual-tech-2',
@@ -22,6 +24,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Tech #2',
     author: 'Decka-tan',
     desc: 'Sharpen your knowledge about Ritual tech in this Word Search Puzzle.',
+    thumbnail: '/ritual-discord-thumb.png',
   },
   {
     id: 'ritual-discord-1',
@@ -29,6 +32,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Discord #1',
     author: 'Decka-tan',
     desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
+    thumbnail: '/ritual-discord-thumb.png',
   },
   {
     id: 'ritual-discord-2',
@@ -36,6 +40,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritual Discord #2',
     author: 'Decka-tan',
     desc: 'Always vibing on the Ritual Discord? This Word Search Puzzle is for you.',
+    thumbnail: '/ritual-discord-thumb.png',
   },
   {
     id: 'ritualist-name-1',
@@ -43,6 +48,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritualist Name #1',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
+    thumbnail: '/ritual-discord-thumb.png',
   },
   {
     id: 'ritualist-name-2',
@@ -50,6 +56,7 @@ const FEATURED_PUZZLES = [
     title: 'Ritualist Name #2',
     author: 'Decka-tan',
     desc: 'A Word Search Puzzle dedicated to Ritualist names in the Ritual community.',
+    thumbnail: '/ritual-discord-thumb.png',
   }
 ];
 
@@ -152,11 +159,13 @@ export default function HomePage() {
                   className="group block border border-border bg-surface rounded-2xl overflow-hidden hover:border-accent transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,148,0.1)]"
                 >
                   {/* Thumbnail Area */}
-                  <div className="aspect-[2/1] bg-bg relative overflow-hidden border-b border-border flex items-center justify-center">
-                    {/* Placeholder Logo */}
-                    <div className="text-5xl font-display text-border group-hover:scale-110 transition-transform duration-700 opacity-50 group-hover:opacity-100 group-hover:text-accent">
-                      RITUAL
-                    </div>
+                  <div className="aspect-[2/1] bg-bg relative overflow-hidden border-b border-border">
+                    <Image
+                      src={puzzle.thumbnail}
+                      alt={puzzle.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
 
                     {/* Play Overlay */}
                     <div className="absolute inset-0 bg-accent/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

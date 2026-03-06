@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github } from 'lucide-react';
+import { Github, X } from 'lucide-react';
 import Image from 'next/image';
 
 export function Bio() {
@@ -18,10 +18,10 @@ export function Bio() {
                     <div className="absolute inset-0 bg-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 mix-blend-overlay" />
                     <Image
                         src="/pfp.jpg"
-                        alt="Decka-tan"
+                        alt="Decka-chan"
                         width={192}
                         height={192}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                        className="w-full h-full object-cover transition-all duration-500"
                     />
                 </motion.div>
 
@@ -33,7 +33,7 @@ export function Bio() {
                         transition={{ duration: 0.5 }}
                         className="text-3xl font-display tracking-wide uppercase mb-2"
                     >
-                        Decka-tan
+                        Decka-chan
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -63,6 +63,9 @@ export function Bio() {
                     >
                         <a href="https://github.com/Decka-tan" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-border hover:border-accent hover:text-accent transition-colors duration-300">
                             <Github size={20} />
+                        </a>
+                        <a href="https://x.com/decka_chan" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-border hover:border-accent hover:text-accent transition-colors duration-300">
+                            <X size={20} />
                         </a>
                     </motion.div>
                 </div>
