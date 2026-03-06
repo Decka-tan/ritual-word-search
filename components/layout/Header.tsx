@@ -17,15 +17,13 @@ export function Header() {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between bg-gradient-to-b from-bg via-bg/80 to-transparent backdrop-blur-md">
             <Link href="/" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    <Image
-                        src="/ritual-logo.png"
-                        alt="Ritual Word Search"
-                        width={40}
-                        height={40}
-                        className="object-contain"
-                    />
-                </div>
+                <Image
+                    src="/ritual-logo.png"
+                    alt="Ritual Word Search"
+                    width={40}
+                    height={40}
+                    className="shrink-0 group-hover:scale-105 transition-transform duration-300"
+                />
                 <span className="font-display text-xl tracking-widest uppercase text-text-primary">Ritual</span>
             </Link>
 
